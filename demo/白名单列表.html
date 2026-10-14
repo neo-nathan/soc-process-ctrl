@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>进程管控 - 白名单列表</title>
+<style>
+/* 页面基础样式：去掉默认外边距，字体用系统中文字体 */
+body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#f0f2f5}
+/* 链接颜色：参考截图里的蓝色 */
+a{color:#1e88e5;text-decoration:none}a:hover{color:#1565c0}
+/* 表格行悬停时浅蓝底色 */
+.row:hover{background:#f4f8fd}
+/* 表格里超长文字单行省略 */
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 主按钮（创建）悬停 */
+.pbtn:hover{background:#1565c0;color:#ffffff}
+/* 弹窗表单：输入框 / 下拉 / 多行文本 统一外观 */
+.fi{box-sizing:border-box;width:100%;height:32px;padding:0 10px;font-family:inherit;font-size:13px;color:#333333;background:#ffffff;border:1px solid #d5d9e0;border-radius:3px}
+.fi:focus{outline:none;border-color:#1e88e5}
+.fi::placeholder{color:#b0b8c4}
+textarea.fi{height:72px;padding:8px 10px;resize:none}
+/* 取消按钮悬停 */
+.cbtn:hover{border-color:#1e88e5;color:#1e88e5}
+/* 下拉框统一外观（左上角的系统类型筛选） */
+select{font-family:inherit;font-size:13px;color:#333333;background:#ffffff;border:1px solid #d5d9e0;border-radius:3px;height:30px;padding:0 8px}
+/* 高级查询面板里的点选项：选中 = 蓝框蓝字，未选中 = 无框，悬停变蓝 */
+.chip:hover{color:#1e88e5}
+/* 查询面板里的输入框 */
+.qi{box-sizing:border-box;height:30px;padding:0 10px;font-family:inherit;font-size:13px;color:#333333;background:#ffffff;border:1px solid #d5d9e0;border-radius:2px}
+.qi:focus{outline:none;border-color:#1e88e5}
+.qi::placeholder{color:#b0b8c4}
+/* "高级搜索"按钮悬停 */
+.advbtn:hover{color:#1e88e5}
+/* 表头说明图标：鼠标移上去弹出说明框（.tipbox 默认隐藏，悬停时显示） */
+.tipwrap{position:relative;display:inline-flex;align-items:center}
+.tipwrap:hover .tipico{color:#1e88e5 !important}
+.tipwrap:hover .tipbox,.tipwrap:focus-within .tipbox{display:block}
+.tipbox{display:none;pointer-events:none;position:absolute;top:24px;right:-8px;z-index:60;width:360px;padding:10px 12px;background:#1f2d3d;color:#ffffff;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.25);font-size:12px;font-weight:400;line-height:20px;white-space:normal}
+.tipbox::before{content:"";position:absolute;top:-6px;right:12px;border:6px solid transparent;border-top:0;border-bottom-color:#1f2d3d}
+/* 数据行里的发布状态说明框：靠左对齐、宽一点；鼠标移到状态文字上就显示 */
+.tipbox.tl{left:-8px;right:auto;width:360px}
+.tipbox.tl::before{left:14px;right:auto}
+/* 左侧导航：悬停效果（截图 14）—— 底色变亮一点的深蓝、左侧出现亮蓝竖条、文字变白；一级菜单的图标变亮蓝 */
+.nav1:hover,.nav2:hover{background:#0d3479 !important;border-left-color:#08a7ff !important;color:#ffffff !important}
+.nav1:hover .nav-ico{color:#33b8ff !important}
+/* 导航条里的链接悬停 */
+.crumb:hover{color:#1565c0 !important;text-decoration:underline}
+/* 展开行里的操作按钮（照截图 16 策略中心）：白底、灰边、蓝色线条图标 + 文字；悬停边框和文字变蓝 */
+.obtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 14px;background:#ffffff;border:1px solid #d5d9e0;border-radius:3px;color:#333333;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:none;white-space:nowrap}
+.obtn svg{color:#1e88e5}
+.obtn:hover{border-color:#1e88e5;color:#1e88e5}
+/* 不能点的按钮：整体变灰，鼠标是禁止样式，悬停不变色 */
+.obtn.off,.obtn.off:hover{color:#b0b8c4;border-color:#e3e6eb;background:#fafbfc;cursor:not-allowed}
+.obtn.off svg{color:#c0c6cf}
+/* 删除按钮：红色图标和文字 */
+.obtn.danger svg{color:#e53935}
+.obtn.danger:hover{border-color:#e53935;color:#e53935}
+/* 行首的展开 / 收起箭头：收起时朝右，展开时朝下（截图 16） */
+.chev{width:36px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#8a94a6;cursor:pointer;background:transparent;border:0;padding:0}
+.chev:hover{color:#1e88e5}
+.chev svg{transition:transform .15s}
+
+/* 独立页面：页面固定 1920×1080，窗口小时可以滚动 */
+html,body{margin:0}
+</style>
+</head>
+<body>
+<!-- 渲染结果放这里 -->
+<div id="app"></div>
+
+<!-- 页面模板（和设计稿一致） -->
+<template id="page-tpl">
+<!-- ============ 整个页面：固定 1920 x 1080 ============ -->
+<div style="position: relative; width: 1920px; height: 1080px; box-sizing: border-box; display: flex; flex-direction: column; background: #f0f2f5; color: #333333; font-size: 14px; overflow: hidden;">
+
+  <!-- ============ 顶栏（50px 高） ============ -->
+  <div style="height: 50px; flex-shrink: 0; display: flex; align-items: stretch; background: #ffffff; border-bottom: 1px solid #e3e6eb;">
+    <!-- 左上角 LOGO 区：深蓝底 -->
+    <div style="width: 180px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #0f2a5c; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 2px;">
+      SOC
+    </div>
+    <!-- 系统标题 -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 20px; flex-grow: 1;">
+      <span style="font-size: 18px; font-weight: 700; color: #1f2d3d;">终端威胁检测与响应系统</span>
+      <span style="font-size: 14px; color: #1f2d3d;">· 专用</span>
+      <span style="font-size: 13px; color: #8a94a6; font-style: italic; margin-left: 12px;">一切尽在掌握！</span>
+    </div>
+    <!-- 右侧：消息数 / 用户 / 下载 -->
+    <div style="display: flex; align-items: center; gap: 16px; padding: 0 20px;">
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 4px; padding: 4px 10px; color: #4a5568;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+        <span>101</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 16px; padding: 4px 12px 4px 6px; color: #4a5568;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e88e5" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        <span>optAdmin</span>
+      </div>
+      <div style="width: 26px; height: 26px; border-radius: 50%; background: #1e88e5; display: flex; align-items: center; justify-content: center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M12 4v12M6 11l6 6 6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 顶栏以下：左导航 + 右侧内容 ============ -->
+  <div style="flex-grow: 1; display: flex; min-height: 0;">
+
+    <!-- ============ 左侧主导航（180px，深蓝） ============ -->
+    <nav style="width: 180px; flex-shrink: 0; background: #0f2a5c; color: #ffffff; display: flex; flex-direction: column; padding-top: 6px;">
+      <!-- 导航菜单列表：数据在下方脚本里，选中项高亮 -->
+      <div style="display: flex; flex-direction: column;">
+        <template data-sc="for" list="{{ menus }}" as="m" hint-placeholder-count="19">
+          <!-- 一级菜单：普通状态浅色文字；选中 / 悬停时底色变亮、左侧亮蓝竖条、文字变白、图标变亮蓝（截图 13 / 14）
+               有二级菜单的在右边显示箭头（展开朝上、收起朝下），点击展开 / 收起 -->
+          <a href="#" class="nav1" onClick="{{ m.toggle }}" aria-expanded="{{ m.expanded }}" style="display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 0 0 34px; box-sizing: border-box; color: {{ m.fg }}; font-size: 14px; background: {{ m.bg }}; border-left: 3px solid {{ m.bar }};">
+            <span class="nav-ico" style="display: flex; color: {{ m.icoColor }};"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.icon }}"></path></svg></span>
+            <span style="flex-grow: 1;">{{ m.label }}</span>
+            <template data-sc="if" value="{{ m.hasSub }}" hint-placeholder-val="{{ false }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 16px; transform: rotate({{ m.caret }});"><path d="M6 9l6 6 6-6"></path></svg>
+            </template>
+          </a>
+          <!-- 二级菜单：缩进，前面一个小圆点（截图 13）；当前页面：底色变亮 + 左侧亮蓝竖条 + 白字 + 亮蓝圆点；悬停：底色 + 竖条 + 白字（截图 14） -->
+          <template data-sc="if" value="{{ m.expanded }}" hint-placeholder-val="{{ false }}">
+            <template data-sc="for" list="{{ m.children }}" as="c" hint-placeholder-count="4">
+              <a href="{{ c.href }}" class="nav2" aria-current="{{ c.current }}" style="display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 0 0 65px; box-sizing: border-box; color: {{ c.fg }}; font-size: 14px; background: {{ c.bg }}; border-left: 3px solid {{ c.bar }};">
+                <span style="width: 5px; height: 5px; border-radius: 50%; background: {{ c.dot }}; flex-shrink: 0;"></span>
+                <span>{{ c.label }}</span>
+              </a>
+            </template>
+          </template>
+        </template>
+      </div>
+      <!-- 底部版权信息 -->
+      <div style="margin-top: auto; padding: 14px 10px 12px; border-top: 1px solid #1d3f7d; text-align: center; font-size: 12px; line-height: 18px; color: #c5d0e3;">
+        <div>[公司名称]</div>
+        <div>版权所有</div>
+        <div>版本：3.0 build：305034</div>
+      </div>
+    </nav>
+
+    <!-- ============ 右侧主内容区 ============ -->
+    <main style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; margin: 12px; background: #ffffff; border: 1px solid #e3e6eb;">
+
+      <!-- 导航条（面包屑）：进程管控 / 白名单。左侧导航有了二级菜单后，原来的顶部页签不再需要，换成导航条标明当前位置
+           样式和「进程管控列表」页的导航条一致；「进程管控」可点（回到进程管控概览） -->
+      <div style="display: flex; align-items: center; gap: 8px; height: 44px; flex-shrink: 0; padding: 0 16px; border-bottom: 1px solid #eef0f3; font-size: 14px; color: #8a94a6;">
+        <a href="概览.html" class="crumb" style="color: #1e88e5;">进程管控</a>
+        <span>/</span>
+        <span aria-current="page" style="color: #1f2d3d;">白名单</span>
+      </div>
+
+      <!-- 工具栏：左侧 = 系统类型筛选 + 创建白名单；右侧 = 高级搜索 / 刷新 / 列设置 -->
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 50px; flex-shrink: 0; padding: 0 10px;">
+        <!-- 左侧：系统类型筛选 + 创建白名单（按钮和弹窗从「进程管控列表」页移过来） -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <select id="osFilter" aria-label="系统类型筛选" onChange="{{ pickOs }}" style="width: 180px;">
+            <template data-sc="for" list="{{ osOpts }}" as="o" hint-placeholder-count="10">
+              <option value="{{ o.value }}" selected="{{ o.sel }}">{{ o.label }}</option>
+            </template>
+          </select>
+          <!-- 创建白名单按钮：点击 → 在本页弹出"创建白名单"弹窗 -->
+          <button class="pbtn" onClick="{{ openCreate }}" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 14px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 3px; color: #ffffff; font-size: 14px; font-family: inherit; cursor: pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
+            <span>创建白名单</span>
+          </button>
+        </div>
+        <!-- 右侧：高级搜索 / 刷新 / 列设置 -->
+        <div style="display: flex; align-items: center; gap: 18px; color: #4a5568;">
+          <!-- 高级搜索：点击展开 / 折叠下方的查询面板；展开时蓝字、箭头朝上 -->
+          <button class="advbtn" onClick="{{ toggleAdv }}" aria-expanded="{{ advExpanded }}" style="display: flex; align-items: center; gap: 4px; border: 0; background: transparent; padding: 0; cursor: pointer; font-family: inherit; font-size: 14px; color: {{ advColor }};">高级搜索
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform: rotate({{ advDeg }}deg);"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <button aria-label="刷新" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>
+          </button>
+          <button aria-label="列设置" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16M12 4v16M17 4v16"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ 高级查询面板：默认折叠，点"高级搜索"展开 ============
+           两类条件：① 点选项（发布状态 / 应用范围 / 进程变更 / 创建时间）点了立刻筛选；
+                     ② 输入项（指定日期 / 名单名称关键字）填好后点"筛选"才生效 -->
+      <template data-sc="if" value="{{ advOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; margin: 0 10px 10px; padding: 12px 16px; background: #eef1f6; font-size: 13px;">
+          <!-- 创建时间（点选）：全部 / 近 7 天 / 近 30 天 / 本月；右边"指定"是输入项，点筛选生效 -->
+          <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">创建时间：</span>
+            <template data-sc="for" list="{{ timeChips }}" as="c" hint-placeholder-count="4">
+              <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
+            </template>
+            <span style="margin-left: 24px; color: #5a6475;">指定：</span>
+            <!-- 开始日期：文本框固定 YYYY-MM-DD 格式（浏览器自带日期框的显示格式跟随系统语言，没法固定，所以用文本框）；
+                 点右侧日历图标弹出系统日期选择器，选完自动填成 YYYY-MM-DD -->
+            <div style="position: relative; width: 150px; height: 30px;">
+              <input class="qi" type="text" maxlength="10" placeholder="开始日期" aria-label="开始日期" value="{{ draft.from }}" onInput="{{ inFrom }}" style="width: 150px; padding-right: 30px;">
+              <button type="button" aria-label="选择开始日期" onClick="{{ openPicker }}" style="position: absolute; top: 1px; right: 1px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 0; background: transparent; cursor: pointer; color: #8a94a6;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></button>
+              <input type="date" tabindex="-1" aria-hidden="true" value="{{ draft.from }}" onInput="{{ pickedFrom }}" style="position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none;">
+            </div>
+            <span style="color: #8a94a6;">—</span>
+            <!-- 结束日期：文本框固定 YYYY-MM-DD 格式（浏览器自带日期框的显示格式跟随系统语言，没法固定，所以用文本框）；
+                 点右侧日历图标弹出系统日期选择器，选完自动填成 YYYY-MM-DD -->
+            <div style="position: relative; width: 150px; height: 30px;">
+              <input class="qi" type="text" maxlength="10" placeholder="结束日期" aria-label="结束日期" value="{{ draft.to }}" onInput="{{ inTo }}" style="width: 150px; padding-right: 30px;">
+              <button type="button" aria-label="选择结束日期" onClick="{{ openPicker }}" style="position: absolute; top: 1px; right: 1px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 0; background: transparent; cursor: pointer; color: #8a94a6;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></button>
+              <input type="date" tabindex="-1" aria-hidden="true" value="{{ draft.to }}" onInput="{{ pickedTo }}" style="position: absolute; right: 0; bottom: 0; width: 1px; height: 1px; padding: 0; border: 0; opacity: 0; pointer-events: none;">
+            </div>
+            <!-- 日期填错时的红字提示（点"筛选"时检查） -->
+            <template data-sc="if" value="{{ hasDateErr }}" hint-placeholder-val="{{ false }}">
+              <span role="alert" style="margin-left: 8px; color: #e53935;">{{ dateErr }}</span>
+            </template>
+          </div>
+          <!-- 发布状态（点选）：全部 / 空白名单（列表里显示 --）/ 待发布 / 已发布 / 有变更 -->
+          <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">发布状态：</span>
+            <template data-sc="for" list="{{ pubChips }}" as="c" hint-placeholder-count="6">
+              <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
+            </template>
+          </div>
+          <!-- 应用范围（点选）：全部 / 已应用 / 未应用 -->
+          <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">应用范围：</span>
+            <template data-sc="for" list="{{ scopeChips }}" as="c" hint-placeholder-count="3">
+              <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
+            </template>
+          </div>
+          <!-- 进程变更（点选）：全部 / 有新增 / 有移除 / 无变更 -->
+          <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">进程变更：</span>
+            <template data-sc="for" list="{{ deltaChips }}" as="c" hint-placeholder-count="4">
+              <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
+            </template>
+          </div>
+          <!-- 筛选条件（输入）：选择按哪个字段搜（目前只有"名单名称"），输入关键字，点"筛选"生效；"重置"清空全部条件 -->
+          <div style="display: flex; align-items: center; gap: 8px; height: 32px;">
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">筛选条件：</span>
+            <select aria-label="筛选字段" onChange="{{ inField }}" style="width: 130px; border-radius: 2px;">
+              <template data-sc="for" list="{{ fieldOpts }}" as="o" hint-placeholder-count="2">
+                <option value="{{ o.value }}" selected="{{ o.sel }}">{{ o.label }}</option>
+              </template>
+            </select>
+            <input class="qi" type="text" placeholder="{{ kwPlaceholder }}" aria-label="关键字" value="{{ draft.kw }}" onInput="{{ inKw }}" style="width: 280px;">
+            <button class="pbtn" onClick="{{ doQuery }}" style="height: 30px; padding: 0 22px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 2px; color: #ffffff; font-family: inherit; font-size: 14px; cursor: pointer;">筛选</button>
+            <button class="cbtn" onClick="{{ doReset }}" style="height: 30px; padding: 0 16px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 2px; color: #333333; font-family: inherit; font-size: 14px; cursor: pointer;">重置</button>
+            <template data-sc="if" value="{{ filtering }}" hint-placeholder-val="{{ false }}">
+              <span style="margin-left: 8px; color: #5a6475;">已筛选出 <span style="color: #1e88e5;">{{ total }}</span> 个，共 {{ allTotal }} 个</span>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <!-- ============ 白名单列表 ============
+           一条白名单看 3 列就知道卡在哪一步：
+             ① 进程数：已发布版本的数量 + 还没发布的增减（+N 绿 / -N 红）。0 = 空白名单，不能发布
+             ② 发布状态（4 种）：--（没进程）/ 待发布（加了进程还没发布过）/ 已发布（内容定稿了）/ 有变更（发布过，之后有 +N / -N）
+             ③ 应用范围：--（还没选终端）/ N 个组 M 台终端（已下发到这些终端）
+           操作顺序：添加进程 → 发布（定稿）→ 应用范围（选完自动下发）→ 以后改了进程再发布（自动下发）；改应用范围不用发布，自动下发
+           按钮规则：发布 = 待发布 / 有变更 能点（发布后会变成 0 的不能点）；应用到组 / 终端 = 只有"已发布"能点；删除 = 随时能点，先弹确认框
+           列 = [展开箭头] / 序号 / 名称 / 系统类型 / 进程数 / 应用范围 / 发布状态 / 创建人 / 创建时间 / 描述
+           各列按比例分配整行宽度（flex: 比例 1 0）
+           操作按钮不再单独一列：点行首的箭头（或名称）展开，按钮在展开的子行里（照截图 16 策略中心的折叠样式） -->
+
+      <!-- ---------- 用户白名单列表 ---------- -->
+      <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; margin: 0 10px; border-bottom: 1px solid #dde1e7;">
+        <div style="display: flex; align-items: center; height: 36px; flex-shrink: 0; background: #edf0f4; color: #1f2d3d; font-weight: 700; font-size: 14px;">
+          <!-- 表头最左边：和数据行的展开箭头对齐的空位 -->
+          <div style="width: 36px; flex-shrink: 0;"></div>
+          <div style="width: 56px; flex-shrink: 0; padding: 0 8px; box-sizing: border-box;">序号</div>
+          <div style="flex: 200 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">名称</div>
+          <div style="flex: 130 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">系统类型</div>
+          <div style="flex: 110 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">进程数</div>
+          <div style="flex: 180 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">应用范围</div>
+          <!-- 发布状态表头：文字右边一个实心 info 图标（灰色圆底白色 i，悬停变蓝），鼠标移上去弹出三种状态的解释 -->
+          <div style="flex: 150 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7; display: flex; align-items: center; gap: 5px;">
+            <span>发布状态</span>
+            <span class="tipwrap" tabindex="0" aria-label="发布状态说明">
+              <svg class="tipico" width="16" height="16" viewBox="0 0 16 16" style="color: #a0a8b5; cursor: help;"><circle cx="8" cy="8" r="8" fill="currentColor"></circle><circle cx="8" cy="4.6" r="1.1" fill="#ffffff"></circle><rect x="7" y="6.8" width="2" height="5.2" rx="1" fill="#ffffff"></rect></svg>
+              <span class="tipbox" role="tooltip" style="width: 470px;">
+                <span style="display: block; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.2);">发布 = 把当前进程内容定稿；真正下发到终端看「应用范围」：已发布的名单选了应用范围就自动下发。颜色：灰 没进程，蓝 等着发布，绿 定稿了，橙 有没发布的变更。</span>
+                <span style="display: block; color: #c5ccd6;">--</span>
+                <span style="display: block; margin-bottom: 6px;">还没有任何进程，不能发布；先到「进程」页添加</span>
+                <span style="display: block; color: #90caf9;">待发布</span>
+                <span style="display: block; margin-bottom: 6px;">加了进程（0 +N），还没发布过；点「发布」定稿，之后才能设置应用范围</span>
+                <span style="display: block; color: #a5d6a7;">已发布</span>
+                <span style="display: block; margin-bottom: 6px;">内容定稿了，没有待发布的增减。应用范围是 -- 的还没下发到终端，选了应用范围就自动下发；改应用范围也自动下发，不用再发布</span>
+                <span style="display: block; color: #ffcc80;">有变更</span>
+                <span style="display: block;">发布过，之后进程有增减（+N / -N）还没发布，终端上还是旧版本；点「发布」自动下发。有变更时不能改应用范围；已发布的名单至少保留 1 个进程</span>
+                <!-- 状态流转图：箭头上的字 = 触发状态变化的操作
+                       -- →添加进程→ 待发布 →发布→ 已发布 →进程增减→ 有变更 →发布→ 已发布
+                       应用范围是另一条线：已发布时选 / 改范围 → 自动下发，状态不变 -->
+                <span style="display: block; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.2); color: #c5ccd6;">状态流转（箭头上的字 = 触发变化的操作）</span>
+                <svg role="img" aria-label="发布状态流转图" width="446" height="110" viewBox="0 0 446 110" style="display: block; margin-top: 4px;" font-size="11" font-family="inherit">
+                  <defs><marker id="stArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#c5ccd6"></path></marker></defs>
+                  <g fill="none" stroke="#c5ccd6" stroke-width="1.2" marker-end="url(#stArrow)">
+                    <path d="M66 36H110"></path>
+                    <path d="M186 36H230"></path>
+                    <path d="M306 29H350"></path>
+                    <path d="M350 43H306"></path>
+                    <path d="M268 49V72"></path>
+                  </g>
+                  <g fill="#c5ccd6" text-anchor="middle">
+                    <text x="88" y="26">添加进程</text>
+                    <text x="208" y="26">发布</text>
+                    <text x="328" y="19">进程增减</text>
+                    <text x="328" y="60">发布</text>
+                    <text x="268" y="88">选 / 改应用范围 → 自动下发</text>
+                    <text x="268" y="104" font-size="10">（状态不变；有变更时不能改范围）</text>
+                  </g>
+                  <g stroke-width="1.2" text-anchor="middle">
+                    <rect x="6" y="23" width="60" height="26" rx="3" fill="#2b3a4d" stroke="#c5ccd6"></rect><text x="36" y="40" fill="#c5ccd6">--</text>
+                    <rect x="110" y="23" width="76" height="26" rx="3" fill="#2b3a4d" stroke="#90caf9"></rect><text x="148" y="40" fill="#90caf9">待发布</text>
+                    <rect x="230" y="23" width="76" height="26" rx="3" fill="#2b3a4d" stroke="#a5d6a7"></rect><text x="268" y="40" fill="#a5d6a7">已发布</text>
+                    <rect x="350" y="23" width="76" height="26" rx="3" fill="#2b3a4d" stroke="#ffcc80"></rect><text x="388" y="40" fill="#ffcc80">有变更</text>
+                  </g>
+                </svg>
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div style="flex: 100 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">创建人</div>
+          <div style="flex: 160 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">创建时间</div>
+          <div style="flex: 220 1 0; min-width: 0; padding: 0 8px; border-left: 1px solid #dde1e7;">描述</div>
+        </div>
+        <!-- 数据行容器：不能 overflow: hidden，否则最后几行的状态说明框会被截掉 -->
+        <div style="display: flex; flex-direction: column;">
+          <template data-sc="for" list="{{ userRows }}" as="r" hint-placeholder-count="10">
+            <!-- 主行：点行首箭头展开 / 收起；展开时主行保持白底，下面的子行是灰底，两行一眼能分开 -->
+            <div class="row" style="display: flex; align-items: center; height: 40px; border-bottom: 1px solid #eef0f3; font-size: 13px; color: #333333; background: #ffffff;">
+              <button class="chev" onClick="{{ r.toggle }}" aria-expanded="{{ r.open }}" aria-label="{{ r.chevLabel }}" title="{{ r.chevLabel }}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ r.chevDeg }});"><path d="M9 6l6 6-6 6"></path></svg>
+              </button>
+              <div style="width: 56px; flex-shrink: 0; padding: 0 8px; box-sizing: border-box; color: #5a6475;">{{ r.seq }}</div>
+              <!-- 名称：蓝色链接，点击和行首箭头一样，展开 / 收起这一行的操作按钮 -->
+              <div class="ell" style="flex: 200 1 0; min-width: 0; padding: 0 8px;"><a href="#" onClick="{{ r.toggle }}" aria-expanded="{{ r.open }}" title="{{ r.chevLabel }}">{{ r.name }}</a></div>
+              <!-- 系统类型：系统图标 + 名称 -->
+              <div style="flex: 130 1 0; min-width: 0; padding: 0 8px; display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a6475" stroke-width="2"><path d="{{ r.osIcon }}"></path></svg>
+                <span class="ell">{{ r.os }}</span>
+              </div>
+              <!-- 进程数：已发布版本的数量 + 还没发布的增减（+N 新增绿 / -N 移除红；发布后并入数字）
+                   +N / -N 可以点，直接去这条白名单的进程页查看 -->
+              <div style="flex: 110 1 0; min-width: 0; padding: 0 8px; display: flex; align-items: baseline; gap: 6px;">
+                <span>{{ r.base }}</span>
+                <template data-sc="if" value="{{ r.hasAdd }}" hint-placeholder-val="{{ true }}">
+                  <a href="白名单进程列表.html" title="{{ r.addTip }}" style="font-size: 12px; font-weight: 700; color: #2e7d32;">+{{ r.add }}</a>
+                </template>
+                <template data-sc="if" value="{{ r.hasDel }}" hint-placeholder-val="{{ false }}">
+                  <a href="白名单进程列表.html" title="{{ r.delTip }}" style="font-size: 12px; font-weight: 700; color: #e53935;">-{{ r.del }}</a>
+                </template>
+              </div>
+              <!-- 应用范围：-- = 还没选终端；N 个组 M 台终端 = 已下发到这些终端（只选了终端没选组的，只显示终端数） -->
+              <div class="ell" style="flex: 180 1 0; min-width: 0; padding: 0 8px;">
+                <template data-sc="if" value="{{ r.applied }}" hint-placeholder-val="{{ true }}"><template data-sc="if" value="{{ r.hasGc }}" hint-placeholder-val="{{ true }}"><span style="color: #1e88e5;">{{ r.gc }}</span> 个组　</template><span style="color: #1e88e5;">{{ r.hc }}</span> 台终端</template>
+                <template data-sc="if" value="{{ r.unapplied }}" hint-placeholder-val="{{ false }}"><span title="还没设置应用范围（终端上没有这条名单）" style="color: #b0b8c4;">--</span></template>
+              </div>
+              <!-- 发布状态（4 种）：--（灰）/ 待发布（蓝）/ 已发布（绿）/ 有变更（橙）
+                   鼠标移上去有说明 -->
+              <div style="flex: 150 1 0; min-width: 0; padding: 0 8px; display: flex; align-items: center;">
+                <!-- 状态文字 + 说明框：鼠标移到状态上，弹出"为什么是这个状态"和"接下来该做什么" -->
+                <span class="tipwrap" tabindex="0" style="gap: 6px; cursor: help;">
+                  <!-- 状态前的小圆点：-- （没进程）不显示圆点 -->
+                  <template data-sc="if" value="{{ r.hasDot }}" hint-placeholder-val="{{ true }}">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ r.stColor }}; flex-shrink: 0;"></span>
+                  </template>
+                  <span style="color: {{ r.stColor }};">{{ r.status }}</span>
+                  <span class="tipbox tl" role="tooltip">
+                    <span style="display: block; color: {{ r.stTipColor }}; margin-bottom: 4px;">{{ r.status }}</span>
+                    <span style="display: block;">{{ r.pubWhy }}</span>
+                    <span style="display: block; margin-top: 6px; color: #c5ccd6;">{{ r.pubNext }}</span>
+                  </span>
+                </span>
+              </div>
+              <!-- 创建人 / 创建时间 / 描述（描述太长时省略，鼠标移上去看全文；没填的显示灰色 --） -->
+              <div class="ell" style="flex: 100 1 0; min-width: 0; padding: 0 8px;">{{ r.creator }}</div>
+              <div class="ell" style="flex: 160 1 0; min-width: 0; padding: 0 8px; color: #5a6475;">{{ r.created }}</div>
+              <div class="ell" title="{{ r.noteText }}" style="flex: 220 1 0; min-width: 0; padding: 0 8px; color: {{ r.noteColor }};">{{ r.noteText }}</div>
+            </div>
+            <!-- 展开的子行（点了行首箭头才出现）：操作按钮都放这里，照截图 16 的白底边框按钮 + 蓝色线条图标
+                   编辑 / 进程 / 应用到组 / 应用到终端 / 发布 / 删除
+                   能点的 = 正常按钮；不能点的 = 灰色按钮（鼠标移上去说明原因）
+                     发布        待发布 / 有变更 能点；空白名单、没有变更、发布后会变成 0 的灰色
+                     应用到组/终端 只有"已发布"能点；选完 / 改完自动下发
+                     删除        随时能点（红色），点了先弹确认框 -->
+            <template data-sc="if" value="{{ r.open }}" hint-placeholder-val="{{ false }}">
+              <div class="subrow" style="display: flex; align-items: center; gap: 10px; height: 52px; padding-left: 92px; box-sizing: border-box; background: #eef1f5; border-bottom: 1px solid #e3e6eb; box-shadow: inset 3px 0 0 #1e88e5;">
+                <!-- 编辑：铅笔 + 下划线 -->
+                <a href="#" class="obtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 16l10-10 2 2-10 10H6z"></path></svg>
+                  <span>编辑</span>
+                </a>
+                <!-- 进程：列表图标，去这条白名单的进程页 -->
+                <a href="白名单进程列表.html" class="obtn" title="{{ r.procTip }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
+                  <span>进程</span>
+                </a>
+                <!-- 应用到组：组织树图标（照截图 16）；只有"已发布"的名单能点（选完自动下发），其余灰色 -->
+                <template data-sc="if" value="{{ r.canScope }}" hint-placeholder-val="{{ true }}">
+                  <a href="#" class="obtn" onClick="{{ r.setGroup }}" title="{{ r.groupTip }}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v5H9zM3 16h6v5H3zM15 16h6v5h-6zM12 8v4M6 16v-4h12v4"></path></svg>
+                    <span>应用到组</span>
+                  </a>
+                </template>
+                <template data-sc="if" value="{{ r.noScope }}" hint-placeholder-val="{{ false }}">
+                  <span class="obtn off" title="{{ r.scopeOffTip }}" aria-disabled="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v5H9zM3 16h6v5H3zM15 16h6v5h-6zM12 8v4M6 16v-4h12v4"></path></svg>
+                    <span>应用到组</span>
+                  </span>
+                </template>
+                <!-- 应用到终端：终端窗口 >_ 图标（照截图 16）；规则同上 -->
+                <template data-sc="if" value="{{ r.canScope }}" hint-placeholder-val="{{ true }}">
+                  <a href="#" class="obtn" onClick="{{ r.setHost }}" title="{{ r.hostTip }}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v13H3zM7 9l3 3-3 3M12 15h5"></path></svg>
+                    <span>应用到终端</span>
+                  </a>
+                </template>
+                <template data-sc="if" value="{{ r.noScope }}" hint-placeholder-val="{{ false }}">
+                  <span class="obtn off" title="{{ r.scopeOffTip }}" aria-disabled="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v13H3zM7 9l3 3-3 3M12 15h5"></path></svg>
+                    <span>应用到终端</span>
+                  </span>
+                </template>
+                <!-- 发布：上传箭头 -->
+                <template data-sc="if" value="{{ r.pubHot }}" hint-placeholder-val="{{ true }}">
+                  <a href="#" class="obtn" onClick="{{ r.publish }}" title="{{ r.pubTip }}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5M7 10l5-5 5 5M4 20h16"></path></svg>
+                    <span>发布</span>
+                  </a>
+                </template>
+                <template data-sc="if" value="{{ r.pubOff }}" hint-placeholder-val="{{ false }}">
+                  <span class="obtn off" title="{{ r.pubOffTip }}" aria-disabled="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5M7 10l5-5 5 5M4 20h16"></path></svg>
+                    <span>发布</span>
+                  </span>
+                </template>
+                <!-- 删除：垃圾桶。随时可以删；点了先弹确认框，已下发的名单会提示要向终端下发清除策略 -->
+                <a href="#" class="obtn danger" onClick="{{ r.askDel }}" title="{{ r.delTip }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"></path></svg>
+                  <span>删除</span>
+                </a>
+              </div>
+            </template>
+          </template>
+          <!-- 筛选后这个列表一条都没有时的提示 -->
+          <template data-sc="if" value="{{ userEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="height: 60px; display: flex; align-items: center; justify-content: center; color: #8a94a6; font-size: 13px;">没有符合条件的白名单，可以调整条件或点"重置"</div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 底部：只有右侧的统计文字 -->
+      <div style="flex-shrink: 0; margin: 0 10px;">
+        <div style="display: flex; align-items: center; justify-content: flex-end; height: 42px; padding-bottom: 6px;">
+          <div style="color: #4a5568; padding-right: 220px;">
+            白名单总数：<span style="color: #1e88e5;">{{ total }} 个</span>　|　进程总数：<span style="color: #1e88e5;">{{ procTotal }} 个</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ 遮罩 + 创建白名单弹窗（点左上角"创建白名单"按钮才出现） ============ -->
+  <template data-sc="if" value="{{ dlgOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; top: 0; left: 0; z-index: 40; width: 1920px; height: 1080px; background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center;">
+    <!-- 弹窗本体：白底、圆角、阴影 -->
+    <div role="dialog" aria-modal="true" aria-label="创建白名单" style="width: 840px; background: #ffffff; border-radius: 4px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column;">
+
+      <!-- 标题栏：标题 + 右侧关闭叉 -->
+      <div style="height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; background: #f5f7fa; border-bottom: 1px solid #e3e6eb; border-radius: 4px 4px 0 0;">
+        <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">创建白名单</span>
+        <button onClick="{{ closeDlg }}" aria-label="关闭" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #8a94a6; border: 0; background: transparent; cursor: pointer; padding: 0;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+
+      <!-- 表单区：每行 = 右对齐的标签（必填项带红星）+ 控件 -->
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 22px 32px 6px 22px;">
+
+        <!-- 白名单名称 -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <label for="wlName" style="width: 96px; flex-shrink: 0; text-align: right; color: #333333;"><span style="color: #e53935;">* </span>白名单名称：</label>
+          <input id="wlName" class="fi" type="text" placeholder="示例：办公区终端白名单" value="{{ f.name }}" onInput="{{ f.onName }}">
+        </div>
+
+        <!-- 系统类型：必填，一条白名单只针对一种系统类型；只有 Windows、Linux/信创 两项；左上角已经筛选了某个系统类型时，这里自动带入对应的一项 -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <label for="wlOs" style="width: 96px; flex-shrink: 0; text-align: right; color: #333333;"><span style="color: #e53935;">* </span>系统类型：</label>
+          <select id="wlOs" class="fi" style="width: 240px;">
+            <template data-sc="for" list="{{ dlgOsOpts }}" as="o" hint-placeholder-count="3">
+              <option selected="{{ o.sel }}">{{ o.label }}</option>
+            </template>
+          </select>
+          <span style="font-size: 12px; color: #8a94a6;">不同系统类型的进程差别很大，需分别建白名单</span>
+        </div>
+
+        <!-- 描述（原"备注"） -->
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+          <label for="wlNote" style="width: 96px; flex-shrink: 0; text-align: right; color: #333333; line-height: 32px;">描述：</label>
+          <textarea id="wlNote" class="fi" placeholder="选填，说明这条白名单用在哪里、放行什么" value="{{ f.note }}" onInput="{{ f.onNote }}"></textarea>
+        </div>
+      </div>
+
+      <!-- 底部按钮：取消（白底）/ 创建（蓝底），靠右 -->
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 22px 20px;">
+        <button onClick="{{ closeDlg }}" class="cbtn" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 14px; font-family: inherit; cursor: pointer;">取消</button>
+        <button onClick="{{ createList }}" class="pbtn" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 3px; color: #ffffff; font-size: 14px; font-family: inherit; cursor: pointer;">创建</button>
+      </div>
+    </div>
+  </div>
+  </template>
+  <!-- ============ 删除确认弹窗（点子行里的"删除"才出现） ============ -->
+  <template data-sc="if" value="{{ delOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; top: 0; left: 0; z-index: 40; width: 1920px; height: 1080px; background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center;">
+    <div role="dialog" aria-modal="true" aria-label="删除白名单" style="width: 480px; background: #ffffff; border-radius: 4px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column;">
+      <div style="height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; background: #f5f7fa; border-bottom: 1px solid #e3e6eb; border-radius: 4px 4px 0 0;">
+        <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">删除白名单</span>
+        <button onClick="{{ closeDel }}" aria-label="关闭" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #8a94a6; border: 0; background: transparent; cursor: pointer; padding: 0;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+      <div style="display: flex; gap: 12px; padding: 22px 24px 8px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef6c00" stroke-width="2" style="flex-shrink: 0;"><path d="M12 9v4M12 17h.01M10.3 3.9L2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
+        <div style="font-size: 14px; color: #333333; line-height: 22px;">
+          <div>确定删除「{{ delName }}」吗？删除后不能恢复。</div>
+          <!-- 已下发到终端的名单：多一句提醒 -->
+          <template data-sc="if" value="{{ delApplied }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top: 6px; color: #e53935;">该名单已下发到 {{ delHosts }} 台终端，删除后中心会向这些终端下发清除策略，终端上的名单会一起清掉。</div>
+          </template>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 22px 20px;">
+        <button onClick="{{ closeDel }}" class="cbtn" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 14px; font-family: inherit; cursor: pointer;">取消</button>
+        <button onClick="{{ confirmDel }}" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #e53935; border: 1px solid #e53935; border-radius: 3px; color: #ffffff; font-size: 14px; font-family: inherit; cursor: pointer;">删除</button>
+      </div>
+    </div>
+  </div>
+  </template>
+  <!-- 操作提示：点"创建"后在页面上方中间出现，2 秒后自动消失（和进程管控列表一致） -->
+  <template data-sc="if" value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; background: #1f2d3d; color: #ffffff; border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); font-size: 14px;">
+      <template data-sc="if" value="{{ toastOk }}" hint-placeholder-val="{{ true }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66bb6a" stroke-width="3"><path d="M5 12l5 5 9-10"></path></svg>
+      </template>
+      <template data-sc="if" value="{{ toastWarn }}" hint-placeholder-val="{{ false }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffa726" stroke-width="2.5"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16.5v.5"></path></svg>
+      </template>
+      <span>{{ toast }}</span>
+    </div>
+  </template>
+</div>
+</template>
+
+<script>
+// 页面属性的默认值（设计稿右侧属性面板里的那些开关）
+const PROP_DEFS = {"accent":{"editor":"color","default":"#1e88e5","options":["#1e88e5","#1565c0","#0f2a5c"]},"showCreateDialog":{"editor":"boolean","default":false},"showAdvanced":{"editor":"boolean","default":false},"$preview":{"width":1920,"height":1080}};
+
+// ======================================================================
+// 小渲染器：替代设计工具的运行时，让页面脱离设计工具也能直接打开
+// 支持：{{ a.b }} 取值、<template data-sc="for"> 循环、<template data-sc="if"> 条件、
+//      onClick / onChange 事件、setState 后整页重新渲染
+// ======================================================================
+
+// 页面逻辑类的父类：提供 props（属性默认值）、state（页面状态）、setState（改状态并重绘）
+class DCLogic {
+  constructor(props) {
+    this.props = props || {};
+    this.state = {};
+  }
+  setState(patch) {
+    Object.assign(this.state, patch);   // 合并新状态
+    render();                           // 重新画整页
+  }
+}
+
+// 按 "a.b.c" 从作用域里取值；true / false / 数字 这种字面量直接返回
+function lookup(scope, path) {
+  path = path.trim();
+  if (path === 'true') return true;
+  if (path === 'false') return false;
+  if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+  let cur = scope;
+  for (const key of path.split('.')) {
+    if (cur == null) return undefined;
+    cur = cur[key];
+  }
+  return cur;
+}
+
+const WHOLE = /^\s*\{\{([^}]+)\}\}\s*$/;   // 整个属性值就是一个 {{ }}（要保留原始类型，比如函数、布尔）
+const PART = /\{\{([^}]+)\}\}/g;           // 字符串里夹着的 {{ }}
+
+// 把字符串里的 {{ }} 都换成值
+function interp(str, scope) {
+  return str.replace(PART, (_, p) => {
+    const v = lookup(scope, p);
+    return v == null ? '' : String(v);
+  });
+}
+
+// 递归渲染一个模板节点，结果追加到 parent 里
+function renderNode(node, scope, parent) {
+  // 文字节点：替换 {{ }}
+  if (node.nodeType === 3) {
+    parent.appendChild(document.createTextNode(interp(node.nodeValue, scope)));
+    return;
+  }
+  if (node.nodeType !== 1) return;   // 注释等其他节点跳过
+
+  // 循环：<template data-sc="for" list="{{ rows }}" as="r">
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'for') {
+    const list = lookup(scope, node.getAttribute('list').replace(/[{}]/g, '')) || [];
+    const as = node.getAttribute('as');
+    list.forEach((item, i) => {
+      // 子作用域：继承外层，再加上当前这一项和序号
+      const child = Object.create(scope);
+      child[as] = item;
+      child.$index = i;
+      node.content.childNodes.forEach((n) => renderNode(n, child, parent));
+    });
+    return;
+  }
+  // 条件：<template data-sc="if" value="{{ x }}">，值为真才渲染里面的内容
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'if') {
+    const v = lookup(scope, node.getAttribute('value').replace(/[{}]/g, ''));
+    if (v) node.content.childNodes.forEach((n) => renderNode(n, scope, parent));
+    return;
+  }
+
+  // 普通元素：复制标签，逐个处理属性
+  // 必须按原节点的命名空间创建：svg / path 这些图标属于 SVG 命名空间，
+  // 用 createElement 建出来是"假的 svg"，浏览器不会画（之前小箭头、图标不显示就是这个原因）
+  const el = node.namespaceURI === 'http://www.w3.org/1999/xhtml'
+    ? document.createElement(node.localName)
+    : document.createElementNS(node.namespaceURI, node.localName);
+  const props = {};   // 要在插入后设置的属性（selected / checked / value）
+  for (const attr of Array.from(node.attributes)) {
+    const name = attr.name;
+    const m = attr.value.match(WHOLE);
+    if (m) {
+      const v = lookup(scope, m[1]);
+      if (name.startsWith('on')) {
+        // 事件：onClick → click；链接 href="#" 的点击不跳页面
+        if (typeof v === 'function') {
+          el.addEventListener(name.slice(2).toLowerCase(), (e) => {
+            if (el.tagName === 'A' && el.getAttribute('href') === '#') e.preventDefault();
+            v(e);
+          });
+        }
+      } else if (name === 'checked' || name === 'selected' || name === 'value') {
+        props[name] = v;                      // 这几个要用属性赋值才生效
+      } else if (v === false || v == null) {
+        // false / 空值：不写这个属性
+      } else {
+        el.setAttribute(name, String(v));
+      }
+    } else if (attr.value.indexOf('{{') >= 0) {
+      el.setAttribute(name, interp(attr.value, scope));
+    } else if (name === 'checked' || name === 'selected') {
+      props[name] = true;                     // 写死的 checked / selected
+    } else {
+      el.setAttribute(name, attr.value);
+    }
+  }
+  // 子节点（<template> 自己的内容在 .content 里）
+  const kids = node.tagName === 'TEMPLATE' ? node.content.childNodes : node.childNodes;
+  kids.forEach((n) => renderNode(n, scope, el));
+  parent.appendChild(el);
+  // 插入后再设置属性（option 的 selected 必须在进了 select 之后设）
+  if ('value' in props) el.value = props.value == null ? '' : props.value;
+  if ('checked' in props) el.checked = !!props.checked;
+  if ('selected' in props) el.selected = !!props.selected;
+}
+
+let TPL = null;    // 页面模板（只解析一次）
+let COMP = null;   // 页面逻辑实例
+
+// 整页渲染：取最新数据 → 按模板生成 DOM → 替换掉旧的
+function render() {
+  const vals = COMP.renderVals();
+  const root = document.getElementById('app');
+  const frag = document.createDocumentFragment();
+  TPL.content.childNodes.forEach((n) => renderNode(n, vals, frag));
+  // 保留页面滚动位置，避免每次点击后跳回顶部
+  const x = window.scrollX, y = window.scrollY;
+  root.replaceChildren(frag);
+  window.scrollTo(x, y);
+}
+
+// 启动：读模板、按属性默认值创建页面逻辑、第一次渲染
+window.addEventListener('DOMContentLoaded', () => {
+  TPL = document.getElementById('page-tpl');
+  const defaults = {};
+  for (const [k, cfg] of Object.entries(PROP_DEFS)) {
+    if (cfg && typeof cfg === 'object' && 'default' in cfg) defaults[k] = cfg.default;
+  }
+  COMP = new Component(defaults);
+  render();
+});
+
+// ======================================================================
+// 页面逻辑（和设计稿里完全一样）：renderVals() 返回模板要用的数据和点击处理函数
+// ======================================================================
+
+// 页面逻辑：这里只负责给模板提供数据，不做真实请求
+class Component extends DCLogic {
+  renderVals() {
+    // ---------- 左侧导航菜单 ----------
+    // active 为 true 的项高亮（当前页面：进程管控）
+    const NAV_ACTIVE_BG = '#0d3479';   // 选中 / 悬停：底色（比导航底色亮一点的深蓝，截图 13 取色）
+    const NAV_BAR = '#08a7ff';         // 选中 / 悬停：左侧竖条（亮蓝）
+    const NAV_TEXT = '#c5d4fd';        // 普通状态文字 / 图标（浅蓝白）
+    const NAV_TEXT_ON = '#ffffff';     // 选中状态文字
+    const NAV_ICON_ON = '#33b8ff';     // 选中 / 悬停：一级菜单图标（亮蓝）
+    // 二级菜单跳转地址：设计稿里为空（不跳转）；生成 demo 时会替换成各页面的文件名
+    const SUB_LINKS = { '概览': '概览.html', '进程管理': '进程管控列表.html', '黑名单': '黑名单列表.html', '白名单': '白名单列表.html', '学习任务': '学习任务列表.html' };
+    const menus = [
+      { label: '安全中心', icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z' },
+      { label: '安全态势', icon: 'M3 20h18M4 16l5-6 4 4 7-8' },
+      { label: '全网终端', icon: 'M3 5h18v12H3zM8 21h8M8 9l3 2-3 2M13 13h3' },
+      { label: '病毒查杀', icon: 'M12 3l2 4h4l-2 4 2 4h-4l-2 4-2-4H6l2-4-2-4h4z' },
+      { label: 'EDR', icon: 'M12 3a9 9 0 1 0 9 9M12 12l5-5M12 7v5h5' },
+      { label: '防火墙', icon: 'M4 4h16v16H4zM4 10h16M4 16h16M10 4v6M14 10v6M10 16v4' },
+      { label: '漏洞扫描', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 11v2' },
+      { label: '资产管理', icon: 'M3 10l3-6h12l3 6v10H3zM3 10h18M9 14h6' },
+      { label: '进程管控', icon: 'M4 5h16v14H4zM8 9h8M8 13h5M15 13l2 2 3-3',
+        // 二级菜单；current 为 true 的是当前页面（白名单）
+        children: [
+          { label: '概览' },
+          { label: '进程管理' },
+          { label: '白名单', current: true },
+          { label: '黑名单' },
+        ] },
+      { label: '行为审计', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M8 13l3-4 2 3 3-5' },
+      { label: '安全基线', icon: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6zM12 8v8M9 12h6' },
+      { label: '桌面管理', icon: 'M3 4h18v12H3zM8 20h8M12 16v4M15 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4' },
+      { label: '移动安全', icon: 'M8 3h8v18H8zM11 18h2' },
+      { label: '策略中心', icon: 'M12 3l8 4-8 4-8-4zM4 12l8 4 8-4M4 17l8 4 8-4' },
+      { label: '计划任务', icon: 'M4 5h16v15H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4' },
+      { label: '报告预警', icon: 'M12 4a6 6 0 0 0-6 6v4l-2 3h16l-2-3v-4a6 6 0 0 0-6-6M10 20h4' },
+      { label: '升级中心', icon: 'M7 17a4 4 0 0 1 1-8 6 6 0 0 1 11 2 3 3 0 0 1 0 6zM12 17v-6M9 14l3-3 3 3' },
+      { label: '系统中心', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a3 3 0 1 0 0 6 3 3 0 0 0 0-6M7 19c1-3 3-4 5-4s4 1 5 4' },
+      { label: '级联中心', icon: 'M4 4h6v5H4zM14 15h6v5h-6zM7 9v4h10v2' },
+    ].map((m) => {
+      const hasSub = !!(m.children && m.children.length);
+      // 有二级菜单的一级菜单默认展开（当前页面就在里面）；点击切换展开 / 收起
+      const navClosed = (this.state && this.state.navClosed) || {};
+      const expanded = hasSub && !navClosed[m.label];
+      return {
+        ...m,
+        hasSub,
+        expanded,
+        caret: expanded ? '180deg' : '0deg',
+        toggle: hasSub ? () => this.setState({ navClosed: { ...navClosed, [m.label]: expanded } }) : null,
+        // 一级选中：没有二级菜单时看 active；有二级菜单时，收起后如果当前页面在里面，也把一级标成选中
+        ...(() => {
+          const on = m.active || (hasSub && !expanded && m.children.some((c) => c.current));
+          return {
+            bg:  on ? NAV_ACTIVE_BG : 'transparent',
+            bar: on ? NAV_BAR : 'transparent',
+            fg:  on ? NAV_TEXT_ON : NAV_TEXT,
+            icoColor: on ? NAV_ICON_ON : NAV_TEXT,
+          };
+        })(),
+        children: (m.children || []).map((c) => ({
+          ...c,
+          href: SUB_LINKS[c.label] || '#',        // 二级菜单跳转的页面（设计稿里不跳转，demo 里跳到对应页面）
+          current: !!c.current,
+          bg:  c.current ? NAV_ACTIVE_BG : 'transparent',
+          bar: c.current ? NAV_BAR : 'transparent',
+          fg:  c.current ? NAV_TEXT_ON : NAV_TEXT,
+          dot: c.current ? NAV_BAR : 'currentColor',   // 当前页面的小圆点是亮蓝色，其他跟文字同色
+        })),
+      };
+    });
+
+
+    // ---------- 列表数据 ----------
+    // 系统图标：Windows 用四格窗口，Linux 用企鹅样的圆形轮廓
+    const WIN = 'M3 5l8-1v8H3zM13 4l8-1v9h-8zM3 13h8v8l-8-1zM13 13h8v9l-8-1z';
+    const LNX = 'M12 3a5 5 0 0 0-5 5v3l-3 5h4l1 4h6l1-4h4l-3-5V8a5 5 0 0 0-5-5M10 9h.5M13.5 9h.5';
+    // 每行 = 一条白名单。字段：name 名称 / created 创建时间 / os 系统类型 / creator 创建人 / note 描述
+    //   base 已发布版本的进程数（没发布过的名单 = 0）/ add、del 还没发布的新增 / 移除进程数（列表里显示成 +N / -N）
+    //   groupCount / hostCount 应用范围（0 = 未应用，显示 --）
+    //   pub 未发布 / 已发布（发布 = 把当前进程内容定稿；已发布 + 有应用范围 = 终端上跑的就是这版）
+    //
+    // 白名单操作流程（发布状态按它来）：
+    //   ① 新建空白名单                     进程数 0      发布状态 --（没进程，不能发布）
+    //   ② 添加进程                         进程数 0 +5   发布状态 待发布
+    //   ③ 点「发布」= 内容定稿              进程数 5      发布状态 已发布（还没选终端，终端上没有它）
+    //   ④ 选应用范围（只有已发布的能选）     自动下发到所选终端，状态还是 已发布
+    //   ⑤ 再加进程                         进程数 5 +2   发布状态 有变更（终端上还是 5 个的旧版本；有变更时不能改应用范围）
+    //   ⑥ 点「发布」                       进程数 7      发布状态 已发布，自动下发到终端
+    //   ⑦ 进程不变只改应用范围             不用发布，自动下发到新加的终端
+    //   已发布的名单至少保留 1 个进程，不能删成 0；删除名单随时可以（已下发的会向终端下发清除策略）
+    //   ┌────────┬──────────┬────────┬───────────────┬───────────────┬────────────┐
+    //   │ 发布状态 │ 进程数    │ 应用范围 │ 发布            │ 应用到组 / 终端  │ 示例         │
+    //   ├────────┼──────────┼────────┼───────────────┼───────────────┼────────────┤
+    //   │ 已发布   │ 18       │ 已应用  │ 灰（没有变更）   │ 可（改完自动下发）│ Web 服务    │
+    //   │ 有变更   │ 9 -1     │ 已应用  │ 可（并下发）     │ 灰（先发布）     │ 数据库服务   │
+    //   │ 有变更   │ 27 +2 -3 │ 已应用  │ 可（并下发）     │ 灰              │ 办公软件（进程页示例就是它）│
+    //   │ 有变更   │ 15 +2 -1 │ 已应用  │ 可（并下发）     │ 灰              │ 运维工具     │
+    //   │ 已发布   │ 11       │ --     │ 灰              │ 可（选完自动下发）│ 邮件服务     │
+    //   │ 有变更   │ 5 +2     │ --     │ 可（只定稿）     │ 灰              │ 人事系统     │
+    //   │ 待发布   │ 0 +7     │ --     │ 可              │ 灰（先发布）     │ 打印服务     │
+    //   │ 待发布   │ 0 +4     │ --     │ 可              │ 灰              │ 测试环境     │
+    //   │ 有变更   │ 6 -6     │ 已应用  │ 灰（发布后为 0） │ 灰              │ 财务系统     │
+    //   │ --      │ 0        │ --     │ 灰（空白名单）   │ 灰（先添加进程） │ 门户网站     │
+    //   └────────┴──────────┴────────┴───────────────┴───────────────┴────────────┘
+    const raw = [
+      { name: 'Web 服务白名单',   created: '2026-09-03 14:05:11', os: 'Linux/信创', osIcon: LNX, base: 18, add: 0, del: 0, groupCount: 1, hostCount:  24, pub: '已发布', creator: 'optAdmin', note: '对外 Web 服务器放行的 nginx / php-fpm 等进程' },
+      { name: '数据库服务白名单', created: '2026-09-05 10:48:02', os: 'Linux/信创', osIcon: LNX, base:  9, add: 0, del: 1, groupCount: 1, hostCount:  12, pub: '已发布', creator: 'optAdmin', note: 'MySQL、Redis 数据库主机' },
+      { name: '办公软件白名单',   created: '2026-09-08 16:30:45', os: 'Windows',    osIcon: WIN, base: 27, add: 2, del: 3, groupCount: 5, hostCount: 236, pub: '已发布', creator: 'secAdmin', note: '办公区终端的 Office、WPS、输入法等' },
+      { name: '运维工具白名单',   created: '2026-09-10 11:20:19', os: 'Linux/信创', osIcon: LNX, base: 15, add: 2, del: 1, groupCount: 2, hostCount:  31, pub: '已发布', creator: 'optAdmin', note: '运维跳板机上的 ansible、监控采集进程' },
+      // 邮件服务：定稿了还没选终端；人事系统：定稿后还没选终端，又加了 2 个进程
+      { name: '邮件服务白名单',   created: '2026-09-15 08:40:12', os: 'Linux/信创', osIcon: LNX, base: 11, add: 0, del: 0, groupCount: 0, hostCount:   0, pub: '已发布', creator: 'optAdmin', note: '邮件网关 postfix / dovecot' },
+      { name: '人事系统白名单',   created: '2026-09-20 17:45:36', os: 'Windows',    osIcon: WIN, base:  5, add: 2, del: 0, groupCount: 0, hostCount:   0, pub: '已发布', creator: 'devLead',  note: '人事部终端的 HR 系统客户端' },
+      // 打印服务 / 测试环境：加了进程还没发布过
+      { name: '打印服务白名单',   created: '2026-09-22 10:12:40', os: 'Windows',    osIcon: WIN, base:  0, add: 7, del: 0, groupCount: 0, hostCount:   0, pub: '未发布', creator: 'secAdmin', note: '打印服务器的 spooler 相关进程' },
+      { name: '测试环境白名单',   created: '2026-09-26 15:08:02', os: 'Linux/信创', osIcon: LNX, base:  0, add: 4, del: 0, groupCount: 0, hostCount:   0, pub: '未发布', creator: 'devLead',  note: '' },
+      // 财务系统：已发布的名单把进程全标记移除了（发布后会变成 0，所以发布按钮灰）；门户网站：刚建的空白名单
+      { name: '财务系统白名单',   created: '2026-09-27 14:20:33', os: 'Windows',    osIcon: WIN, base:  6, add: 0, del: 6, groupCount: 3, hostCount:  45, pub: '已发布', creator: 'secAdmin', note: '财务部终端的 ERP、报税客户端' },
+      { name: '门户网站白名单',   created: '2026-09-28 11:02:45', os: 'Linux/信创', osIcon: LNX, base:  0, add: 0, del: 0, groupCount: 0, hostCount:   0, pub: '未发布', creator: 'optAdmin', note: '' },
+    ];
+    // Play / demo 里点过的操作：
+    //   scoped[名称] = 'group'（点过"应用到组"，演示：设成 1 个组 20 台终端）或 'host'（点过"应用到终端"，演示：设成 5 台终端）
+    //   published = 点过"发布"的名单；opened = 当前展开了子行的名单
+    const st0 = this.state || {};
+    const scoped = st0.scoped || {}, published = st0.published || {}, opened = st0.opened || {};
+    const prevent = (e) => { if (e && e.preventDefault) e.preventDefault(); };
+    const allRows = raw.map((r) => {
+      // ---- 演示里点过的操作先套上去 ----
+      const sc = scoped[r.name];                                         // 点过哪种"应用到"
+      const gc = r.groupCount || (sc === 'group' ? 1 : 0);               // 应用到几个组
+      const hc = r.hostCount  || (sc === 'group' ? 20 : (sc === 'host' ? 5 : 0));   // 多少台终端
+      const done = !!published[r.name];                                  // 点过"发布"：增减并入已发布版本
+      const base = done ? r.base + r.add - r.del : r.base;               // 已发布版本的进程数
+      const add = done ? 0 : r.add, del = done ? 0 : r.del;              // 还没发布的增减
+      const pub = (done || r.pub === '已发布') ? '已发布' : '未发布';
+      // ---- 几个判断 ----
+      const everPub = pub === '已发布';                                  // 发布过（内容定稿过）
+      const changed = add > 0 || del > 0;                                // 有还没发布的增减
+      const total   = base + add - del;                                  // 发布后会有几个进程
+      const none    = base + add === 0;                                  // 一个进程都没有（空白名单）
+      const applied = gc > 0 || hc > 0;                                  // 设过应用范围（= 已下发到终端）
+      // ---- 发布状态（4 种） ----
+      //   --     一个进程都没有
+      //   待发布  没发布过，加了进程
+      //   已发布  定稿了，没有待发布的增减（选没选终端都算）
+      //   有变更  发布过，之后有 +N / -N
+      const status = none ? '--' : (!everPub ? '待发布' : (changed ? '有变更' : '已发布'));
+      const kind = status === '--' ? '空白名单' : status;                // 筛选按它比较
+      const chg = changed ? [add ? '新增 ' + add + ' 个' : '', del ? '移除 ' + del + ' 个' : ''].filter(Boolean).join('、') : '';
+      // ---- 发布：待发布 / 有变更 能点；空白名单、没有变更、发布后会变成 0 的不能点 ----
+      const toZero = everPub && changed && total === 0;
+      const canPub = (status === '待发布' || status === '有变更') && !toZero;
+      const pubOffTip = none ? '空白名单不能发布，请先添加进程'
+        : (toZero ? '发布后进程数会变成 0，已发布的名单至少要保留 1 个进程；要清掉请直接删除名单'
+        : '没有待发布的变更');
+      const pubTip = applied ? '发布并下发到 ' + hc + ' 台终端' : '标记为已发布，设置应用范围后自动下发';
+      // ---- 应用到组 / 终端：只有"已发布"能点；选完 / 改完自动下发 ----
+      const canScope = status === '已发布';
+      const scopeOffTip = none ? '还没有进程，先添加进程并发布' : (status === '待发布' ? '先发布，只有已发布的名单才能设置应用范围' : '有变更还没发布，先点「发布」再改应用范围');
+      return {
+        ...r, gc, hc, base, add, del,
+        // 描述：没填的显示灰色 --
+        noteText: r.note || '--', noteColor: r.note ? '#5a6475' : '#b0b8c4',
+        // 进程数后面的 +N / -N（还没发布的增减，发布后并入数字）
+        hasAdd: add > 0, hasDel: del > 0,
+        addTip: '有 ' + add + ' 个新增进程还没发布；点击去进程页查看',
+        delTip: '有 ' + del + ' 个移除的进程还没发布；点击去进程页查看',
+        applied, unapplied: !applied, hasGc: gc > 0,
+        // 展开 / 收起子行
+        open: !!opened[r.name],
+        chevDeg: opened[r.name] ? '90deg' : '0deg',
+        chevLabel: opened[r.name] ? '收起' : '展开操作',
+        toggle: (e) => { prevent(e); this.setState({ opened: { ...opened, [r.name]: !opened[r.name] } }); },
+        // 发布状态列：灰 = 没进程；蓝 = 等着发布；绿 = 定稿了；橙 = 有没发布的变更
+        status, kind,
+        hasDot: status !== '--',   // -- 不显示状态前的小圆点
+        stColor:    { '--': '#b0b8c4', '待发布': '#1e88e5', '已发布': '#2e7d32', '有变更': '#ef6c00' }[status],
+        stTipColor: { '--': '#c5ccd6', '待发布': '#90caf9', '已发布': '#a5d6a7', '有变更': '#ffcc80' }[status],
+        // 为什么是这个状态
+        pubWhy: (() => {
+          const where = (gc ? gc + ' 个组 ' : '') + hc + ' 台终端';
+          if (status === '--') return '还没有任何进程，不能发布。';
+          if (status === '待发布') return '加了 ' + add + ' 个进程，还没发布过，终端上没有这条白名单。';
+          if (status === '已发布') return applied ? '内容已定稿并下发到 ' + where + '，终端上就是当前的 ' + base + ' 个进程。' : '内容已定稿（' + base + ' 个进程），还没设置应用范围，终端上没有它。';
+          return '发布过（' + base + ' 个进程），之后' + chg + '还没发布' + (applied ? '，终端上跑的还是旧版本。' : '。');
+        })(),
+        // 接下来该做什么
+        pubNext: (() => {
+          if (status === '--') return '下一步：到「进程」页添加进程，然后点「发布」。';
+          if (status === '待发布') return '下一步：点「发布」把内容定稿，再设置应用范围（自动下发）。';
+          if (status === '已发布') return applied ? '终端已是最新，不需要操作。改应用范围会自动下发。' : '下一步：点「应用到组」或「应用到终端」，选完自动下发。';
+          if (toZero) return '发布后进程数会变成 0，不能发布；要清掉这条名单请直接删除。';
+          return '下一步：点「发布」' + (applied ? '，会自动下发到终端。有变更时不能改应用范围。' : '把变更定稿，再设置应用范围。');
+        })(),
+        // 操作按钮的提示文字
+        procTip:  none ? '还没有进程，去添加' : (changed ? '有 ' + chg + ' 还没发布' : '查看 / 维护名单里的进程'),
+        groupTip: applied ? '修改应用的分组，改完自动下发' : '选要用在哪些分组，选完自动下发',
+        hostTip:  applied ? '修改应用的终端，改完自动下发' : '选要用在哪些终端，选完自动下发',
+        canScope, noScope: !canScope, scopeOffTip,
+        pubHot: canPub, pubOff: !canPub, pubOffTip, pubTip,
+        // 删除：随时可以。已下发到终端的，中心会向终端下发清除策略（删除前弹窗确认）
+        delTip: applied ? '删除名单，并向 ' + hc + ' 台终端下发清除策略' : '删除名单',
+        // ---- 演示用的点击动作 ----
+        setGroup: (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'group' } });
+          showToast(applied ? '（演示）已修改应用的分组，已按新范围自动下发' : '（演示）已应用到 1 个组 20 台终端，名单已自动下发'); },
+        setHost:  (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'host' } });
+          showToast(applied ? '（演示）已修改应用的终端，已按新范围自动下发' : '（演示）已应用到 5 台终端，名单已自动下发'); },
+        publish:  (e) => { prevent(e); this.setState({ published: { ...published, [r.name]: true } });
+          showToast(applied ? '已发布并下发到 ' + hc + ' 台终端（' + chg + '）' : '已标记为已发布，设置应用范围后会自动下发'); },
+        askDel:   (e) => { prevent(e); this.setState({ delAsk: r.name }); },   // 打开删除确认弹窗
+      };
+    });
+    // ---------- 删除确认弹窗：state.delAsk = 要删的名单名称 ----------
+    const delRow = allRows.find((r) => r.name === st0.delAsk);
+    const delOpen = !!delRow;
+    const delName = delRow ? delRow.name : '';
+    const delApplied = !!(delRow && delRow.applied);
+    const delHosts = delRow ? delRow.hc : 0;
+    const closeDel = () => this.setState({ delAsk: '' });
+    const confirmDel = () => { const d = st0.deleted || {}; this.setState({ deleted: { ...d, [delName]: true }, delAsk: '' });
+      showToast(delApplied ? '已删除「' + delName + '」，已向 ' + delHosts + ' 台终端下发清除策略' : '已删除「' + delName + '」'); };
+
+    // ======================================================================
+    // 高级查询
+    //   state.advOpen   面板是否展开（没点过时看 Tweaks 的"展开高级搜索"，默认折叠）
+    //   state.os / delta / time   点选条件，点了立刻 setState 重新筛选
+    //   this._draft     输入框里正在填的内容（打字时不刷新整页，避免输入框丢焦点）
+    //   state.applied   点"筛选"时把 _draft 拷一份到这里，真正参与筛选的是它
+    // ======================================================================
+    const st = this.state || {};
+    const EMPTY = { field: 'name', kw: '', from: '', to: '' };
+    if (!this._draft) this._draft = { ...EMPTY };
+    const draft = this._draft;
+    const applied = st.applied || EMPTY;
+    const TODAY = '2026-09-29';   // 演示用的"今天"（示例数据都在这之前），接后端时换成真实日期
+    const daysAgo = (n) => { const d = new Date(TODAY); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
+
+    // 输入框：只记到 _draft；画布里（React）要 forceUpdate 才能看到打的字，demo 页面里不用刷新
+    const typing = (key) => (e) => { draft[key] = e.target.value; if (typeof this.forceUpdate === 'function') this.forceUpdate(); };
+    const inKw = typing('kw'), inFrom = typing('from'), inTo = typing('to'), inField = typing('field');
+    // 点"筛选"：输入项生效；填了指定日期时，创建时间的点选项自动取消（以指定日期为准）
+    // 日期检查：必须是 YYYY-MM-DD 且是真实存在的日期；开始不能晚于结束
+    const isDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(new Date(v)) && new Date(v).toISOString().slice(0, 10) === v;
+    const checkDates = () => {
+      if ((draft.from && !isDate(draft.from)) || (draft.to && !isDate(draft.to))) return '日期格式应为 YYYY-MM-DD，例如 2026-09-01';
+      if (draft.from && draft.to && draft.from > draft.to) return '开始日期不能晚于结束日期';
+      return '';
+    };
+    // 点"筛选"：先检查日期，有错就提示、不筛选；没错时输入项生效（填了指定日期，创建时间的点选项自动取消）
+    const doQuery = () => {
+      const err = checkDates();
+      if (err) { this.setState({ dateErr: err }); return; }
+      this.setState({ dateErr: '', applied: { ...draft }, time: (draft.from || draft.to) ? 'custom' : (st.time || 'all') });
+    };
+    // 日历图标：弹出旁边隐藏的系统日期选择器（老浏览器不支持 showPicker 时退回 focus + click）
+    const openPicker = (e) => {
+      const picker = e.currentTarget.nextElementSibling;
+      try { picker.showPicker(); } catch (_) { picker.focus(); picker.click(); }
+    };
+    // 日期选择器选好后：值本身就是 YYYY-MM-DD，写进文本框并刷新显示
+    const pickedFrom = (e) => { draft.from = e.target.value; this.setState({ dateErr: '' }); };
+    const pickedTo   = (e) => { draft.to = e.target.value; this.setState({ dateErr: '' }); };
+    const dateErr = st.dateErr || '';
+    const hasDateErr = dateErr !== '';
+    // 点"重置"：所有条件回到默认
+    const doReset = () => { this._draft = { ...EMPTY }; this.setState({ applied: EMPTY, os: '全部系统类型', delta: 'all', pubf: 'all', scopef: 'all', time: 'all', dateErr: '' }); };
+
+    // 生成一组点选项：选中的蓝框蓝字，点了立刻筛选
+    const chips = (key, opts, extra) => opts.map(([value, label]) => {
+      const on = (st[key] || 'all') === value;
+      return { label, pressed: on ? 'true' : 'false', border: on ? '#1e88e5' : 'transparent', bg: on ? '#ffffff' : 'transparent', color: on ? '#1e88e5' : '#333333',
+        pick: () => this.setState({ [key]: value, ...(extra ? extra(value) : {}) }) };
+    });
+    const deltaChips = chips('delta', [['all', '全部'], ['up', '有新增'], ['down', '有移除'], ['same', '无变更']]);
+    const pubChips   = chips('pubf',  [['all', '全部'], ['空白名单', '空白名单'], ['待发布', '待发布'], ['已发布', '已发布'], ['有变更', '有变更']]);
+    const scopeChips = chips('scopef', [['all', '全部'], ['yes', '已应用'], ['no', '未应用']]);
+    // 点创建时间的点选项时，清掉指定日期（两者只取一个）
+    const timeChips  = chips('time',  [['all', '全部'], ['7d', '近 7 天'], ['30d', '近 30 天'], ['month', '本月']], () => {
+      draft.from = ''; draft.to = ''; return { applied: { ...applied, from: '', to: '' }, dateErr: '' };
+    });
+    const fieldOpts = [['name', '名单名称']].map(([value, label]) => ({ value, label, sel: draft.field === value }));
+    const kwPlaceholder = '请输入名单名称关键字';
+
+    // 工具栏左侧的系统类型下拉（选了立刻筛选）
+    const os = st.os || '全部系统类型';
+    const osOpts = ['全部系统类型', 'Windows', 'Linux/信创']   // 系统类型只分两大类：Windows / Linux/信创（CentOS、Ubuntu、银河麒麟、统信 UOS 等都算 Linux/信创）
+      .map((v) => ({ value: v, label: v, sel: v === os }));
+    const pickOs = (e) => this.setState({ os: e.target.value });
+
+    // 按全部条件过滤（条件之间是"并且"关系）
+    const kw = applied.kw.trim().toLowerCase();
+    const time = st.time || 'all';
+    const deleted = st.deleted || {};   // Play / demo 里点过"删除"的名单
+    const rows = allRows.filter((r) => {
+      if (deleted[r.name]) return false;
+      const day = r.created.slice(0, 10);
+      if (os !== '全部系统类型' && r.os !== os) return false;
+      const dl = st.delta || 'all';
+      if (dl === 'up' && !(r.add > 0)) return false;                    // 有新增：有 +N
+      if (dl === 'down' && !(r.del > 0)) return false;                  // 有移除：有 -N
+      if (dl === 'same' && (r.add > 0 || r.del > 0)) return false;      // 无变更
+      const pf = st.pubf || 'all', sf = st.scopef || 'all';
+      if (pf !== 'all' && r.kind !== pf) return false;                 // 发布状态
+      if (sf === 'yes' && !r.applied) return false;                     // 已应用
+      if (sf === 'no' && r.applied) return false;                       // 未应用
+      if (time === '7d' && day < daysAgo(7)) return false;
+      if (time === '30d' && day < daysAgo(30)) return false;
+      if (time === 'month' && day.slice(0, 7) !== TODAY.slice(0, 7)) return false;
+      if (applied.from && day < applied.from) return false;
+      if (applied.to && day > applied.to) return false;
+      if (kw && !r.name.toLowerCase().includes(kw)) return false;   // 名单名称包含关键字
+      return true;
+    });
+    const allTotal = allRows.filter((r) => !deleted[r.name]).length;   // 删掉的不算
+    const filtering = rows.length !== allTotal;
+
+    // 面板展开 / 折叠
+    const advOpen = st.advOpen !== undefined ? st.advOpen : (this.props.showAdvanced ?? false);
+    const toggleAdv = () => this.setState({ advOpen: !advOpen });
+    const advExpanded = advOpen ? 'true' : 'false';
+    const advColor = advOpen ? '#1e88e5' : '#4a5568';
+    const advDeg = advOpen ? 180 : 0;
+
+    // ---------- 用户白名单列表（用高级搜索筛选后的 rows） ----------
+    const userRows = rows.map((r, i) => ({ ...r, seq: i + 1 }));   // seq = 序号，筛选后从 1 重新编号
+    const userCount = userRows.length;
+    const userEmpty = userCount === 0;
+
+    // 底部统计：白名单总数 = 列表里的名单条数；进程总数 = 各名单进程数相加
+    const total = userCount;
+    const procTotal = userRows.reduce((s, r) => s + r.base + r.add - r.del, 0);   // 各名单发布后会有的进程数相加
+
+    // ---------- 操作提示：showToast("文字") 显示，2 秒后自动清掉（从进程管控列表搬过来） ----------
+    const toast = st.toast || '';
+    const toastOn = toast !== '';
+    const toastWarn = !!st.toastWarn;   // true = 提醒（橙色感叹号），false = 成功（绿色对勾）
+    const toastOk = !toastWarn;
+    const showToast = (text, warn) => {
+      this.setState({ toast: text, toastWarn: !!warn });
+      clearTimeout(this._toastTimer);
+      this._toastTimer = setTimeout(() => this.setState({ toast: '' }), 2000);
+    };
+
+    // ---------- 创建白名单弹窗：state.dlg = true 打开；表单填的内容存在 this._form 里 ----------
+    const dlgOpen = st.dlg !== undefined ? !!st.dlg : (this.props.showCreateDialog ?? false);
+    // 表单内容记在 this._form（打字时不 setState 整页重画，输入框不丢焦点；画布里用 forceUpdate 让输入框显示打的字）
+    if (!this._form) this._form = { name: '', note: '' };
+    const form = this._form;
+    const typingForm = (key) => (e) => { form[key] = e.target.value; if (typeof this.forceUpdate === 'function') this.forceUpdate(); };
+    const f = { ...form, onName: typingForm('name'), onNote: typingForm('note') };
+    const openCreate = () => { this._form = { name: '', note: '' }; this.setState({ dlg: true }); };   // 每次打开都是空表单
+    const closeDlg = () => this.setState({ dlg: false });
+    const createList = () => { this.setState({ dlg: false }); showToast('已创建白名单' + (form.name ? '「' + form.name + '」' : '')); };   // 点"创建"（演示：只提示，不真的加一行）
+    // 系统类型：只分 Windows / Linux 两种。左上角已经筛选了某个系统类型时自动带入：
+    // Windows → Windows；Linux/信创 → Linux/信创；没筛选时停在"请选择"
+    const dlgOsDefault = os === '全部系统类型' ? '请选择系统类型' : (os === 'Windows' ? 'Windows' : 'Linux/信创');
+    const dlgOsOpts = ['请选择系统类型', 'Windows', 'Linux/信创'].map((label) => ({ label, sel: label === dlgOsDefault }));
+    return { menus, delOpen, delName, delApplied, delHosts, closeDel, confirmDel, advOpen, toggleAdv, advExpanded, advColor, advDeg, osOpts, pickOs, deltaChips, pubChips, scopeChips, timeChips, fieldOpts, kwPlaceholder, draft, inKw, inFrom, inTo, inField, openPicker, pickedFrom, pickedTo, dateErr, hasDateErr, doQuery, doReset, allTotal, filtering, userRows, userEmpty, total, procTotal, dlgOpen, f, openCreate, closeDlg, createList, dlgOsOpts, toast, toastOn, toastOk, toastWarn };
+  }
+}
+
+</script>
+</body>
+</html>

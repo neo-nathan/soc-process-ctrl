@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>进程管控 - 统计分析</title>
+<style>
+
+/* 页面基础：系统中文字体，灰底 */
+body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#f0f2f5}
+/* 链接颜色和学习任务列表页一致 */
+a{color:#1e88e5;text-decoration:none}a:hover{color:#1565c0}
+/* 左侧导航：悬停效果（截图 14）—— 底色变亮一点的深蓝、左侧出现亮蓝竖条、文字变白；一级菜单的图标变亮蓝 */
+.nav1:hover,.nav2:hover{background:#0d3479 !important;border-left-color:#08a7ff !important;color:#ffffff !important}
+.nav1:hover .nav-ico{color:#33b8ff !important}
+
+/* ===== 概览页 ===== */
+/* 面板：白底细边框，标题栏 */
+.panel{display:flex;flex-direction:column;background:#ffffff;border:1px solid #e3e6eb;min-height:0}
+.panel-hd{display:flex;align-items:center;justify-content:space-between;height:40px;flex-shrink:0;padding:0 14px;border-bottom:1px solid #eef0f3}
+.panel-tt{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#1f2d3d}
+.panel-tt::before{content:"";width:3px;height:14px;background:#1e88e5}
+.more{font-size:12px;color:#1e88e5}
+/* 指标卡：整张可点，悬停边框变蓝 */
+.kpi{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:0 18px;background:#ffffff;border:1px solid #e3e6eb;border-left:3px solid #1e88e5;color:#333333}
+.kpi:hover{border-color:#1e88e5;color:#333333}
+/* 时间范围按钮 */
+.rng{height:26px;padding:0 12px;border:1px solid #d5d9e0;background:#ffffff;border-radius:2px;font-size:13px;color:#333333;cursor:pointer;font-family:inherit}
+.rng:hover{border-color:#1e88e5;color:#1e88e5}
+/* 待处理事项 / TOP 榜 / 最近事件：行悬停 */
+.orow:hover{background:#f4f8fd}
+/* 柱状图：悬停高亮当前这一天 */
+.bar-col:hover .bar{filter:brightness(0.85)}
+.bar-col:hover .bar-x{color:#1e88e5;font-weight:700}
+/* 小按钮（加白）*/
+.mini{height:22px;padding:0 8px;border:1px solid #d5d9e0;background:#ffffff;border-radius:2px;font-size:12px;color:#333333;cursor:pointer;font-family:inherit;white-space:nowrap}
+.mini:hover{border-color:#1e88e5;color:#1e88e5}
+
+/* 独立页面：页面固定 1920×1080，窗口小时可以滚动 */
+html,body{margin:0}
+</style>
+</head>
+<body>
+<!-- 渲染结果放这里 -->
+<div id="app"></div>
+
+<!-- 页面模板（和设计稿一致） -->
+<template id="page-tpl">
+
+
+<!-- ============ 整个页面：固定 1920 x 1080（外壳与「学习任务列表」页一致） ============ -->
+<div style="position: relative; width: 1920px; height: 1080px; box-sizing: border-box; display: flex; flex-direction: column; background: #f0f2f5; color: #333333; font-size: 14px; overflow: hidden;">
+
+  <!-- ============ 顶栏（50px 高） ============ -->
+  <div style="height: 50px; flex-shrink: 0; display: flex; align-items: stretch; background: #ffffff; border-bottom: 1px solid #e3e6eb;">
+    <!-- 左上角 LOGO 区：深蓝底 -->
+    <div style="width: 180px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #0f2a5c; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 2px;">SOC</div>
+    <!-- 系统标题 -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 20px; flex-grow: 1;">
+      <span style="font-size: 18px; font-weight: 700; color: #1f2d3d;">终端威胁检测与响应系统</span>
+      <span style="font-size: 14px; color: #1f2d3d;">· 专用</span>
+      <span style="font-size: 13px; color: #8a94a6; font-style: italic; margin-left: 12px;">一切尽在掌握！</span>
+    </div>
+    <!-- 右侧：消息数 / 用户 / 下载 -->
+    <div style="display: flex; align-items: center; gap: 16px; padding: 0 20px;">
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 4px; padding: 4px 10px; color: #4a5568;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+        <span>101</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 16px; padding: 4px 12px 4px 6px; color: #4a5568;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e88e5" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        <span>optAdmin</span>
+      </div>
+      <div style="width: 26px; height: 26px; border-radius: 50%; background: #1e88e5; display: flex; align-items: center; justify-content: center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 顶栏以下：左导航 + 右侧内容 ============ -->
+  <div style="flex-grow: 1; display: flex; min-height: 0;">
+
+    <!-- ============ 左侧主导航（180px，深蓝；当前高亮：进程管控） ============ -->
+    <nav style="width: 180px; flex-shrink: 0; background: #0f2a5c; color: #ffffff; display: flex; flex-direction: column; padding-top: 6px;">
+      <div style="display: flex; flex-direction: column;">
+        <template data-sc="for" list="{{ menus }}" as="m" hint-placeholder-count="19">
+          <!-- 一级菜单：普通状态浅色文字；选中 / 悬停时底色变亮、左侧亮蓝竖条、文字变白、图标变亮蓝（截图 13 / 14）
+               有二级菜单的在右边显示箭头（展开朝上、收起朝下），点击展开 / 收起 -->
+          <a href="#" class="nav1" onClick="{{ m.toggle }}" aria-expanded="{{ m.expanded }}" style="display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 0 0 34px; box-sizing: border-box; color: {{ m.fg }}; font-size: 14px; background: {{ m.bg }}; border-left: 3px solid {{ m.bar }};">
+            <span class="nav-ico" style="display: flex; color: {{ m.icoColor }};"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.icon }}"></path></svg></span>
+            <span style="flex-grow: 1;">{{ m.label }}</span>
+            <template data-sc="if" value="{{ m.hasSub }}" hint-placeholder-val="{{ false }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 16px; transform: rotate({{ m.caret }});"><path d="M6 9l6 6 6-6"></path></svg>
+            </template>
+          </a>
+          <!-- 二级菜单：缩进，前面一个小圆点（截图 13）；当前页面：底色变亮 + 左侧亮蓝竖条 + 白字 + 亮蓝圆点；悬停同样效果（截图 14） -->
+          <template data-sc="if" value="{{ m.expanded }}" hint-placeholder-val="{{ false }}">
+            <template data-sc="for" list="{{ m.children }}" as="c" hint-placeholder-count="5">
+              <a href="{{ c.href }}" class="nav2" aria-current="{{ c.current }}" style="display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 0 0 65px; box-sizing: border-box; color: {{ c.fg }}; font-size: 14px; background: {{ c.bg }}; border-left: 3px solid {{ c.bar }};">
+                <span style="width: 5px; height: 5px; border-radius: 50%; background: {{ c.dot }}; flex-shrink: 0;"></span>
+                <span>{{ c.label }}</span>
+              </a>
+            </template>
+          </template>
+        </template>
+      </div>
+      <!-- 底部版权信息 -->
+      <div style="margin-top: auto; padding: 14px 10px 12px; border-top: 1px solid #1d3f7d; text-align: center; font-size: 12px; line-height: 18px; color: #c5d0e3;">
+        <div>[公司名称]</div>
+        <div>版权所有</div>
+        <div>版本：3.0 build：305034</div>
+      </div>
+    </nav>
+
+    <!-- ============ 右侧主内容区 ============ -->
+    <main style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; margin: 12px; background: #ffffff; border: 1px solid #e3e6eb;">
+
+      <!-- 页签：进程管控概览下 3 个页签 概览 / 日志 / 策略（当前选中：无）；统计分析页已不在页签里（页面保留）；其他页面都在左侧二级菜单里
+           选中的页签：白底 + 顶部蓝线 + 蓝字 -->
+      <div style="display: flex; align-items: stretch; height: 44px; flex-shrink: 0; background: #f5f7fa; border-bottom: 1px solid #e3e6eb;">
+        <a href="概览.html" style="width: 116px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e3e6eb; color: #333333; font-size: 15px;">概览</a>
+        <a href="审计日志列表.html" style="width: 116px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e3e6eb; color: #333333; font-size: 15px;">日志</a>
+        <a href="策略详情.html" style="width: 116px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e3e6eb; color: #333333; font-size: 15px;">策略</a>
+      </div>
+
+      <!-- ============ 内容区：统计分析 ============
+           设计思路（管理员进来第一眼要回答的 4 个问题）：
+             1. 管控开到什么程度了？—— 指标卡 + 终端管控模式分布
+             2. 现在有没有事要我处理？—— 待处理事项（按严重程度排序，每条直达对应页面）
+             3. 拦截情况正常吗、趋势如何？—— 拦截趋势图 + 最近拦截事件
+             4. 谁最不老实？—— 拦截最多的进程 / 终端 TOP5，可直接加白
+           指标口径：时间范围（今日 / 近 7 天 / 近 30 天）作用于 已拦截、放行、趋势图、TOP 榜、最近事件；
+                     终端数、待确认、未知进程是"当前状态"，不随时间范围变。 -->
+      <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 12px 16px 14px; background: #f5f7fa;">
+
+        <!-- 第一行：标题 + 时间范围 + 更新时间 -->
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 30px; flex-shrink: 0;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 16px; font-weight: 700; color: #1f2d3d;">进程管控统计分析</span>
+            <span style="font-size: 12px; color: #8a94a6;">统计时间：{{ rangeText }}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- 时间范围：选中的蓝底白字 -->
+            <div style="display: flex; gap: 0;">
+              <template data-sc="for" list="{{ ranges }}" as="r" hint-placeholder-count="3">
+                <button class="rng" onClick="{{ r.pick }}" aria-pressed="{{ r.on }}" style="background: {{ r.bg }}; color: {{ r.fg }}; border-color: {{ r.bd }}; margin-left: -1px;">{{ r.label }}</button>
+              </template>
+            </div>
+            <span style="font-size: 12px; color: #8a94a6;">数据更新于 {{ updatedAt }}</span>
+            <button aria-label="刷新" style="width: 26px; height: 26px; border: 0; background: transparent; cursor: pointer; color: #4a5568; display: flex; align-items: center; justify-content: center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 第二行：6 张指标卡（整张卡可点，跳到对应页面）-->
+        <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; height: 92px; flex-shrink: 0;">
+          <template data-sc="for" list="{{ kpis }}" as="k" hint-placeholder-count="6">
+            <a href="{{ k.href }}" class="kpi" style="border-left-color: {{ k.color }};">
+              <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #5a6475;">
+                <span>{{ k.label }}</span>
+                <span style="font-size: 12px; color: #8a94a6;">{{ k.hint }}</span>
+              </div>
+              <div style="display: flex; align-items: baseline; gap: 6px;">
+                <span style="font-size: 28px; font-weight: 700; line-height: 1; color: {{ k.color }};">{{ k.value }}</span>
+                <span style="font-size: 13px; color: #5a6475;">{{ k.unit }}</span>
+                <span style="margin-left: auto; font-size: 12px; color: {{ k.deltaColor }};">{{ k.delta }}</span>
+              </div>
+              <div style="font-size: 12px; color: #8a94a6;">{{ k.sub }}</div>
+            </a>
+          </template>
+        </div>
+
+        <!-- 第三行：待处理事项 | 拦截趋势 | 模式分布 + 名单概况 -->
+        <div style="display: flex; gap: 12px; height: 360px; flex-shrink: 0;">
+
+          <!-- 待处理事项：按严重程度排序，每条一个入口 -->
+          <div class="panel" style="width: 560px; flex-shrink: 0;">
+            <div class="panel-hd">
+              <span class="panel-tt">待处理事项<span style="font-weight: 400; color: #8a94a6; font-size: 12px;">共 {{ todoCount }} 项</span></span>
+              <span style="display: flex; gap: 10px; font-size: 12px; color: #8a94a6;">
+                <span><i style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #c62828; margin-right: 4px;"></i>紧急</span>
+                <span><i style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef8f00; margin-right: 4px;"></i>重要</span>
+                <span><i style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1e88e5; margin-right: 4px;"></i>一般</span>
+              </span>
+            </div>
+            <div style="display: flex; flex-direction: column; overflow: hidden;">
+              <template data-sc="for" list="{{ todos }}" as="t" hint-placeholder-count="6">
+                <div class="orow" style="display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 14px; border-bottom: 1px solid #f0f2f5;">
+                  <i style="width: 8px; height: 8px; border-radius: 50%; background: {{ t.color }}; flex-shrink: 0;"></i>
+                  <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 13px; color: #1f2d3d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.title }}</span>
+                    <span style="font-size: 12px; color: #8a94a6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ t.detail }}</span>
+                  </div>
+                  <span style="font-size: 18px; font-weight: 700; color: {{ t.color }}; flex-shrink: 0;">{{ t.count }}</span>
+                  <a href="{{ t.href }}" style="flex-shrink: 0; font-size: 12px; white-space: nowrap;">{{ t.action }} ›</a>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- 拦截趋势：分组柱状图（已拦截 = 拦截模式命中 / 放行 = 审计模式命中只记录），今日按小时、7 天 / 30 天按天
+               口径和审计日志一致：只统计「不在白名单」或「在黑名单」的进程，白名单里的进程不产生日志、也不计数 -->
+          <div class="panel" style="flex-grow: 1; min-width: 0;">
+            <div class="panel-hd">
+              <span class="panel-tt">拦截趋势<span style="font-weight: 400; color: #8a94a6; font-size: 12px;">{{ trendUnit }}</span></span>
+              <span style="display: flex; gap: 14px; font-size: 12px; color: #5a6475;">
+                <span><i style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #c62828; margin-right: 5px; vertical-align: -1px;"></i>已拦截 {{ sumBlocked }}</span>
+                <span><i style="display: inline-block; width: 10px; height: 10px; border-radius: 2px; background: #ef8f00; margin-right: 5px; vertical-align: -1px;"></i>放行（审计模式）{{ sumShould }}</span>
+              </span>
+            </div>
+            <div style="flex-grow: 1; min-height: 0; display: flex; padding: 12px 14px 8px 8px;">
+              <!-- 纵轴刻度 -->
+              <div style="width: 30px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: #8a94a6; text-align: right; padding-right: 6px; padding-bottom: 18px;">
+                <span>{{ yMax }}</span><span>{{ yMid }}</span><span>0</span>
+              </div>
+              <!-- 柱子：每个时间点一列，列里两根柱（已拦截 红 / 放行 橙），鼠标悬停显示数值（title）-->
+              <div style="flex-grow: 1; min-width: 0; display: flex; align-items: stretch; border-left: 1px solid #e3e6eb; position: relative;">
+                <div style="position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed #eceff3;"></div>
+                <div style="position: absolute; left: 0; right: 0; top: 50%; border-top: 1px dashed #eceff3;"></div>
+                <template data-sc="for" list="{{ trend }}" as="d" hint-placeholder-count="30">
+                  <div class="bar-col" title="{{ d.tip }}" style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 0; padding: 0 {{ colPad }}px; box-sizing: border-box; height: 100%;">
+                    <div style="display: flex; align-items: flex-end; gap: 2px; width: 100%; height: calc(100% - 18px); justify-content: center;">
+                      <div class="bar" style="width: {{ barW }}px; height: {{ d.hBlocked }}%; background: #c62828; border-radius: 2px 2px 0 0; min-height: {{ d.minBlocked }}px;"></div>
+                      <div class="bar" style="width: {{ barW }}px; height: {{ d.hShould }}%; background: #ef8f00; border-radius: 2px 2px 0 0; min-height: {{ d.minShould }}px;"></div>
+                    </div>
+                    <span class="bar-x" style="height: 18px; line-height: 18px; font-size: 11px; color: #8a94a6; white-space: nowrap;">{{ d.label }}</span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- 终端管控模式分布 + 名单概况 -->
+          <div style="width: 400px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px;">
+            <div class="panel" style="flex-grow: 1;">
+              <div class="panel-hd">
+                <span class="panel-tt">终端管控模式分布</span>
+                <a href="{{ links.policy }}" class="more">策略设置 ›</a>
+              </div>
+              <div style="padding: 14px 14px 8px; display: flex; flex-direction: column; gap: 12px;">
+                <!-- 一根横向堆叠条，段宽按终端数比例 -->
+                <div style="display: flex; height: 14px; border-radius: 3px; overflow: hidden; gap: 2px;">
+                  <template data-sc="for" list="{{ modes }}" as="m" hint-placeholder-count="4">
+                    <div title="{{ m.label }} {{ m.count }} 台" style="width: {{ m.pct }}%; background: {{ m.color }};"></div>
+                  </template>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <template data-sc="for" list="{{ modes }}" as="m" hint-placeholder-count="4">
+                    <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; height: 22px;">
+                      <i style="width: 10px; height: 10px; border-radius: 2px; background: {{ m.color }}; flex-shrink: 0;"></i>
+                      <span style="width: 64px; color: #333333;">{{ m.label }}</span>
+                      <span style="width: 56px; text-align: right; font-weight: 700; color: #1f2d3d;">{{ m.count }} 台</span>
+                      <span style="width: 44px; text-align: right; color: #8a94a6; font-size: 12px;">{{ m.pct }}%</span>
+                      <span style="color: #8a94a6; font-size: 12px; margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ m.note }}</span>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <div class="panel" style="height: 120px; flex-shrink: 0;">
+              <div class="panel-hd">
+                <span class="panel-tt">名单概况</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1; padding: 0 8px;">
+                <template data-sc="for" list="{{ lists }}" as="l" hint-placeholder-count="2">
+                  <a href="{{ l.href }}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #333333;">
+                    <span style="font-size: 12px; color: #5a6475;">{{ l.label }}</span>
+                    <span style="font-size: 22px; font-weight: 700; color: {{ l.color }}; line-height: 1;">{{ l.count }}<span style="font-size: 12px; font-weight: 400; color: #5a6475; margin-left: 3px;">个</span></span>
+                    <span style="font-size: 12px; color: #8a94a6;">{{ l.sub }}</span>
+                  </a>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第四行：拦截 TOP 进程 | 拦截 TOP 终端 | 最近拦截事件 -->
+        <div style="display: flex; gap: 12px; flex-grow: 1; min-height: 0;">
+
+          <!-- 拦截最多的进程 TOP5（已拦截 + 审计模式放行）：可直接加白（误拦最常见的处理）-->
+          <div class="panel" style="width: 560px; flex-shrink: 0;">
+            <div class="panel-hd">
+              <span class="panel-tt">拦截最多的进程<span style="font-weight: 400; color: #8a94a6; font-size: 12px;">TOP 5 · 含审计模式放行</span></span>
+              <a href="{{ links.log }}" class="more">查看日志 ›</a>
+            </div>
+            <div style="display: flex; flex-direction: column; padding: 4px 0;">
+              <template data-sc="for" list="{{ topProcs }}" as="x" hint-placeholder-count="5">
+                <div class="orow" style="display: flex; align-items: center; gap: 10px; height: 58px; padding: 0 14px; border-bottom: 1px solid #f0f2f5;">
+                  <span style="width: 18px; height: 18px; border-radius: 2px; background: {{ x.rankBg }}; color: {{ x.rankFg }}; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{{ x.rank }}</span>
+                  <div style="width: 236px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                    <span style="font-size: 13px; font-weight: 700; color: #1f2d3d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ x.proc }}</span>
+                    <span style="font-size: 12px; color: #8a94a6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ x.path }}">{{ x.reason }} · {{ x.hosts }} 台终端</span>
+                  </div>
+                  <!-- 次数 + 横条（长度按 TOP1 比例）-->
+                  <div style="flex-grow: 1; min-width: 0; display: flex; align-items: center; gap: 8px;">
+                    <div style="flex-grow: 1; height: 8px; background: #f0f2f5; border-radius: 2px; overflow: hidden;"><div style="width: {{ x.pct }}%; height: 100%; background: {{ x.color }};"></div></div>
+                    <span style="width: 44px; text-align: right; font-size: 14px; font-weight: 700; color: #1f2d3d;">{{ x.count }}</span>
+                  </div>
+                  <button class="mini" onClick="{{ x.addWhite }}">加白</button>
+                </div>
+              </template>
+            </div>
+            <!-- 底部汇总 -->
+            <div style="margin-top: auto; padding: 0 14px; height: 36px; display: flex; align-items: center; font-size: 12px; color: #8a94a6; border-top: 1px solid #f0f2f5;">{{ procSummary }}</div>
+          </div>
+
+          <!-- 拦截最多的终端 TOP5 -->
+          <div class="panel" style="width: 440px; flex-shrink: 0;">
+            <div class="panel-hd">
+              <span class="panel-tt">拦截最多的终端<span style="font-weight: 400; color: #8a94a6; font-size: 12px;">TOP 5</span></span>
+              <a href="{{ links.procs }}" class="more">进程管理 ›</a>
+            </div>
+            <div style="display: flex; flex-direction: column; padding: 4px 0;">
+              <template data-sc="for" list="{{ topHosts }}" as="x" hint-placeholder-count="5">
+                <div class="orow" style="display: flex; align-items: center; gap: 10px; height: 58px; padding: 0 14px; border-bottom: 1px solid #f0f2f5;">
+                  <span style="width: 18px; height: 18px; border-radius: 2px; background: {{ x.rankBg }}; color: {{ x.rankFg }}; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">{{ x.rank }}</span>
+                  <div style="width: 150px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px; min-width: 0;">
+                    <a href="{{ links.procs }}" style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ x.host }}</a>
+                    <span style="font-size: 12px; color: #8a94a6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ x.group }} · {{ x.os }}</span>
+                  </div>
+                  <div style="flex-grow: 1; min-width: 0; display: flex; align-items: center; gap: 8px;">
+                    <div style="flex-grow: 1; height: 8px; background: #f0f2f5; border-radius: 2px; overflow: hidden;"><div style="width: {{ x.pct }}%; height: 100%; background: #1e88e5;"></div></div>
+                    <span style="width: 44px; text-align: right; font-size: 14px; font-weight: 700; color: #1f2d3d;">{{ x.count }}</span>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <div style="margin-top: auto; padding: 0 14px; height: 36px; display: flex; align-items: center; font-size: 12px; color: #8a94a6; border-top: 1px solid #f0f2f5;">{{ hostSummary }}</div>
+          </div>
+
+          <!-- 最近拦截事件：审计日志最新 9 条（已拦截 / 放行），看全部去日志 -->
+          <div class="panel" style="flex-grow: 1; min-width: 0;">
+            <div class="panel-hd">
+              <span class="panel-tt">最近拦截事件</span>
+              <a href="{{ links.log }}" class="more">全部日志 ›</a>
+            </div>
+            <div style="display: flex; flex-direction: column; padding: 4px 0;">
+              <template data-sc="for" list="{{ recent }}" as="e" hint-placeholder-count="9">
+                <div class="orow" style="display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 14px; border-bottom: 1px solid #f0f2f5; font-size: 13px;">
+                  <span style="width: 44px; flex-shrink: 0; color: #8a94a6; font-size: 12px; font-variant-numeric: tabular-nums;">{{ e.time }}</span>
+                  <span style="width: 74px; flex-shrink: 0; display: flex;"><span style="padding: 1px 8px; border-radius: 2px; font-size: 12px; background: {{ e.tagBg }}; color: {{ e.tagFg }};">{{ e.action }}</span></span>
+                  <span style="width: 130px; flex-shrink: 0; font-weight: 700; color: #1f2d3d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ e.path }}">{{ e.proc }}</span>
+                  <a href="{{ links.procs }}" style="width: 110px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ e.host }}</a>
+                  <span style="flex-grow: 1; min-width: 0; color: #5a6475; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ e.reason }} · {{ e.list }}</span>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- 提示条：加白等操作后在顶部居中弹出 -->
+  <template data-sc="if" value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; top: 70px; left: 50%; transform: translateX(-50%); padding: 8px 18px; background: #1f2d3d; color: #ffffff; font-size: 13px; border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 20;">{{ toast }}</div>
+  </template>
+</div>
+
+</template>
+
+<script>
+// 页面属性的默认值（设计稿右侧属性面板里的那些开关）
+const PROP_DEFS = {"$preview": {"width": 1920, "height": 1080}};
+
+// ======================================================================
+// 小渲染器：替代设计工具的运行时，让页面脱离设计工具也能直接打开
+// 支持：{{ a.b }} 取值、<template data-sc="for"> 循环、<template data-sc="if"> 条件、
+//      onClick / onChange 事件、setState 后整页重新渲染
+// ======================================================================
+
+// 页面逻辑类的父类：提供 props（属性默认值）、state（页面状态）、setState（改状态并重绘）
+class DCLogic {
+  constructor(props) {
+    this.props = props || {};
+    this.state = {};
+  }
+  setState(patch) {
+    Object.assign(this.state, patch);   // 合并新状态
+    render();                           // 重新画整页
+  }
+}
+
+// 按 "a.b.c" 从作用域里取值；true / false / 数字 这种字面量直接返回
+function lookup(scope, path) {
+  path = path.trim();
+  if (path === 'true') return true;
+  if (path === 'false') return false;
+  if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+  let cur = scope;
+  for (const key of path.split('.')) {
+    if (cur == null) return undefined;
+    cur = cur[key];
+  }
+  return cur;
+}
+
+const WHOLE = /^\s*\{\{([^}]+)\}\}\s*$/;   // 整个属性值就是一个 {{ }}（要保留原始类型，比如函数、布尔）
+const PART = /\{\{([^}]+)\}\}/g;           // 字符串里夹着的 {{ }}
+
+// 把字符串里的 {{ }} 都换成值
+function interp(str, scope) {
+  return str.replace(PART, (_, p) => {
+    const v = lookup(scope, p);
+    return v == null ? '' : String(v);
+  });
+}
+
+// 递归渲染一个模板节点，结果追加到 parent 里
+function renderNode(node, scope, parent) {
+  // 文字节点：替换 {{ }}
+  if (node.nodeType === 3) {
+    parent.appendChild(document.createTextNode(interp(node.nodeValue, scope)));
+    return;
+  }
+  if (node.nodeType !== 1) return;   // 注释等其他节点跳过
+
+  // 循环：<template data-sc="for" list="{{ rows }}" as="r">
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'for') {
+    const list = lookup(scope, node.getAttribute('list').replace(/[{}]/g, '')) || [];
+    const as = node.getAttribute('as');
+    list.forEach((item, i) => {
+      // 子作用域：继承外层，再加上当前这一项和序号
+      const child = Object.create(scope);
+      child[as] = item;
+      child.$index = i;
+      node.content.childNodes.forEach((n) => renderNode(n, child, parent));
+    });
+    return;
+  }
+  // 条件：<template data-sc="if" value="{{ x }}">，值为真才渲染里面的内容
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'if') {
+    const v = lookup(scope, node.getAttribute('value').replace(/[{}]/g, ''));
+    if (v) node.content.childNodes.forEach((n) => renderNode(n, scope, parent));
+    return;
+  }
+
+  // 普通元素：复制标签，逐个处理属性
+  // 必须按原节点的命名空间创建：svg / path 这些图标属于 SVG 命名空间，
+  // 用 createElement 建出来是"假的 svg"，浏览器不会画（之前小箭头、图标不显示就是这个原因）
+  const el = node.namespaceURI === 'http://www.w3.org/1999/xhtml'
+    ? document.createElement(node.localName)
+    : document.createElementNS(node.namespaceURI, node.localName);
+  const props = {};   // 要在插入后设置的属性（selected / checked / value）
+  for (const attr of Array.from(node.attributes)) {
+    const name = attr.name;
+    const m = attr.value.match(WHOLE);
+    if (m) {
+      const v = lookup(scope, m[1]);
+      if (name.startsWith('on')) {
+        // 事件：onClick → click；链接 href="#" 的点击不跳页面
+        if (typeof v === 'function') {
+          el.addEventListener(name.slice(2).toLowerCase(), (e) => {
+            if (el.tagName === 'A' && el.getAttribute('href') === '#') e.preventDefault();
+            v(e);
+          });
+        }
+      } else if (name === 'checked' || name === 'selected' || name === 'value') {
+        props[name] = v;                      // 这几个要用属性赋值才生效
+      } else if (v === false || v == null) {
+        // false / 空值：不写这个属性
+      } else {
+        el.setAttribute(name, String(v));
+      }
+    } else if (attr.value.indexOf('{{') >= 0) {
+      el.setAttribute(name, interp(attr.value, scope));
+    } else if (name === 'checked' || name === 'selected') {
+      props[name] = true;                     // 写死的 checked / selected
+    } else {
+      el.setAttribute(name, attr.value);
+    }
+  }
+  // 子节点（<template> 自己的内容在 .content 里）
+  const kids = node.tagName === 'TEMPLATE' ? node.content.childNodes : node.childNodes;
+  kids.forEach((n) => renderNode(n, scope, el));
+  parent.appendChild(el);
+  // 插入后再设置属性（option 的 selected 必须在进了 select 之后设）
+  if ('value' in props) el.value = props.value == null ? '' : props.value;
+  if ('checked' in props) el.checked = !!props.checked;
+  if ('selected' in props) el.selected = !!props.selected;
+}
+
+let TPL = null;    // 页面模板（只解析一次）
+let COMP = null;   // 页面逻辑实例
+
+// 整页渲染：取最新数据 → 按模板生成 DOM → 替换掉旧的
+function render() {
+  const vals = COMP.renderVals();
+  const root = document.getElementById('app');
+  const frag = document.createDocumentFragment();
+  TPL.content.childNodes.forEach((n) => renderNode(n, vals, frag));
+  // 保留页面滚动位置，避免每次点击后跳回顶部
+  const x = window.scrollX, y = window.scrollY;
+  root.replaceChildren(frag);
+  window.scrollTo(x, y);
+}
+
+// 启动：读模板、按属性默认值创建页面逻辑、第一次渲染
+window.addEventListener('DOMContentLoaded', () => {
+  TPL = document.getElementById('page-tpl');
+  const defaults = {};
+  for (const [k, cfg] of Object.entries(PROP_DEFS)) {
+    if (cfg && typeof cfg === 'object' && 'default' in cfg) defaults[k] = cfg.default;
+  }
+  COMP = new Component(defaults);
+  render();
+});
+
+// ======================================================================
+// 页面逻辑（和设计稿里完全一样）：renderVals() 返回模板要用的数据和点击处理函数
+// ======================================================================
+
+// 页面逻辑：左侧导航 + 概览各面板的数据（演示数据，口径见模板顶部注释）
+class Component extends DCLogic {
+  // 右上角提示条，2 秒后自动消失
+  showToast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: '' }), 2000);
+  }
+  renderVals() {
+    // ---------- 左侧导航菜单 ----------
+    // 进程管控 下有二级菜单：概览 / 进程管理 / 白名单 / 黑名单（CUR_SUB = 本页要高亮的那一项，空 = 都不高亮）
+    const NAV_ACTIVE_BG = '#0d3479';   // 选中 / 悬停：底色（比导航底色亮一点的深蓝，截图 13 取色）
+    const NAV_BAR = '#08a7ff';         // 选中 / 悬停：左侧竖条（亮蓝）
+    const NAV_TEXT = '#c5d4fd';        // 普通状态文字 / 图标（浅蓝白）
+    const NAV_TEXT_ON = '#ffffff';     // 选中状态文字
+    const NAV_ICON_ON = '#33b8ff';     // 选中 / 悬停：一级菜单图标（亮蓝）
+    // 二级菜单跳转地址：画布里只有「概览」能跳（其他页面在另一块画布）；导出 demo 时这一行会换成 demo 里的全部文件名
+    const SUB_LINKS = {"概览": "概览.html", "进程管理": "进程管控列表.html", "白名单": "白名单列表.html", "黑名单": "黑名单列表.html"};
+    const CUR_SUB = '概览';         // 当前页面对应的二级菜单
+    const menus = [
+      { label: '安全中心', icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z' },
+      { label: '安全态势', icon: 'M3 20h18M4 16l5-6 4 4 7-8' },
+      { label: '全网终端', icon: 'M3 5h18v12H3zM8 21h8M8 9l3 2-3 2M13 13h3' },
+      { label: '病毒查杀', icon: 'M12 3l2 4h4l-2 4 2 4h-4l-2 4-2-4H6l2-4-2-4h4z' },
+      { label: 'EDR', icon: 'M12 3a9 9 0 1 0 9 9M12 12l5-5M12 7v5h5' },
+      { label: '防火墙', icon: 'M4 4h16v16H4zM4 10h16M4 16h16M10 4v6M14 10v6M10 16v4' },
+      { label: '漏洞扫描', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 11v2' },
+      { label: '资产管理', icon: 'M3 10l3-6h12l3 6v10H3zM3 10h18M9 14h6' },
+      { label: '进程管控', icon: 'M4 5h16v14H4zM8 9h8M8 13h5M15 13l2 2 3-3',
+        children: ['概览', '进程管理', '白名单', '黑名单'].map((label) => ({ label, current: label === CUR_SUB })) },
+      { label: '行为审计', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M8 13l3-4 2 3 3-5' },
+      { label: '安全基线', icon: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6zM12 8v8M9 12h6' },
+      { label: '桌面管理', icon: 'M3 4h18v12H3zM8 20h8M12 16v4M15 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4' },
+      { label: '移动安全', icon: 'M8 3h8v18H8zM11 18h2' },
+      { label: '策略中心', icon: 'M12 3l8 4-8 4-8-4zM4 12l8 4 8-4M4 17l8 4 8-4' },
+      { label: '计划任务', icon: 'M4 5h16v15H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4' },
+      { label: '报告预警', icon: 'M12 4a6 6 0 0 0-6 6v4l-2 3h16l-2-3v-4a6 6 0 0 0-6-6M10 20h4' },
+      { label: '升级中心', icon: 'M7 17a4 4 0 0 1 1-8 6 6 0 0 1 11 2 3 3 0 0 1 0 6zM12 17v-6M9 14l3-3 3 3' },
+      { label: '系统中心', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a3 3 0 1 0 0 6 3 3 0 0 0 0-6M7 19c1-3 3-4 5-4s4 1 5 4' },
+      { label: '级联中心', icon: 'M4 4h6v5H4zM14 15h6v5h-6zM7 9v4h10v2' },
+    ].map((m) => {
+      const hasSub = !!(m.children && m.children.length);
+      // 有二级菜单的默认展开（当前页面就在里面）；点一级菜单切换展开 / 收起
+      const navClosed = (this.state && this.state.navClosed) || {};
+      const expanded = hasSub && !navClosed[m.label];
+      // 一级菜单高亮：收起后，如果当前页面在它下面，就把一级标成选中，免得看不出在哪
+      const on = hasSub && !expanded && m.children.some((c) => c.current);
+      return {
+        ...m,
+        hasSub,
+        expanded,
+        caret: expanded ? '180deg' : '0deg',   // 箭头：展开朝上、收起朝下
+        toggle: hasSub ? () => this.setState({ navClosed: { ...navClosed, [m.label]: expanded } }) : null,
+        bg:  on ? NAV_ACTIVE_BG : 'transparent',
+        bar: on ? NAV_BAR : 'transparent',
+        fg:  on ? NAV_TEXT_ON : NAV_TEXT,
+        icoColor: on ? NAV_ICON_ON : NAV_TEXT,
+        children: (m.children || []).map((c) => ({
+          ...c,
+          href: SUB_LINKS[c.label] || '#',           // 跳转页面（没有的不跳）
+          bg:  c.current ? NAV_ACTIVE_BG : 'transparent',
+          bar: c.current ? NAV_BAR : 'transparent',
+          fg:  c.current ? NAV_TEXT_ON : NAV_TEXT,
+          dot: c.current ? NAV_BAR : 'currentColor', // 当前页面的小圆点是亮蓝色，其他跟文字同色
+        })),
+      };
+    });
+
+    // ======== 页面链接：画布里只有部分页面能跳（SUB_LINKS），导出 demo 时会换成 demo 里的全部页面 ========
+    const links = {
+      procs:  SUB_LINKS['进程管理'] || '#',
+      white:  SUB_LINKS['白名单'] || '#',
+      black:  SUB_LINKS['黑名单'] || '#',
+      tasks:  SUB_LINKS['学习任务'] || '#',
+      log:    'AuditLog.dc.html',
+      policy: 'Policy.dc.html',
+    };
+
+    // ======== 时间范围（今日 / 近 7 天 / 近 30 天）========
+    const range = (this.state && this.state.range) || '7d';
+    const RANGE_DEFS = [
+      { id: 'today', label: '今日',    text: '2026-09-28 00:00 ～ 10:30' },
+      { id: '7d',    label: '近 7 天', text: '2026-09-22 ～ 2026-09-28' },
+      { id: '30d',   label: '近 30 天', text: '2026-08-30 ～ 2026-09-28' },
+    ];
+    const ranges = RANGE_DEFS.map((r) => {
+      const on = r.id === range;
+      return { ...r, on, bg: on ? '#1e88e5' : '#ffffff', fg: on ? '#ffffff' : '#333333', bd: on ? '#1e88e5' : '#d5d9e0',
+               pick: () => this.setState({ range: r.id }) };
+    });
+    const rangeText = RANGE_DEFS.find((r) => r.id === range).text;
+    const updatedAt = '2026-09-28 10:30:15';
+
+    // ======== 每天的拦截数据（近 30 天，最后一天 = 今日 09-28）========
+    // 字段：blocked 已拦截（拦截模式命中）/ should 放行（审计模式命中，只记录没拦）
+    //      只统计「不在白名单」或「在黑名单」的进程；白名单里的进程不上报，不计数
+    const DAILY = [
+      // 08-30 ~ 09-05
+      { d: '08-30', blocked: 6, should: 14, pass: 4120 }, { d: '08-31', blocked: 4, should: 11, pass: 3980 },
+      { d: '09-01', blocked: 9, should: 22, pass: 5210 }, { d: '09-02', blocked: 7, should: 19, pass: 5305 },
+      { d: '09-03', blocked: 8, should: 25, pass: 5188 }, { d: '09-04', blocked: 5, should: 17, pass: 5240 },
+      { d: '09-05', blocked: 6, should: 15, pass: 5102 },
+      // 09-06 ~ 09-12（09-09 违规工具黑名单启用，审计放行明显上升）
+      { d: '09-06', blocked: 2, should: 6,  pass: 3870 }, { d: '09-07', blocked: 3, should: 7,  pass: 3902 },
+      { d: '09-08', blocked: 8, should: 20, pass: 5260 }, { d: '09-09', blocked: 11, should: 38, pass: 5311 },
+      { d: '09-10', blocked: 14, should: 42, pass: 5290 }, { d: '09-11', blocked: 12, should: 36, pass: 5344 },
+      { d: '09-12', blocked: 9, should: 31, pass: 5218 },
+      // 09-13 ~ 09-19
+      { d: '09-13', blocked: 3, should: 9,  pass: 3910 }, { d: '09-14', blocked: 2, should: 8,  pass: 3865 },
+      { d: '09-15', blocked: 10, should: 27, pass: 5380 }, { d: '09-16', blocked: 13, should: 29, pass: 5402 },
+      { d: '09-17', blocked: 9, should: 24, pass: 5366 }, { d: '09-18', blocked: 11, should: 26, pass: 5391 },
+      { d: '09-19', blocked: 8, should: 21, pass: 5350 },
+      // 09-20 ~ 09-28（09-22 办公区终端切到拦截模式，已拦截上升、审计放行下降）
+      { d: '09-20', blocked: 4, should: 10, pass: 3920 }, { d: '09-21', blocked: 3, should: 8,  pass: 3944 },
+      { d: '09-22', blocked: 18, should: 17, pass: 5412 }, { d: '09-23', blocked: 22, should: 15, pass: 5460 },
+      { d: '09-24', blocked: 17, should: 13, pass: 5433 }, { d: '09-25', blocked: 15, should: 12, pass: 5471 },
+      { d: '09-26', blocked: 6, should: 5,  pass: 3988 }, { d: '09-27', blocked: 5, should: 4,  pass: 4010 },
+      { d: '09-28', blocked: 13, should: 9,  pass: 2861 },   // 今天 = 审计日志里的 22 条
+    ];
+    // 今日按小时（0 点到 10 点，10:30 更新）
+    // 今日按小时（和审计日志列表里今天的 22 条日志一致：9 时 已拦截 6 / 放行 8，10 时 已拦截 8）
+    const HOURLY = [
+      { d: '0时', blocked: 0, should: 0 }, { d: '1时', blocked: 0, should: 0 }, { d: '2时', blocked: 0, should: 0 },
+      { d: '3时', blocked: 0, should: 0 }, { d: '4时', blocked: 0, should: 0 }, { d: '5时', blocked: 0, should: 0 },
+      { d: '6时', blocked: 0, should: 0 }, { d: '7时', blocked: 0, should: 0 }, { d: '8时', blocked: 0, should: 0 },
+      { d: '9时', blocked: 6, should: 8 }, { d: '10时', blocked: 8, should: 0 },
+    ];
+    // 当前范围 / 上一个同样长度的范围（用来算环比）
+    const cut = (arr, n) => arr.slice(arr.length - n);
+    const cur  = range === 'today' ? HOURLY : range === '7d' ? cut(DAILY, 7) : DAILY;
+    const prev = range === 'today' ? [DAILY[DAILY.length - 2]] : range === '7d' ? DAILY.slice(16, 23) : null;
+    const sum = (arr, k) => arr.reduce((a, x) => a + x[k], 0);
+    const sumBlocked = sum(cur, 'blocked'), sumShould = sum(cur, 'should');
+    // 环比文字：▲ 多了 / ▼ 少了；今日跟昨天全天比不公平，只跟昨天同时段比（近似用昨天数据的 45%）
+    const cmp = (now, k) => {
+      if (!prev) return { text: '', color: '#8a94a6' };
+      let base = sum(prev, k); if (range === 'today') base = Math.round(base * 0.45);
+      const diff = now - base;
+      if (diff === 0) return { text: '与上期持平', color: '#8a94a6' };
+      return { text: (diff > 0 ? '▲ ' : '▼ ') + Math.abs(diff) + ' 较上期', color: diff > 0 ? '#c62828' : '#2e7d32' };
+    };
+    const dBlocked = cmp(sumBlocked, 'blocked'), dShould = cmp(sumShould, 'should');
+    const shouldHosts = { today: 3, '7d': 17, '30d': 41 }[range];   // 审计模式放行涉及的终端数
+
+    // ======== 趋势图：柱高按最大值的百分比 ========
+    const rawMax = Math.max(...cur.map((x) => Math.max(x.blocked, x.should)), 1);
+    const step = rawMax <= 10 ? 2 : rawMax <= 20 ? 4 : 10;   // 纵轴顶刻度：小数字取偶数，大数字取 10 的倍数（中间刻度才是整数）
+    const yMax = Math.ceil(rawMax / step) * step || step;
+    const yMid = yMax / 2;
+    const trend = cur.map((x, i) => ({
+      // 30 天时横轴每 5 天标一个（最后一天一定标），否则挤在一起看不清
+      label: range === '30d' && !((cur.length - 1 - i) % 5 === 0) ? '' : x.d,
+      hBlocked: Math.round(x.blocked / yMax * 100), hShould: Math.round(x.should / yMax * 100),
+      minBlocked: x.blocked ? 2 : 0, minShould: x.should ? 2 : 0,   // 非 0 至少 2px，看得见
+      tip: x.d + '：已拦截 ' + x.blocked + '，放行（审计模式）' + x.should,
+    }));
+    const trendUnit = range === 'today' ? '按小时' : '按天';
+    const barW = range === '30d' ? 9 : 16;        // 30 天柱子窄一些
+    const colPad = range === '30d' ? 2 : 6;
+
+    // ======== 终端管控模式分布（当前状态，不随时间范围变）========
+    const MODES = [
+      { label: '拦截模式', count: 342, color: '#1e88e5', note: '发现即拦截并告警' },
+      { label: '审计模式', count: 187, color: '#64b5f6', note: '只告警不拦截' },
+      { label: '学习模式', count: 96,  color: '#bbdefb', note: '只采集，3 个学习任务进行中' },
+      { label: '未开启',   count: 13,  color: '#c4c8cf', note: '策略未下发或总开关关闭' },
+    ];
+    const hostTotal = MODES.reduce((a, m) => a + m.count, 0);   // 638
+    const modes = MODES.map((m) => ({ ...m, pct: Math.round(m.count / hostTotal * 100) }));
+    const online = 512, offline = hostTotal - online;
+    const blockHosts = MODES[0].count;
+
+    // ======== 待确认 / 未知进程（当前状态）========
+    const pendingProcs = 683, pendingTasks = 2;    // 研发部开发机采集 + 数据库服务器进程采集（学习任务列表里 2 个待确认）
+    const unknownProcs = 57, unknownOnBlock = 12;  // 不在任何黑 / 白名单里、正在运行的进程；其中 12 个跑在拦截模式终端上
+
+    // ======== 指标卡 ========
+    const kpis = [
+      { label: '管控终端', value: hostTotal, unit: '台', color: '#1e88e5', hint: '当前', delta: '', deltaColor: '#8a94a6',
+        sub: '在线 ' + online + ' · 离线 ' + offline, href: links.procs },
+      { label: '拦截模式终端', value: blockHosts, unit: '台', color: '#1e88e5', hint: '当前', delta: '覆盖 ' + Math.round(blockHosts / hostTotal * 100) + '%', deltaColor: '#8a94a6',
+        sub: '审计 ' + MODES[1].count + ' · 学习 ' + MODES[2].count + ' · 未开启 ' + MODES[3].count, href: links.policy },
+      { label: '已拦截', value: sumBlocked, unit: '次', color: '#c62828', hint: RANGE_DEFS.find((r) => r.id === range).label, delta: dBlocked.text, deltaColor: dBlocked.color,
+        sub: '拦截模式下 不在白名单 / 命中黑名单', href: links.log },
+      { label: '放行（审计模式）', value: sumShould, unit: '次', color: '#ef8f00', hint: RANGE_DEFS.find((r) => r.id === range).label, delta: dShould.text, deltaColor: dShould.color,
+        sub: '不在白名单 / 命中黑名单，只记录未拦截', href: links.log },
+      { label: '待确认进程', value: pendingProcs, unit: '个', color: '#ef8f00', hint: '当前', delta: '', deltaColor: '#8a94a6',
+        sub: '来自 ' + pendingTasks + ' 个学习任务，等待加白 / 加黑', href: links.tasks },
+      { label: '未知进程', value: unknownProcs, unit: '个', color: '#5a6475', hint: '当前', delta: '', deltaColor: '#8a94a6',
+        sub: '不在任何名单中，' + unknownOnBlock + ' 个跑在拦截模式终端', href: links.procs },
+    ];
+
+    // ======== 待处理事项：紧急 红 / 重要 橙 / 一般 蓝 ========
+    const RED = '#c62828', ORG = '#ef8f00', BLU = '#1e88e5';
+    const todos = [
+      { color: RED, count: sumShould, action: '查看日志', href: links.log,
+        title: '审计模式下 ' + sumShould + ' 次命中已放行，需确认是否误报',
+        detail: '不在 运维工具 / 数据库服务白名单、命中违规工具黑名单 等，涉及 ' + shouldHosts + ' 台终端；确认后可切到拦截模式' },
+      { color: RED, count: unknownOnBlock, action: '去处理', href: links.procs,
+        title: unknownOnBlock + ' 个未知进程运行在拦截模式终端上',
+        detail: '不在任何黑 / 白名单中，下次启动会被拦截，请尽快确认加白或加黑' },
+      { color: ORG, count: pendingProcs, action: '去确认', href: links.tasks,
+        title: pendingTasks + ' 个学习任务有 ' + pendingProcs + ' 个进程待确认',
+        detail: '研发部开发机采集 527 个 · 数据库服务器进程采集 156 个' },
+      { color: ORG, count: 2, action: '去生成', href: links.tasks,
+        title: '2 个学习任务已完成，尚未生成名单',
+        detail: 'Win11 试点终端学习 · Win10 全网首次学习' },
+      { color: BLU, count: 2, action: '查看名单', href: links.white,
+        title: '2 个名单未应用到任何终端',
+        detail: '开发工具白名单 · 国产化平台风险软件黑名单' },
+      { color: BLU, count: offline, action: '查看终端', href: links.procs,
+        title: offline + ' 台终端离线，策略可能未同步',
+        detail: '其中 38 台离线超过 7 天' },
+    ];
+    const todoCount = todos.length;
+
+    // ======== 拦截最多的进程 / 终端 TOP5（按时间范围不同给不同数据）========
+    const TOP_PROCS = {
+      today: [   // 和审计日志列表里今天的日志一致
+        { proc: 'ToDesk.exe',        path: 'C:\\Program Files\\ToDesk\\ToDesk.exe', reason: '不在白名单 · 办公软件白名单', hosts: 3, count: 3 },
+        { proc: 'update_helper.exe', path: 'C:\\Users\\[用户名]\\AppData\\Roaming\\tmp\\update_helper.exe', reason: '不在白名单 · 办公软件白名单', hosts: 3, count: 3 },
+        { proc: 'xmrig',             path: '/tmp/.x/xmrig', reason: '在黑名单 · 挖矿程序黑名单 等', hosts: 2, count: 2 },
+        { proc: 'steam.exe',         path: 'C:\\Program Files (x86)\\Steam\\steam.exe', reason: '不在白名单 · 办公软件白名单', hosts: 2, count: 2 },
+        { proc: 'nmap',              path: '/usr/bin/nmap', reason: '不在白名单 · 运维工具白名单', hosts: 2, count: 2 },
+      ],
+      '7d': [
+        { proc: 'ToDesk.exe',    path: 'C:\\Program Files\\ToDesk\\ToDesk.exe',            reason: '在黑名单 · 远控木马黑名单', hosts: 9,  count: 31 },
+        { proc: 'update_helper.exe', path: 'C:\\Users\\[用户名]\\AppData\\Local\\Temp\\update_helper.exe', reason: '不在白名单 · 办公软件白名单', hosts: 11, count: 26 },
+        { proc: 'steam.exe',     path: 'C:\\Program Files (x86)\\Steam\\steam.exe',          reason: '不在白名单 · 办公软件白名单', hosts: 7,  count: 19 },
+        { proc: 'xmrig',         path: '/tmp/.x/xmrig',                                    reason: '在黑名单 · 挖矿程序黑名单', hosts: 2,  count: 14 },
+        { proc: 'nmap',          path: '/usr/bin/nmap',                                    reason: '在黑名单 · 内网扫描工具黑名单', hosts: 3, count: 9 },
+      ],
+      '30d': [
+        { proc: 'ToDesk.exe',    path: 'C:\\Program Files\\ToDesk\\ToDesk.exe',            reason: '在黑名单 · 远控木马黑名单', hosts: 23, count: 118 },
+        { proc: 'steam.exe',     path: 'C:\\Program Files (x86)\\Steam\\steam.exe',          reason: '不在白名单 · 办公软件白名单', hosts: 19, count: 96 },
+        { proc: 'update_helper.exe', path: 'C:\\Users\\[用户名]\\AppData\\Local\\Temp\\update_helper.exe', reason: '不在白名单 · 办公软件白名单', hosts: 26, count: 84 },
+        { proc: 'SunloginClient.exe', path: 'C:\\Program Files\\Oray\\SunLogin\\SunloginClient.exe', reason: '在黑名单 · 远控木马黑名单', hosts: 8, count: 47 },
+        { proc: 'xmrig',         path: '/tmp/.x/xmrig',                                    reason: '在黑名单 · 挖矿程序黑名单', hosts: 3,  count: 35 },
+      ],
+    }[range];
+    const TOP_HOSTS = {
+      today: [   // 和审计日志里今天出现的终端一致
+        { host: 'OA-PC-042',    group: '默认分组', os: 'Windows',   count: 5 },
+        { host: 'HR-LAPTOP-07', group: 'wrh',      os: 'Windows',   count: 3 },
+        { host: 'FIN-PC-003',   group: 'wrh',      os: 'Windows',   count: 3 },
+        { host: 'srv-web-02',   group: '服务器',   os: 'Ubuntu', count: 3 },
+        { host: 'srv-db-01',    group: '服务器',   os: 'CentOS',   count: 3 },
+      ],
+      '7d': [
+        { host: 'OA-PC-042',   group: '办公区/行政部', os: 'Windows',  count: 17 },
+        { host: 'DEV-PC-117',  group: '研发部/开发机', os: 'Ubuntu', count: 14 },
+        { host: 'DB-SRV-03',   group: '服务器组/数据库', os: 'CentOS', count: 12 },
+        { host: 'OA-PC-088',   group: '办公区/财务部', os: 'Windows',  count: 9 },
+        { host: 'OA-PC-131',   group: '办公区/市场部', os: 'Windows',  count: 7 },
+      ],
+      '30d': [
+        { host: 'OA-PC-042',   group: '办公区/行政部', os: 'Windows',  count: 63 },
+        { host: 'DEV-PC-117',  group: '研发部/开发机', os: 'Ubuntu', count: 48 },
+        { host: 'OA-PC-131',   group: '办公区/市场部', os: 'Windows',  count: 41 },
+        { host: 'DB-SRV-03',   group: '服务器组/数据库', os: 'CentOS', count: 37 },
+        { host: 'OA-PC-088',   group: '办公区/财务部', os: 'Windows',  count: 29 },
+      ],
+    }[range];
+    const rankStyle = (i) => ({ rank: i + 1, rankBg: i < 3 ? '#1e88e5' : '#eceff3', rankFg: i < 3 ? '#ffffff' : '#5a6475' });
+    const topProcs = TOP_PROCS.map((x, i) => ({
+      ...x, ...rankStyle(i),
+      pct: Math.round(x.count / TOP_PROCS[0].count * 100),
+      color: x.reason.indexOf('在黑名单') === 0 ? '#c62828' : '#ef8f00',   // 命中黑名单 红，不在白名单 橙
+      addWhite: () => this.showToast('已将 ' + x.proc + ' 加入白名单（演示）'),
+    }));
+    const SUMMARY = { today: [14, 9], '7d': [23, 34], '30d': [46, 79] }[range];   // [被拦截过的进程种数, 涉及终端数]
+    const procSummary = '共 ' + SUMMARY[0] + ' 个进程被拦截过，TOP 5 占 ' + Math.round(TOP_PROCS.reduce((a, x) => a + x.count, 0) / (sumBlocked + sumShould) * 100) + '%';
+    const hostSummary = '共 ' + SUMMARY[1] + ' 台终端发生过拦截，占管控终端 ' + Math.round(SUMMARY[1] / hostTotal * 100) + '%';
+    const topHosts = TOP_HOSTS.map((x, i) => ({ ...x, ...rankStyle(i), pct: Math.round(x.count / TOP_HOSTS[0].count * 100) }));
+
+    // ======== 最近拦截事件（最新在前；数据和审计日志列表一致）========
+    const TAG = {
+      '已拦截':   { bg: '#fdecea', fg: '#c62828' },
+      '放行':     { bg: '#e8f5e9', fg: '#2e7d32' },   // 审计模式：只记录不拦截
+    };
+    const recent = [
+      { time: '10:21', action: '已拦截', proc: 'AnyDesk.exe',       path: 'C:\\Users\\[用户名]\\Downloads\\AnyDesk.exe', host: 'OA-PC-017',    reason: '在黑名单',   list: '远控木马黑名单' },
+      { time: '10:19', action: '已拦截', proc: 'ToDesk.exe',        path: 'C:\\Program Files\\ToDesk\\ToDesk.exe',     host: 'OA-PC-042',    reason: '不在白名单', list: '办公软件白名单' },
+      { time: '10:17', action: '已拦截', proc: 'ToDesk.exe',        path: 'C:\\Program Files\\ToDesk\\ToDesk.exe',     host: 'FIN-PC-003',   reason: '不在白名单', list: '办公软件白名单' },
+      { time: '10:15', action: '已拦截', proc: 'svch0st.exe',       path: 'C:\\Users\\Public\\Libraries\\svch0st.exe', host: 'OA-PC-042',    reason: '不在白名单', list: '办公软件白名单' },
+      { time: '10:12', action: '已拦截', proc: 'update_helper.exe', path: 'C:\\Users\\[用户名]\\AppData\\Roaming\\tmp\\update_helper.exe', host: 'FIN-PC-003', reason: '不在白名单', list: '办公软件白名单' },
+      { time: '10:08', action: '已拦截', proc: 'steam.exe',         path: 'C:\\Program Files (x86)\\Steam\\steam.exe',  host: 'HR-LAPTOP-07', reason: '不在白名单', list: '办公软件白名单' },
+      { time: '10:05', action: '已拦截', proc: 'update_helper.exe', path: 'C:\\Users\\[用户名]\\AppData\\Roaming\\tmp\\update_helper.exe', host: 'OA-PC-042', reason: '不在白名单', list: '办公软件白名单' },
+      { time: '10:02', action: '已拦截', proc: 'chrome.exe',        path: 'C:\\Users\\[用户名]\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe', host: 'HR-LAPTOP-07', reason: '不在白名单', list: '办公软件白名单' },
+      { time: '09:58', action: '放行',   proc: 'frpc',              path: '/opt/frp/frpc',                             host: 'srv-web-02',   reason: '不在白名单', list: '运维工具白名单' },
+    ].map((e) => ({ ...e, tagBg: TAG[e.action].bg, tagFg: TAG[e.action].fg }));
+
+    // ======== 名单概况（数据和白名单 / 黑名单列表页一致）========
+    const lists = [
+      { label: '白名单', count: 7, color: '#2e7d32', sub: '启用 5 · 拦截模式 2', href: links.white },
+      { label: '黑名单', count: 7, color: '#c62828', sub: '启用 5 · 拦截模式 3', href: links.black },
+    ];
+
+    // ======== 提示条（加白后弹 2 秒）========
+    const toast = (this.state && this.state.toast) || '';
+    const toastOn = !!toast;
+
+    return { menus, links, ranges, rangeText, updatedAt, kpis, todos, todoCount,
+             trend, trendUnit, yMax, yMid, barW, colPad, sumBlocked, sumShould,
+             modes, lists, topProcs, topHosts, procSummary, hostSummary, recent, toast, toastOn };
+  }
+}
+
+</script>
+</body>
+</html>

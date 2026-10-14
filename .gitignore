@@ -1,0 +1,6 @@
+# 本地私有配置：含凭据，禁止提交
+CLAUDE.local.md
+# 本机工具配置和系统文件
+.claude/
+.idea/
+.DS_Store

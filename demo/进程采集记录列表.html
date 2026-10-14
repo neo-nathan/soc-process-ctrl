@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>进程管控 - 进程采集记录</title>
+<style>
+
+/* 页面基础样式：去掉默认外边距，字体用系统中文字体 */
+body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#f0f2f5}
+/* 链接颜色：参考截图里的蓝色 */
+a{color:#1e88e5;text-decoration:none}a:hover{color:#1565c0}
+/* 表格行悬停时浅蓝底色 */
+.row:hover{background:#f4f8fd}
+/* 表格里超长文字单行省略 */
+.ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 复选框统一大小 */
+input[type=checkbox]{width:14px;height:14px;margin:0;accent-color:#1e88e5}
+/* 工具栏白底按钮悬停 */
+.tbtn:hover{border-color:#1e88e5;color:#1e88e5}
+/* 面包屑里的返回链接悬停 */
+.crumb:hover{text-decoration:underline}
+/* 表格里的等宽文字（哈希值） */
+.mono{font-family:Menlo,Consolas,"Courier New",monospace;font-size:12px}
+/* 视图按钮（参考截图 03/04/05）：白底灰边，悬停蓝字蓝边 */
+.vbtn:hover{color:#1e88e5;border-color:#1e88e5}
+/* 菜单项：悬停浅蓝底蓝字，按下时底色再深一点。
+   菜单项按钮上写了行内样式 background / color，行内样式优先级更高，
+   所以这里必须加 !important，否则悬停、按下效果会被行内样式盖掉 */
+.mitem:hover{background:#eef4fc !important;color:#1e88e5 !important}
+.mitem:active{background:#d6e6fa !important;color:#1565c0 !important}
+/* 下拉框统一外观 */
+select{font-family:inherit;font-size:13px;color:#333333;background:#ffffff;border:1px solid #d5d9e0;border-radius:3px;height:30px;padding:0 8px}
+/* 左侧导航：悬停效果（截图 14）—— 底色变亮一点的深蓝、左侧出现亮蓝竖条、文字变白；一级菜单的图标变亮蓝 */
+.nav1:hover,.nav2:hover{background:#0d3479 !important;border-left-color:#08a7ff !important;color:#ffffff !important}
+.nav1:hover .nav-ico{color:#33b8ff !important}
+
+/* 独立页面：页面固定 1920×1080，窗口小时可以滚动 */
+html,body{margin:0}
+</style>
+</head>
+<body>
+<!-- 渲染结果放这里 -->
+<div id="app"></div>
+
+<!-- 页面模板（和设计稿一致） -->
+<template id="page-tpl">
+
+
+<!-- ============ 整个页面：固定 1920 x 1080 ============ -->
+<div style="position: relative; width: 1920px; height: 1080px; box-sizing: border-box; display: flex; flex-direction: column; background: #f0f2f5; color: #333333; font-size: 14px; overflow: hidden;">
+
+  <!-- ============ 顶栏（50px 高） ============ -->
+  <div style="height: 50px; flex-shrink: 0; display: flex; align-items: stretch; background: #ffffff; border-bottom: 1px solid #e3e6eb;">
+    <!-- 左上角 LOGO 区：深蓝底 -->
+    <div style="width: 180px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #0f2a5c; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 2px;">
+      SOC
+    </div>
+    <!-- 系统标题 -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 20px; flex-grow: 1;">
+      <span style="font-size: 18px; font-weight: 700; color: #1f2d3d;">终端威胁检测与响应系统</span>
+      <span style="font-size: 14px; color: #1f2d3d;">· 专用</span>
+      <span style="font-size: 13px; color: #8a94a6; font-style: italic; margin-left: 12px;">一切尽在掌握！</span>
+    </div>
+    <!-- 右侧：消息数 / 用户 / 下载 -->
+    <div style="display: flex; align-items: center; gap: 16px; padding: 0 20px;">
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 4px; padding: 4px 10px; color: #4a5568;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+        <span>101</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 16px; padding: 4px 12px 4px 6px; color: #4a5568;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e88e5" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        <span>optAdmin</span>
+      </div>
+      <div style="width: 26px; height: 26px; border-radius: 50%; background: #1e88e5; display: flex; align-items: center; justify-content: center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M12 4v12M6 11l6 6 6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 顶栏以下：左导航 + 右侧内容（进程管控不按分组/终端筛选，故不放终端分组面板） ============ -->
+  <div style="flex-grow: 1; display: flex; min-height: 0;">
+
+    <!-- ============ 左侧主导航（180px，深蓝） ============ -->
+    <nav style="width: 180px; flex-shrink: 0; background: #0f2a5c; color: #ffffff; display: flex; flex-direction: column; padding-top: 6px;">
+      <!-- 导航菜单列表：数据在下方脚本里，选中项高亮 -->
+      <div style="display: flex; flex-direction: column;">
+        <template data-sc="for" list="{{ menus }}" as="m" hint-placeholder-count="19">
+          <!-- 一级菜单：普通状态浅色文字；选中 / 悬停时底色变亮、左侧亮蓝竖条、文字变白、图标变亮蓝（截图 13 / 14）
+               有二级菜单的在右边显示箭头（展开朝上、收起朝下），点击展开 / 收起 -->
+          <a href="#" class="nav1" onClick="{{ m.toggle }}" aria-expanded="{{ m.expanded }}" style="display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 0 0 34px; box-sizing: border-box; color: {{ m.fg }}; font-size: 14px; background: {{ m.bg }}; border-left: 3px solid {{ m.bar }};">
+            <span class="nav-ico" style="display: flex; color: {{ m.icoColor }};"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.icon }}"></path></svg></span>
+            <span style="flex-grow: 1;">{{ m.label }}</span>
+            <template data-sc="if" value="{{ m.hasSub }}" hint-placeholder-val="{{ false }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 16px; transform: rotate({{ m.caret }});"><path d="M6 9l6 6 6-6"></path></svg>
+            </template>
+          </a>
+          <!-- 二级菜单：缩进，前面一个小圆点（截图 13）；当前页面：底色变亮 + 左侧亮蓝竖条 + 白字 + 亮蓝圆点；悬停同样效果（截图 14） -->
+          <template data-sc="if" value="{{ m.expanded }}" hint-placeholder-val="{{ false }}">
+            <template data-sc="for" list="{{ m.children }}" as="c" hint-placeholder-count="5">
+              <a href="{{ c.href }}" class="nav2" aria-current="{{ c.current }}" style="display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 0 0 65px; box-sizing: border-box; color: {{ c.fg }}; font-size: 14px; background: {{ c.bg }}; border-left: 3px solid {{ c.bar }};">
+                <span style="width: 5px; height: 5px; border-radius: 50%; background: {{ c.dot }}; flex-shrink: 0;"></span>
+                <span>{{ c.label }}</span>
+              </a>
+            </template>
+          </template>
+        </template>
+      </div>
+      <!-- 底部版权信息 -->
+      <div style="margin-top: auto; padding: 14px 10px 12px; border-top: 1px solid #1d3f7d; text-align: center; font-size: 12px; line-height: 18px; color: #c5d0e3;">
+        <div>[公司名称]</div>
+        <div>版权所有</div>
+        <div>版本：3.0 build：305034</div>
+      </div>
+    </nav>
+
+    <!-- ============ 右侧主内容区：进程采集记录 ============ -->
+    <main style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; margin: 12px; background: #ffffff; border: 1px solid #e3e6eb;">
+
+      
+
+      <!-- 导航条：最左边"返回"按钮（回学习任务列表）+ 面包屑 进程管控 / 学习任务 / 当前任务名 / 进程采集记录
+           （本页不在左侧二级菜单里，也没有顶部页签，靠这条导航条标明当前位置） -->
+      <div style="display: flex; align-items: center; gap: 12px; height: 44px; flex-shrink: 0; padding: 0 16px 0 10px; border-bottom: 1px solid #eef0f3; font-size: 14px; color: #8a94a6;">
+        <!-- 返回按钮：白底灰边，左箭头 + "返回"；做成链接，Play 模式下点了回到学习任务列表 -->
+        <a href="学习任务列表.html" class="tbtn" style="display: flex; align-items: center; gap: 4px; height: 28px; padding: 0 12px 0 8px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 13px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg>
+          <span>返回</span>
+        </a>
+        <!-- 面包屑 -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <a href="概览.html" class="crumb" style="color: #1e88e5;">进程管控</a>
+          <span>/</span>
+          <a href="学习任务列表.html" class="crumb" style="color: #1e88e5;">学习任务</a>
+          <span>/</span>
+          <span style="color: #1f2d3d; font-weight: 700;">{{ task.name }}</span>
+          <span>/</span>
+          <span style="color: #1f2d3d;">进程采集记录</span>
+        </div>
+      </div>
+
+      <!-- 任务信息条（导航条下方一行）：左边 = 这个学习任务的信息；右边 = 高级搜索 / 刷新 / 列设置；不加底部分割线 -->
+      <div style="display: flex; align-items: center; gap: 36px; height: 56px; flex-shrink: 0; padding: 0 10px 0 16px; font-size: 13px; color: #4a5568;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: {{ task.statusColor }};"></span>
+          <span style="color: {{ task.statusColor }}; font-weight: 700;">{{ task.status }}</span>
+        </div>
+        <!-- 系统类型：一个学习任务只针对一种系统，所以列表里不再单独放系统类型列 -->
+        <div style="display: flex; align-items: center; gap: 6px;">系统类型：
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a6475" stroke-width="2"><path d="M3 5l8-1v8H3zM13 4l8-1v9h-8zM3 13h8v8l-8-1zM13 13h8v9l-8-1z"></path></svg>
+          <span style="color: #333333;">{{ task.os }}</span>
+        </div>
+        <div>学习周期：<span style="color: #333333;">{{ task.period }}</span></div>
+        <div>开始时间：<span style="color: #333333;">{{ task.started }}</span></div>
+        <div>应用范围：<span style="color: #1e88e5;">{{ task.groupCount }}</span> 个组　<span style="color: #1e88e5;">{{ task.hostCount }}</span> 台终端</div>
+        <div>已上报终端：<span style="color: #1e88e5;">{{ task.reported }}</span> / {{ task.hostCount }} 台</div>
+        <div>采集到进程：<span style="color: #1e88e5;">{{ task.procCount }}</span> 个（去重后）</div>
+        <!-- 右侧：高级搜索 / 刷新 / 列设置（margin-left: auto 推到最右） -->
+        <div style="margin-left: auto; display: flex; align-items: center; gap: 18px; color: #4a5568; font-size: 14px;">
+          <a href="#" style="display: flex; align-items: center; gap: 4px; color: #4a5568;">高级搜索
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
+          </a>
+          <button aria-label="刷新" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>
+          </button>
+          <button aria-label="列设置" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16M12 4v16M17 4v16"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 列表上方一行：左上角 = 确认状态筛选；右边 = 4 个显示方式按钮 -->
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; padding: 0 10px 8px;">
+        <!-- 确认状态筛选：全部 / 待确认 / 已加白 / 已加黑（Play 模式下选了会真的筛选列表） -->
+        <select aria-label="确认状态筛选" onChange="{{ pickConfirm }}" style="width: 150px;">
+          <template data-sc="for" list="{{ confirmOpts }}" as="o" hint-placeholder-count="3">
+            <option value="{{ o.value }}" selected="{{ o.sel }}">{{ o.label }}</option>
+          </template>
+        </select>
+        <!-- 显示方式（按文件哈希 / 按路径 / 按包 / 按维护者）：用不同条件把进程记录合并成一行；选中的浅蓝底蓝字 -->
+        <div role="group" aria-label="显示方式" style="display: flex; align-items: center; gap: 6px;">
+          <template data-sc="for" list="{{ views }}" as="v" hint-placeholder-count="4">
+            <button class="vbtn" onClick="{{ v.pick }}" aria-pressed="{{ v.active }}" style="height: 30px; padding: 0 12px; border: 1px solid {{ v.border }}; border-radius: 2px; background: {{ v.bg }}; color: {{ v.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ v.label }}</button>
+          </template>
+        </div>
+      </div>
+
+      <!-- ============ 进程采集记录列表 ============ -->
+      <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; margin: 0 10px; border-bottom: 1px solid #dde1e7;">
+        <!-- 表头：列由当前显示方式决定（见脚本里的 VIEWS），最后固定是「操作」列，占满剩余宽度 -->
+        <div style="display: flex; align-items: center; height: 36px; flex-shrink: 0; background: #edf0f4; color: #1f2d3d; font-weight: 700; font-size: 14px;">
+          <div style="width: 50px; flex-shrink: 0; display: flex; justify-content: center;"><input type="checkbox" aria-label="全选"></div>
+          <template data-sc="for" list="{{ cols }}" as="h" hint-placeholder-count="8">
+            <div class="ell" style="width: {{ h.w }}; flex-shrink: 0; box-sizing: border-box; padding: 0 8px; border-left: 1px solid #dde1e7;">{{ h.title }}</div>
+          </template>
+          <div style="flex-grow: 1; padding: 0 8px; border-left: 1px solid #dde1e7;">操作</div>
+        </div>
+
+        <!-- 数据行：一行 = 按当前条件合并后的一条记录；overflow: visible 让加白 / 加黑的菜单不被裁掉 -->
+        <div style="display: flex; flex-direction: column; overflow: visible;">
+          <template data-sc="for" list="{{ rows }}" as="r" hint-placeholder-count="14">
+            <div class="row" style="display: flex; align-items: center; height: 40px; flex-shrink: 0; border-bottom: 1px solid #eef0f3; font-size: 13px; color: #333333;">
+              <div style="width: 50px; flex-shrink: 0; display: flex; justify-content: center;"><input type="checkbox" aria-label="选择"></div>
+              <!-- 单元格：宽度和表头一一对应；link = 可点的数字 / 多个值（蓝色或橙色），mono = 等宽字体（文件哈希） -->
+              <template data-sc="for" list="{{ r.cells }}" as="c" hint-placeholder-count="8">
+                <div class="ell {{ c.cls }}" title="{{ c.text }}" style="width: {{ c.w }}; flex-shrink: 0; box-sizing: border-box; padding: 0 8px; color: {{ c.color }};">
+                  <template data-sc="if" value="{{ c.link }}" hint-placeholder-val="{{ false }}"><a href="#" style="color: {{ c.color }};">{{ c.text }}</a></template>
+                  <template data-sc="if" value="{{ c.plain }}" hint-placeholder-val="{{ true }}">{{ c.text }}</template>
+                  <template data-sc="if" value="{{ c.tag }}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 2px; background: {{ c.tagBg }}; color: {{ c.color }}; font-size: 12px;">{{ c.text }}</span></template>
+                </div>
+              </template>
+              <!-- 操作列：待确认 → 加白 / 加黑 / 详情；已加白 / 已加黑 → 只有 详情（状态看"确认状态"列）
+                   加白、加黑点击后都弹出菜单：按文件哈希 / 按程序名 / 按全路径（选按什么条件写进名单） -->
+              <div style="flex-grow: 1; padding: 0 8px; display: flex; gap: 14px; white-space: nowrap;">
+                <template data-sc="if" value="{{ r.pending }}" hint-placeholder-val="{{ true }}">
+                  <!-- 加白：外面包 position: relative，菜单定位在它正下方 -->
+                  <span style="position: relative; display: inline-flex;">
+                    <button onClick="{{ r.toggleWhite }}" aria-expanded="{{ r.whiteOpen }}" style="display: inline-flex; align-items: center; gap: 2px; border: 0; background: transparent; padding: 0; color: #1e88e5; font-family: inherit; font-size: 13px; cursor: pointer;">
+                      加白
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transform: rotate({{ r.whiteCaret }});"><path d="M6 9l6 6 6-6"></path></svg>
+                    </button>
+                    <template data-sc="if" value="{{ r.whiteOpen }}" hint-placeholder-val="{{ false }}">
+                      <div role="menu" style="position: absolute; top: 24px; left: -8px; z-index: 20; width: 120px; padding: 4px 0; background: #ffffff; border: 1px solid #e3e6eb; border-radius: 3px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column;">
+                        <template data-sc="for" list="{{ r.whiteItems }}" as="m" hint-placeholder-count="3">
+                          <button role="menuitem" class="mitem" onClick="{{ m.pick }}" style="display: flex; align-items: center; height: 32px; padding: 0 12px; border: 0; background: transparent; color: #333333; font-family: inherit; font-size: 13px; text-align: left; cursor: pointer;">{{ m.label }}</button>
+                        </template>
+                      </div>
+                    </template>
+                  </span>
+                  <!-- 加黑：同上 -->
+                  <span style="position: relative; display: inline-flex;">
+                    <button onClick="{{ r.toggleBlack }}" aria-expanded="{{ r.blackOpen }}" style="display: inline-flex; align-items: center; gap: 2px; border: 0; background: transparent; padding: 0; color: #1e88e5; font-family: inherit; font-size: 13px; cursor: pointer;">
+                      加黑
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transform: rotate({{ r.blackCaret }});"><path d="M6 9l6 6 6-6"></path></svg>
+                    </button>
+                    <template data-sc="if" value="{{ r.blackOpen }}" hint-placeholder-val="{{ false }}">
+                      <div role="menu" style="position: absolute; top: 24px; left: -8px; z-index: 20; width: 120px; padding: 4px 0; background: #ffffff; border: 1px solid #e3e6eb; border-radius: 3px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column;">
+                        <template data-sc="for" list="{{ r.blackItems }}" as="m" hint-placeholder-count="3">
+                          <button role="menuitem" class="mitem" onClick="{{ m.pick }}" style="display: flex; align-items: center; height: 32px; padding: 0 12px; border: 0; background: transparent; color: #333333; font-family: inherit; font-size: 13px; text-align: left; cursor: pointer;">{{ m.label }}</button>
+                        </template>
+                      </div>
+                    </template>
+                  </span>
+                </template>
+                <a href="#">详情</a>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- 底部：批量操作 + 导出 + 统计 -->
+      <div style="flex-shrink: 0; margin: 0 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 42px; padding-bottom: 6px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <!-- 批量把勾选的进程加入名单 -->
+            <button class="tbtn" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 14px; cursor: pointer; font-family: inherit;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4"></path></svg>
+              <span>批量加入白名单</span>
+            </button>
+            <button class="tbtn" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 14px; cursor: pointer; font-family: inherit;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c62828" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M6 6l12 12"></path></svg>
+              <span>批量加入黑名单</span>
+            </button>
+            <button class="tbtn" style="display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 14px; cursor: pointer; font-family: inherit;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1e88e5" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"></path></svg>
+              <span>导出EXCEL</span>
+            </button>
+            <span style="color: #4a5568;">当前已选择 0 条记录</span>
+          </div>
+          <div style="color: #4a5568; padding-right: 220px;">
+            {{ viewLabel }}共 <span style="color: #1e88e5;">{{ groupTotal }} 条</span>　|　进程总数：<span style="color: #1e88e5;">{{ procTotal }} 个</span>　|　待确认：<span style="color: #333333; font-weight: 700;">{{ pending }} 个</span>　|　未知维护者：<span style="color: #e53935;">{{ unknown }} 个</span>　|　原始上报记录：<span style="color: #1e88e5;">{{ rawTotal }} 条</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- 操作提示：点菜单项后在页面上方中间出现，2 秒后自动消失 -->
+  <template data-sc="if" value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; background: #1f2d3d; color: #ffffff; border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); font-size: 14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66bb6a" stroke-width="3"><path d="M5 12l5 5 9-10"></path></svg>
+      <span>{{ toast }}</span>
+    </div>
+  </template>
+</div>
+
+</template>
+
+<script>
+// 页面属性的默认值（设计稿右侧属性面板里的那些开关）
+const PROP_DEFS = {"rowMenu": {"editor": "enum", "default": "none", "options": ["none", "white", "black"]}, "view": {"editor": "enum", "default": "path", "options": ["path", "md5", "pkg", "maintainer"]}, "accent": {"editor": "color", "default": "#1e88e5", "options": ["#1e88e5", "#1565c0", "#0f2a5c"]}, "$preview": {"width": 1920, "height": 1080}};
+
+// ======================================================================
+// 小渲染器：替代设计工具的运行时，让页面脱离设计工具也能直接打开
+// 支持：{{ a.b }} 取值、<template data-sc="for"> 循环、<template data-sc="if"> 条件、
+//      onClick / onChange 事件、setState 后整页重新渲染
+// ======================================================================
+
+// 页面逻辑类的父类：提供 props（属性默认值）、state（页面状态）、setState（改状态并重绘）
+class DCLogic {
+  constructor(props) {
+    this.props = props || {};
+    this.state = {};
+  }
+  setState(patch) {
+    Object.assign(this.state, patch);   // 合并新状态
+    render();                           // 重新画整页
+  }
+}
+
+// 按 "a.b.c" 从作用域里取值；true / false / 数字 这种字面量直接返回
+function lookup(scope, path) {
+  path = path.trim();
+  if (path === 'true') return true;
+  if (path === 'false') return false;
+  if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+  let cur = scope;
+  for (const key of path.split('.')) {
+    if (cur == null) return undefined;
+    cur = cur[key];
+  }
+  return cur;
+}
+
+const WHOLE = /^\s*\{\{([^}]+)\}\}\s*$/;   // 整个属性值就是一个 {{ }}（要保留原始类型，比如函数、布尔）
+const PART = /\{\{([^}]+)\}\}/g;           // 字符串里夹着的 {{ }}
+
+// 把字符串里的 {{ }} 都换成值
+function interp(str, scope) {
+  return str.replace(PART, (_, p) => {
+    const v = lookup(scope, p);
+    return v == null ? '' : String(v);
+  });
+}
+
+// 递归渲染一个模板节点，结果追加到 parent 里
+function renderNode(node, scope, parent) {
+  // 文字节点：替换 {{ }}
+  if (node.nodeType === 3) {
+    parent.appendChild(document.createTextNode(interp(node.nodeValue, scope)));
+    return;
+  }
+  if (node.nodeType !== 1) return;   // 注释等其他节点跳过
+
+  // 循环：<template data-sc="for" list="{{ rows }}" as="r">
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'for') {
+    const list = lookup(scope, node.getAttribute('list').replace(/[{}]/g, '')) || [];
+    const as = node.getAttribute('as');
+    list.forEach((item, i) => {
+      // 子作用域：继承外层，再加上当前这一项和序号
+      const child = Object.create(scope);
+      child[as] = item;
+      child.$index = i;
+      node.content.childNodes.forEach((n) => renderNode(n, child, parent));
+    });
+    return;
+  }
+  // 条件：<template data-sc="if" value="{{ x }}">，值为真才渲染里面的内容
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'if') {
+    const v = lookup(scope, node.getAttribute('value').replace(/[{}]/g, ''));
+    if (v) node.content.childNodes.forEach((n) => renderNode(n, scope, parent));
+    return;
+  }
+
+  // 普通元素：复制标签，逐个处理属性
+  // 必须按原节点的命名空间创建：svg / path 这些图标属于 SVG 命名空间，
+  // 用 createElement 建出来是"假的 svg"，浏览器不会画（之前小箭头、图标不显示就是这个原因）
+  const el = node.namespaceURI === 'http://www.w3.org/1999/xhtml'
+    ? document.createElement(node.localName)
+    : document.createElementNS(node.namespaceURI, node.localName);
+  const props = {};   // 要在插入后设置的属性（selected / checked / value）
+  for (const attr of Array.from(node.attributes)) {
+    const name = attr.name;
+    const m = attr.value.match(WHOLE);
+    if (m) {
+      const v = lookup(scope, m[1]);
+      if (name.startsWith('on')) {
+        // 事件：onClick → click；链接 href="#" 的点击不跳页面
+        if (typeof v === 'function') {
+          el.addEventListener(name.slice(2).toLowerCase(), (e) => {
+            if (el.tagName === 'A' && el.getAttribute('href') === '#') e.preventDefault();
+            v(e);
+          });
+        }
+      } else if (name === 'checked' || name === 'selected' || name === 'value') {
+        props[name] = v;                      // 这几个要用属性赋值才生效
+      } else if (v === false || v == null) {
+        // false / 空值：不写这个属性
+      } else {
+        el.setAttribute(name, String(v));
+      }
+    } else if (attr.value.indexOf('{{') >= 0) {
+      el.setAttribute(name, interp(attr.value, scope));
+    } else if (name === 'checked' || name === 'selected') {
+      props[name] = true;                     // 写死的 checked / selected
+    } else {
+      el.setAttribute(name, attr.value);
+    }
+  }
+  // 子节点（<template> 自己的内容在 .content 里）
+  const kids = node.tagName === 'TEMPLATE' ? node.content.childNodes : node.childNodes;
+  kids.forEach((n) => renderNode(n, scope, el));
+  parent.appendChild(el);
+  // 插入后再设置属性（option 的 selected 必须在进了 select 之后设）
+  if ('value' in props) el.value = props.value == null ? '' : props.value;
+  if ('checked' in props) el.checked = !!props.checked;
+  if ('selected' in props) el.selected = !!props.selected;
+}
+
+let TPL = null;    // 页面模板（只解析一次）
+let COMP = null;   // 页面逻辑实例
+
+// 整页渲染：取最新数据 → 按模板生成 DOM → 替换掉旧的
+function render() {
+  const vals = COMP.renderVals();
+  const root = document.getElementById('app');
+  const frag = document.createDocumentFragment();
+  TPL.content.childNodes.forEach((n) => renderNode(n, vals, frag));
+  // 保留页面滚动位置，避免每次点击后跳回顶部
+  const x = window.scrollX, y = window.scrollY;
+  root.replaceChildren(frag);
+  window.scrollTo(x, y);
+}
+
+// 启动：读模板、按属性默认值创建页面逻辑、第一次渲染
+window.addEventListener('DOMContentLoaded', () => {
+  TPL = document.getElementById('page-tpl');
+  const defaults = {};
+  for (const [k, cfg] of Object.entries(PROP_DEFS)) {
+    if (cfg && typeof cfg === 'object' && 'default' in cfg) defaults[k] = cfg.default;
+  }
+  COMP = new Component(defaults);
+  render();
+});
+
+// ======================================================================
+// 页面逻辑（和设计稿里完全一样）：renderVals() 返回模板要用的数据和点击处理函数
+// ======================================================================
+
+// 页面逻辑：这里只负责给模板提供数据，不做真实请求
+class Component extends DCLogic {
+  renderVals() {
+    // ---------- 左侧导航菜单 ----------
+    // 进程管控 下有二级菜单：概览 / 进程管理 / 白名单 / 黑名单（CUR_SUB = 本页要高亮的那一项，空 = 都不高亮）
+    const NAV_ACTIVE_BG = '#0d3479';   // 选中 / 悬停：底色（比导航底色亮一点的深蓝，截图 13 取色）
+    const NAV_BAR = '#08a7ff';         // 选中 / 悬停：左侧竖条（亮蓝）
+    const NAV_TEXT = '#c5d4fd';        // 普通状态文字 / 图标（浅蓝白）
+    const NAV_TEXT_ON = '#ffffff';     // 选中状态文字
+    const NAV_ICON_ON = '#33b8ff';     // 选中 / 悬停：一级菜单图标（亮蓝）
+    // 二级菜单跳转地址：画布里只有「概览」能跳（其他页面在另一块画布）；导出 demo 时这一行会换成 demo 里的全部文件名
+    const SUB_LINKS = {"概览": "概览.html", "进程管理": "进程管控列表.html", "白名单": "白名单列表.html", "黑名单": "黑名单列表.html"};
+    const CUR_SUB = '';         // 学习任务相关页面不在左侧菜单里，所以不高亮任何二级菜单
+    const menus = [
+      { label: '安全中心', icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z' },
+      { label: '安全态势', icon: 'M3 20h18M4 16l5-6 4 4 7-8' },
+      { label: '全网终端', icon: 'M3 5h18v12H3zM8 21h8M8 9l3 2-3 2M13 13h3' },
+      { label: '病毒查杀', icon: 'M12 3l2 4h4l-2 4 2 4h-4l-2 4-2-4H6l2-4-2-4h4z' },
+      { label: 'EDR', icon: 'M12 3a9 9 0 1 0 9 9M12 12l5-5M12 7v5h5' },
+      { label: '防火墙', icon: 'M4 4h16v16H4zM4 10h16M4 16h16M10 4v6M14 10v6M10 16v4' },
+      { label: '漏洞扫描', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 11v2' },
+      { label: '资产管理', icon: 'M3 10l3-6h12l3 6v10H3zM3 10h18M9 14h6' },
+      { label: '进程管控', icon: 'M4 5h16v14H4zM8 9h8M8 13h5M15 13l2 2 3-3',
+        children: ['概览', '进程管理', '白名单', '黑名单'].map((label) => ({ label, current: label === CUR_SUB })) },
+      { label: '行为审计', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M8 13l3-4 2 3 3-5' },
+      { label: '安全基线', icon: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6zM12 8v8M9 12h6' },
+      { label: '桌面管理', icon: 'M3 4h18v12H3zM8 20h8M12 16v4M15 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4' },
+      { label: '移动安全', icon: 'M8 3h8v18H8zM11 18h2' },
+      { label: '策略中心', icon: 'M12 3l8 4-8 4-8-4zM4 12l8 4 8-4M4 17l8 4 8-4' },
+      { label: '计划任务', icon: 'M4 5h16v15H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4' },
+      { label: '报告预警', icon: 'M12 4a6 6 0 0 0-6 6v4l-2 3h16l-2-3v-4a6 6 0 0 0-6-6M10 20h4' },
+      { label: '升级中心', icon: 'M7 17a4 4 0 0 1 1-8 6 6 0 0 1 11 2 3 3 0 0 1 0 6zM12 17v-6M9 14l3-3 3 3' },
+      { label: '系统中心', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a3 3 0 1 0 0 6 3 3 0 0 0 0-6M7 19c1-3 3-4 5-4s4 1 5 4' },
+      { label: '级联中心', icon: 'M4 4h6v5H4zM14 15h6v5h-6zM7 9v4h10v2' },
+    ].map((m) => {
+      const hasSub = !!(m.children && m.children.length);
+      // 有二级菜单的默认展开（当前页面就在里面）；点一级菜单切换展开 / 收起
+      const navClosed = (this.state && this.state.navClosed) || {};
+      const expanded = hasSub && !navClosed[m.label];
+      // 一级菜单高亮：收起后，如果当前页面在它下面，就把一级标成选中，免得看不出在哪
+      const on = hasSub && !expanded && m.children.some((c) => c.current);
+      return {
+        ...m,
+        hasSub,
+        expanded,
+        caret: expanded ? '180deg' : '0deg',   // 箭头：展开朝上、收起朝下
+        toggle: hasSub ? () => this.setState({ navClosed: { ...navClosed, [m.label]: expanded } }) : null,
+        bg:  on ? NAV_ACTIVE_BG : 'transparent',
+        bar: on ? NAV_BAR : 'transparent',
+        fg:  on ? NAV_TEXT_ON : NAV_TEXT,
+        icoColor: on ? NAV_ICON_ON : NAV_TEXT,
+        children: (m.children || []).map((c) => ({
+          ...c,
+          href: SUB_LINKS[c.label] || '#',           // 跳转页面（没有的不跳）
+          bg:  c.current ? NAV_ACTIVE_BG : 'transparent',
+          bar: c.current ? NAV_BAR : 'transparent',
+          fg:  c.current ? NAV_TEXT_ON : NAV_TEXT,
+          dot: c.current ? NAV_BAR : 'currentColor', // 当前页面的小圆点是亮蓝色，其他跟文字同色
+        })),
+      };
+    });
+
+    // ---------- 当前查看的学习任务（从列表页点「查看进程」进来） ----------
+    const task = {
+      name: '办公区终端基线学习', os: 'Windows', period: '7 天', started: '2026-09-22 09:00:00',
+      groupCount: 2, hostCount: 236, reported: 218, procCount: 1284,
+      status: '学习中', statusColor: '#1e88e5',
+    };
+
+    // ---------- 采集到的进程（全部来自 Windows 终端） ----------
+    // 每行 = 一条进程记录（路径 + 文件哈希唯一）。字段：
+    //   name 进程名 / path 路径 / md5 文件哈希
+    //   pkg 包名（Windows 取文件属性里的"产品名称"；空 = 查不到）
+    //   maintainer 维护者（Windows 取文件属性里的"公司名称"；空 = 未知）
+    //   desc 进程描述（文件属性里的"文件描述"）/ hosts 上报过的终端台数
+    //   state 处理状态（未处理 / 已加白 / 已加黑）/ raw 原始上报记录条数
+    // 示例数据特意放了几种合并后能看出问题的情况：
+    //   同一路径两个文件哈希（微信升级了一半终端；svchost.exe 有一台被替换）
+    //   同一文件哈希 出现在两个路径（可疑程序改名后藏到别处）
+    //   确认状态三种都有：待确认 / 已加白（系统组件、Chrome）/ 已加黑（ToDesk、Steam、破解工具、可疑程序）
+    const rawProcs = [
+      { name: 'explorer.exe',      path: 'C:\\Windows\\explorer.exe',                          md5: '8b88ebbb05a0e56b7dcc708498c02b3e', pkg: 'Microsoft® Windows® Operating System', maintainer: 'Microsoft Corporation', desc: 'Windows 资源管理器',    hosts: 218, state: '已加白', raw: 1962 },
+      { name: 'svchost.exe',       path: 'C:\\Windows\\System32\\svchost.exe',                 md5: '32569e403279b3fd2edb7ebd036273fa', pkg: 'Microsoft® Windows® Operating System', maintainer: 'Microsoft Corporation', desc: 'Windows 服务主进程',    hosts: 217, state: '已加白', raw: 8720 },
+      { name: 'svchost.exe',       path: 'C:\\Windows\\System32\\svchost.exe',                 md5: 'e1f2a3b4c5d6e7f8091a2b3c4d5e6f70', pkg: '',                                     maintainer: '',                      desc: '',                      hosts: 1,   state: '未处理', raw: 38 },
+      { name: 'lsass.exe',         path: 'C:\\Windows\\System32\\lsass.exe',                   md5: '9a1b2c3d4e5f60718293a4b5c6d7e8f9', pkg: 'Microsoft® Windows® Operating System', maintainer: 'Microsoft Corporation', desc: '本地安全机构进程',      hosts: 218, state: '已加白', raw: 1960 },
+      { name: 'RuntimeBroker.exe', path: 'C:\\Windows\\System32\\RuntimeBroker.exe',           md5: 'a0b1c2d3e4f5061728394a5b6c7d8e9f', pkg: 'Microsoft® Windows® Operating System', maintainer: 'Microsoft Corporation', desc: '运行时代理',            hosts: 216, state: '已加白', raw: 3104 },
+      { name: 'msedge.exe',        path: 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe', md5: 'b1c2d3e4f5061728394a5b6c7d8e9fa0', pkg: 'Microsoft Edge', maintainer: 'Microsoft Corporation', desc: 'Microsoft Edge 浏览器', hosts: 132, state: '未处理', raw: 2280 },
+      { name: 'WINWORD.EXE',       path: 'C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE',  md5: 'a1f3c9e0b7d24c6e8f5a2b1c3d4e5f60', pkg: 'Microsoft Office', maintainer: 'Microsoft Corporation', desc: 'Microsoft Word',        hosts: 174, state: '未处理', raw: 1044 },
+      { name: 'EXCEL.EXE',         path: 'C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE',    md5: 'b2a4d0f1c8e35d7f9a6b3c2d4e5f6071', pkg: 'Microsoft Office', maintainer: 'Microsoft Corporation', desc: 'Microsoft Excel',       hosts: 169, state: '未处理', raw: 986 },
+      { name: 'OUTLOOK.EXE',       path: 'C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE',  md5: 'c3b5e1f2d9f46e8a0b7c4d3e5f607182', pkg: 'Microsoft Office', maintainer: 'Microsoft Corporation', desc: 'Microsoft Outlook',     hosts: 151, state: '未处理', raw: 1320 },
+      { name: 'chrome.exe',        path: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',        md5: 'd4e5f60718293a4b5c6d7e8f901a2b3c', pkg: 'Google Chrome',    maintainer: 'Google LLC',            desc: 'Google Chrome',         hosts: 141, state: '已加白', raw: 6210 },
+      { name: 'WeChat.exe',        path: 'C:\\Program Files (x86)\\Tencent\\WeChat\\WeChat.exe',               md5: 'c3d4e5f60718293a4b5c6d7e8f901a2b', pkg: 'WeChat',           maintainer: 'Tencent',               desc: '微信 3.9.10',           hosts: 121, state: '未处理', raw: 2210 },
+      { name: 'WeChat.exe',        path: 'C:\\Program Files (x86)\\Tencent\\WeChat\\WeChat.exe',               md5: 'd5e6f708192a3b4c5d6e7f8091a2b3c4', pkg: 'WeChat',           maintainer: 'Tencent',               desc: '微信 3.9.12',           hosts: 42,  state: '未处理', raw: 724 },
+      { name: 'QQ.exe',            path: 'C:\\Program Files\\Tencent\\QQNT\\QQ.exe',                           md5: 'e6f708192a3b4c5d6e7f8091a2b3c4d5', pkg: 'QQ',               maintainer: 'Tencent',               desc: 'QQ',                    hosts: 88,  state: '未处理', raw: 1506 },
+      { name: 'DingTalk.exe',      path: 'C:\\Program Files (x86)\\DingDing\\main\\current\\DingTalk.exe',      md5: 'e5f60718293a4b5c6d7e8f901a2b3c4d', pkg: 'DingTalk',         maintainer: '钉钉（中国）信息技术有限公司', desc: '钉钉',          hosts: 96,  state: '未处理', raw: 1710 },
+      { name: 'ToDesk.exe',        path: 'C:\\Program Files\\ToDesk\\ToDesk.exe',                              md5: 'f60718293a4b5c6d7e8f901a2b3c4d5e', pkg: 'ToDesk',           maintainer: '海南有趣科技有限公司',  desc: 'ToDesk 远程控制',       hosts: 7,   state: '已加黑', raw: 41 },
+      { name: 'steam.exe',         path: 'C:\\Program Files (x86)\\Steam\\steam.exe',                          md5: '1a2b3c4d5e6f708192a3b4c5d6e7f801', pkg: 'Steam',            maintainer: 'Valve Corporation',     desc: 'Steam 游戏平台',        hosts: 6,   state: '已加黑', raw: 57 },
+      { name: 'KMSAuto.exe',       path: 'C:\\Users\\[用户名]\\Downloads\\KMSAuto Net\\KMSAuto.exe',          md5: '2b3c4d5e6f708192a3b4c5d6e7f80912', pkg: '',                 maintainer: '',                      desc: '',                      hosts: 3,   state: '已加黑', raw: 11 },
+      { name: 'update_helper.exe', path: 'C:\\Users\\[用户名]\\AppData\\Roaming\\tmp\\update_helper.exe',       md5: '0718293a4b5c6d7e8f901a2b3c4d5e6f', pkg: '',                 maintainer: '',                      desc: '',                      hosts: 2,   state: '已加黑', raw: 9 },
+      { name: 'svch0st.exe',       path: 'C:\\ProgramData\\Microsoft\\svch0st.exe',                            md5: '0718293a4b5c6d7e8f901a2b3c4d5e6f', pkg: '',                 maintainer: '',                      desc: '',                      hosts: 1,   state: '已加黑', raw: 4 },
+    ];
+    // 处理状态颜色：已加白=绿 / 已加黑=红
+    const STATE = { '已加白': '#2e7d32', '已加黑': '#c62828', '已处理': '#5a6475' };
+    const uniq = (arr) => arr.filter((x, i) => arr.indexOf(x) === i);
+
+    // ---------- 单元格小工具：模板只取值，颜色 / 字体都在这里算好 ----------
+    // 普通文字；muted 灰字；bad 红字（未知来源）；mono 等宽（文件哈希）；link 蓝色可点（数字）；warn 橙色可点（一格里有多个不同值，要注意）
+    const cell = (w, text, kind) => ({
+      w: w + 'px',
+      text: String(text),
+      cls:   kind === 'mono' ? 'mono' : '',
+      color: { muted: '#5a6475', bad: '#e53935', none: '#8a94a6', mono: '#5a6475', link: '#1e88e5', warn: '#e65100' }[kind] || '#333333',
+      link:  kind === 'link' || kind === 'warn',
+      plain: !(kind === 'link' || kind === 'warn'),
+      tag:   false,
+    });
+    // 一格里可能有多个值：只有一个就直接显示，多个就显示"N 个xx"（橙色，点开看明细）
+    const many = (w, vals, unit, kind) => vals.length > 1 ? cell(w, vals.length + ' 个' + unit, 'warn') : cell(w, vals[0], kind);
+    // 确认状态（合并后的一行）：
+    //   只要还有一条未处理 → 待确认（橙）；全部已加白 → 已加白（绿）；全部已加黑 → 已加黑（红）
+    //   白、黑都有（很少见，只会出现在按包 / 按维护者里）→ 显示"已加白/黑"（灰），只在"全部"里出现
+    const confirmOf = (it) => {
+      if (it.some((p) => p.state === '未处理')) return '待确认';
+      const st = uniq(it.map((p) => p.state));
+      return st.length === 1 ? st[0] : '已加白/黑';
+    };
+    const CONFIRM_STYLE = {
+      '待确认':   { color: '#4a5568', bg: '#eceff3' },
+      '已加白':   { color: '#2e7d32', bg: '#e8f5e9' },
+      '已加黑':   { color: '#c62828', bg: '#fdecea' },
+      '已加白/黑': { color: '#4a5568', bg: '#ffffff' },
+    };
+    const confirmCell = (it, w) => {
+      const st = confirmOf(it);
+      const c = cell(w || 90, st);
+      c.color = CONFIRM_STYLE[st].color;
+      c.tagBg = CONFIRM_STYLE[st].bg;
+      c.plain = false;   // 不用普通文字
+      c.tag = true;      // 用标签样式显示
+      return c;
+    };
+    // 查不到包名 / 维护者时统一显示 "--"（灰色）
+    const pkgOf = (p) => p.pkg || '--';
+    const mtOf  = (p) => p.maintainer || '--';
+    const hostSum = (it) => it.reduce((n, p) => n + p.hosts, 0);
+
+    // ---------- 4 种显示方式 ----------
+    // 一个学习任务只采一种系统类型，所以各视图都不再放"系统类型"列（系统显示在上方任务信息条里）
+    // key 合并条件；cols 列名和宽度（px，含内边距；合计约 1470，剩下的给操作列）；cells 一行怎么显示
+    const VIEWS = {
+      path: {
+        label: '按路径显示',
+        key: (p) => p.path,
+        cols: [['进程名称', 170], ['文件哈希', 250], ['进程路径', 300], ['包名', 200], ['维护者', 190], ['进程描述', 190], ['终端数', 80], ['确认状态', 90]],
+        cells: (g, it) => [
+          many(170, uniq(it.map((p) => p.name)), '名称'),
+          many(250, uniq(it.map((p) => p.md5)), '文件哈希', 'mono'),          // 同一路径多个文件哈希 = 文件被换过
+          cell(300, g, 'muted'),
+          cell(200, pkgOf(it[0]), it[0].pkg ? '' : 'none'),
+          cell(190, mtOf(it[0]),  it[0].maintainer ? '' : 'none'),
+          cell(190, it[0].desc || '--', it[0].desc ? 'muted' : 'none'),
+          cell(80, hostSum(it), 'link'),
+          confirmCell(it),
+        ],
+      },
+      md5: {
+        label: '按文件哈希显示',
+        key: (p) => p.md5,
+        cols: [['文件哈希', 250], ['进程名称', 170], ['进程路径', 290], ['包名', 200], ['维护者', 190], ['进程描述', 200], ['终端数', 80], ['确认状态', 90]],
+        cells: (g, it) => [
+          cell(250, g, 'mono'),
+          many(170, uniq(it.map((p) => p.name)), '名称'),                    // 同一文件改了名
+          many(290, uniq(it.map((p) => p.path)), '路径', 'muted'),           // 同一文件放在多处
+          cell(200, pkgOf(it[0]), it[0].pkg ? '' : 'none'),
+          cell(190, mtOf(it[0]),  it[0].maintainer ? '' : 'none'),
+          cell(200, it[0].desc || '--', it[0].desc ? 'muted' : 'none'),
+          cell(80, hostSum(it), 'link'),
+          confirmCell(it),
+        ],
+      },
+      pkg: {
+        label: '按包显示',
+        key: (p) => pkgOf(p),
+        // 去掉了"包含进程"列（点进程数可以看是哪些进程）；列宽和按维护者显示保持一致
+        cols: [['包名', 400], ['维护者', 320], ['进程数', 200], ['终端数', 200], ['确认状态', 200]],
+        cells: (g, it) => [
+          cell(400, g, it[0].pkg ? '' : 'none'),
+          cell(320, mtOf(it[0]), it[0].maintainer ? '' : 'none'),
+          cell(200, it.length, 'link'),
+          cell(200, hostSum(it), 'link'),
+          confirmCell(it, 200),
+        ],
+      },
+      maintainer: {
+        label: '按维护者显示',
+        key: (p) => mtOf(p),
+        cols: [['维护者', 520], ['包数', 200], ['进程数', 200], ['终端数', 200], ['确认状态', 200]],
+        cells: (g, it) => [
+          cell(520, g, it[0].maintainer ? '' : 'none'),
+          cell(200, uniq(it.map((p) => pkgOf(p))).length, 'link'),   // 包数：点开看是哪些包
+          cell(200, it.length, 'link'),
+          cell(200, hostSum(it), 'link'),
+          confirmCell(it, 200),
+        ],
+      },
+    };
+
+    // 当前显示方式：Play 模式里点按钮存在 state 里；没点过用属性面板里的默认值
+    const view = (this.state && this.state.view) || this.props.view || 'path';
+    const cfg = VIEWS[view] || VIEWS.path;
+
+    // 显示方式按钮：选中 = 浅蓝底蓝字；未选中 = 白底灰边深色字（照截图 03/04/05）
+    // 按钮顺序：按文件哈希 / 按路径 / 按包 / 按维护者
+    const VIEW_ORDER = ['md5', 'path', 'pkg', 'maintainer'];
+    const views = VIEW_ORDER.map((id) => ({
+      label:  VIEWS[id].label,
+      active: id === view,
+      bg:     id === view ? '#e6f2fd' : '#ffffff',
+      border: id === view ? '#90caf9' : '#d5d9e0',
+      color:  id === view ? '#1e88e5' : '#333333',
+      pick:   () => this.setState({ view: id }),
+    }));
+
+    // 表头
+    const cols = cfg.cols.map(([title, w]) => ({ title, w: w + 'px' }));
+
+    // 按当前条件把进程记录合并成一行（保持出现顺序）
+    const map = {};
+    const order = [];
+    rawProcs.forEach((p) => {
+      const k = cfg.key(p);
+      if (!map[k]) { map[k] = []; order.push(k); }
+      map[k].push(p);
+    });
+    // 确认状态筛选：全部 / 待确认 / 已加白 / 已加黑；Play 模式下选了存在 state 里（值直接用中文）
+    const confirm = (this.state && this.state.confirm) || '全部';
+    const confirmOpts = [['全部', '全部'], ['待确认', '待确认'], ['已加白', '已加白'], ['已加黑', '已加黑']]
+      .map(([value, label]) => ({ value, label, sel: value === confirm }));
+    const pickConfirm = (e) => this.setState({ confirm: e.target.value });
+
+    // 加白 / 加黑菜单：state.menu 记录开着的是哪个（"视图|行 key|white/black"），空字符串 = 都没开
+    // 没点过时，属性面板 rowMenu = white / black 就在第一个待确认的行上展示
+    const firstPendingKey = order.find((k) => map[k].some((p) => p.state === '未处理'));
+    const openMenu = (this.state && this.state.menu !== undefined) ? this.state.menu
+      : (this.props.rowMenu && this.props.rowMenu !== 'none' ? view + '|' + firstPendingKey + '|' + this.props.rowMenu : '');
+    const byItems = ['按文件哈希', '按程序名', '按全路径'];   // 菜单项
+
+    // 操作提示：showToast("文字") 显示，2 秒后自动清掉；同时收起菜单
+    const toast = (this.state && this.state.toast) || '';
+    const toastOn = toast !== '';
+    const showToast = (text, extra) => {
+      this.setState(Object.assign({ toast: text }, extra || {}));
+      clearTimeout(this._toastTimer);
+      this._toastTimer = setTimeout(() => this.setState({ toast: '' }), 2000);
+    };
+    let rows = order.map((k) => {
+      const it = map[k];
+      const idW = view + '|' + k + '|white';   // 这一行"加白"菜单的 id
+      const idB = view + '|' + k + '|black';   // 这一行"加黑"菜单的 id
+      const nPending = it.filter((p) => p.state === '未处理').length;
+      const states = uniq(it.map((p) => p.state));
+      // 合并后的状态：全部加白 → 已加白；全部加黑 → 已加黑；白黑都有 → 已处理
+      const state = states.length === 1 ? states[0] : '已处理';
+      return {
+        whiteOpen: openMenu === idW,
+        blackOpen: openMenu === idB,
+        whiteCaret: openMenu === idW ? '180deg' : '0deg',   // 菜单打开时小三角朝上
+        blackCaret: openMenu === idB ? '180deg' : '0deg',
+        toggleWhite: () => this.setState({ menu: openMenu === idW ? '' : idW }),   // 再点一次收起；点另一个会换过去
+        toggleBlack: () => this.setState({ menu: openMenu === idB ? '' : idB }),
+        closeMenu: () => this.setState({ menu: '' }),                              // 收起菜单
+        // 菜单项：点了收起菜单 + 顶部提示，例如"已按文件哈希 加白"
+        whiteItems: byItems.map((label) => ({ label, pick: () => showToast('已' + label + '加白', { menu: '' }) })),
+        blackItems: byItems.map((label) => ({ label, pick: () => showToast('已' + label + '加黑', { menu: '' }) })),
+        confirm: confirmOf(it),
+        cells: cfg.cells(k, it),
+        pending: nPending > 0,          // 还有没处理的 → 显示 加白 / 加黑
+        done: nPending === 0,
+        state,
+        stColor: STATE[state] || '#5a6475',
+      };
+    });
+
+    if (confirm !== '全部') rows = rows.filter((r) => r.confirm === confirm);
+
+    // 底部统计
+    const viewLabel = cfg.label.replace('显示', '') + '合并，';   // 例：按路径合并，
+    const groupTotal = rows.length;
+    const procTotal = rawProcs.length;
+    const pending   = rawProcs.filter((p) => p.state === '未处理').length;
+    const unknown   = rawProcs.filter((p) => !p.maintainer).length;
+    const rawTotal  = rawProcs.reduce((sum, p) => sum + p.raw, 0);
+
+    return { menus, toast, toastOn, task, views, cols, rows, byItems, confirmOpts, pickConfirm, viewLabel, groupTotal, procTotal, pending, unknown, rawTotal };
+  }
+}
+
+</script>
+</body>
+</html>

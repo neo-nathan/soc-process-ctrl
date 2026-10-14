@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>进程管控 - 策略详情</title>
+<style>
+
+/* 页面基础：系统中文字体，灰底 */
+body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:#f0f2f5}
+/* 链接颜色和学习任务列表页一致 */
+a{color:#1e88e5;text-decoration:none}a:hover{color:#1565c0}
+/* 左侧导航：悬停效果（截图 14）—— 底色变亮一点的深蓝、左侧出现亮蓝竖条、文字变白；一级菜单的图标变亮蓝 */
+.nav1:hover,.nav2:hover{background:#0d3479 !important;border-left-color:#08a7ff !important;color:#ffffff !important}
+.nav1:hover .nav-ico{color:#33b8ff !important}
+/* 终端分组树：悬停浅灰底（选中浅蓝底蓝字写在行内） */
+.gnode:hover{background:#f2f5f9}
+
+/* 独立页面：页面固定 1920×1080，窗口小时可以滚动 */
+html,body{margin:0}
+</style>
+</head>
+<body>
+<!-- 渲染结果放这里 -->
+<div id="app"></div>
+
+<!-- 页面模板（和设计稿一致） -->
+<template id="page-tpl">
+
+
+<!-- ============ 整个页面：固定 1920 x 1080（外壳与「学习任务列表」页一致） ============ -->
+<div style="position: relative; width: 1920px; height: 1080px; box-sizing: border-box; display: flex; flex-direction: column; background: #f0f2f5; color: #333333; font-size: 14px; overflow: hidden;">
+
+  <!-- ============ 顶栏（50px 高） ============ -->
+  <div style="height: 50px; flex-shrink: 0; display: flex; align-items: stretch; background: #ffffff; border-bottom: 1px solid #e3e6eb;">
+    <!-- 左上角 LOGO 区：深蓝底 -->
+    <div style="width: 180px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #0f2a5c; color: #ffffff; font-size: 22px; font-weight: 800; letter-spacing: 2px;">SOC</div>
+    <!-- 系统标题 -->
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 20px; flex-grow: 1;">
+      <span style="font-size: 18px; font-weight: 700; color: #1f2d3d;">终端威胁检测与响应系统</span>
+      <span style="font-size: 14px; color: #1f2d3d;">· 专用</span>
+      <span style="font-size: 13px; color: #8a94a6; font-style: italic; margin-left: 12px;">一切尽在掌握！</span>
+    </div>
+    <!-- 右侧：消息数 / 用户 / 下载 -->
+    <div style="display: flex; align-items: center; gap: 16px; padding: 0 20px;">
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 4px; padding: 4px 10px; color: #4a5568;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+        <span>101</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 6px; background: #f2f4f7; border-radius: 16px; padding: 4px 12px 4px 6px; color: #4a5568;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e88e5" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+        <span>optAdmin</span>
+      </div>
+      <div style="width: 26px; height: 26px; border-radius: 50%; background: #1e88e5; display: flex; align-items: center; justify-content: center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6"></path></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 顶栏以下：左导航 + 右侧内容 ============ -->
+  <div style="flex-grow: 1; display: flex; min-height: 0;">
+
+    <!-- ============ 左侧主导航（180px，深蓝；当前高亮：进程管控） ============ -->
+    <nav style="width: 180px; flex-shrink: 0; background: #0f2a5c; color: #ffffff; display: flex; flex-direction: column; padding-top: 6px;">
+      <div style="display: flex; flex-direction: column;">
+        <template data-sc="for" list="{{ menus }}" as="m" hint-placeholder-count="19">
+          <!-- 一级菜单：普通状态浅色文字；选中 / 悬停时底色变亮、左侧亮蓝竖条、文字变白、图标变亮蓝（截图 13 / 14）
+               有二级菜单的在右边显示箭头（展开朝上、收起朝下），点击展开 / 收起 -->
+          <a href="#" class="nav1" onClick="{{ m.toggle }}" aria-expanded="{{ m.expanded }}" style="display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 0 0 34px; box-sizing: border-box; color: {{ m.fg }}; font-size: 14px; background: {{ m.bg }}; border-left: 3px solid {{ m.bar }};">
+            <span class="nav-ico" style="display: flex; color: {{ m.icoColor }};"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.icon }}"></path></svg></span>
+            <span style="flex-grow: 1;">{{ m.label }}</span>
+            <template data-sc="if" value="{{ m.hasSub }}" hint-placeholder-val="{{ false }}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 16px; transform: rotate({{ m.caret }});"><path d="M6 9l6 6 6-6"></path></svg>
+            </template>
+          </a>
+          <!-- 二级菜单：缩进，前面一个小圆点（截图 13）；当前页面：底色变亮 + 左侧亮蓝竖条 + 白字 + 亮蓝圆点；悬停同样效果（截图 14） -->
+          <template data-sc="if" value="{{ m.expanded }}" hint-placeholder-val="{{ false }}">
+            <template data-sc="for" list="{{ m.children }}" as="c" hint-placeholder-count="5">
+              <a href="{{ c.href }}" class="nav2" aria-current="{{ c.current }}" style="display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 0 0 65px; box-sizing: border-box; color: {{ c.fg }}; font-size: 14px; background: {{ c.bg }}; border-left: 3px solid {{ c.bar }};">
+                <span style="width: 5px; height: 5px; border-radius: 50%; background: {{ c.dot }}; flex-shrink: 0;"></span>
+                <span>{{ c.label }}</span>
+              </a>
+            </template>
+          </template>
+        </template>
+      </div>
+      <!-- 底部版权信息 -->
+      <div style="margin-top: auto; padding: 14px 10px 12px; border-top: 1px solid #1d3f7d; text-align: center; font-size: 12px; line-height: 18px; color: #c5d0e3;">
+        <div>[公司名称]</div>
+        <div>版权所有</div>
+        <div>版本：3.0 build：305034</div>
+      </div>
+    </nav>
+
+    <!-- ============ 右侧主内容区 ============ -->
+    <!-- ============ 左侧：终端分组面板（和概览页一样）；点分组 → 右边显示这个分组的策略 ============ -->
+    <aside style="width: 250px; flex-shrink: 0; display: flex; flex-direction: column; margin: 12px 0 12px 12px; background: #ffffff; border: 1px solid #e3e6eb;">
+      <!-- 标题：终端分组 [在线 / 总数]（选中分组的） -->
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 44px; flex-shrink: 0; padding: 0 12px; border-bottom: 1px solid #eef0f3;">
+        <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">终端分组 <span style="font-weight: 400; font-size: 13px; color: #1e88e5;">[{{ groupOnline }}/{{ groupTotal }}]</span></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a94a6" stroke-width="2" aria-hidden="true"><path d="M9 4h6l-1 6 3 3H7l3-3zM12 13v8"></path></svg>
+      </div>
+      <!-- 分组树：根管理组可以展开 / 收起 -->
+      <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 6px 0;">
+        <template data-sc="for" list="{{ groups }}" as="g" hint-placeholder-count="8">
+          <div class="gnode" onClick="{{ g.pick }}" aria-selected="{{ g.on }}" style="display: flex; align-items: center; gap: 6px; height: 32px; padding-left: {{ g.indent }}px; padding-right: 10px; cursor: pointer; background: {{ g.bg }}; color: {{ g.fg }}; font-size: 13px;">
+            <!-- 展开 / 收起按钮（只有根管理组有）：方框里 - 或 + -->
+            <template data-sc="if" value="{{ g.isRoot }}" hint-placeholder-val="{{ false }}">
+              <span onClick="{{ g.toggle }}" style="width: 12px; height: 12px; border: 1px solid #8a94a6; border-radius: 1px; display: flex; align-items: center; justify-content: center; font-size: 11px; line-height: 1; color: #5a6475; flex-shrink: 0; background: #ffffff;">{{ g.sign }}</span>
+            </template>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; color: {{ g.icoColor }};"><path d="M9 3h6v5H9zM4 16h6v5H4zM14 16h6v5h-6zM12 8v4M7 16v-4h10v4"></path></svg>
+            <span style="flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ g.name }}</span>
+            <span style="font-size: 12px; color: #8a94a6;">{{ g.online }}/{{ g.total }}</span>
+          </div>
+        </template>
+      </div>
+    </aside>
+
+    <main style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; margin: 12px; background: #ffffff; border: 1px solid #e3e6eb;">
+
+      <!-- 页签：进程管控概览下 3 个页签 概览 / 日志 / 策略（当前选中：策略）；统计分析页已不在页签里（页面保留）；其他页面都在左侧二级菜单里
+           选中的页签：白底 + 顶部蓝线 + 蓝字 -->
+      <div style="display: flex; align-items: stretch; height: 44px; flex-shrink: 0; background: #f5f7fa; border-bottom: 1px solid #e3e6eb;">
+        <a href="概览.html" style="width: 116px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e3e6eb; color: #333333; font-size: 15px;">概览</a>
+        <a href="审计日志列表.html" style="width: 116px; display: flex; align-items: center; justify-content: center; border-right: 1px solid #e3e6eb; color: #333333; font-size: 15px;">日志</a>
+        <a href="策略详情.html" style="position: relative; z-index: 1; margin-bottom: -1px; width: 116px; display: flex; align-items: center; justify-content: center; background: #ffffff; border-top: 2px solid #1e88e5; border-right: 1px solid #e3e6eb; border-bottom: 1px solid #ffffff; color: #1e88e5; font-weight: 700; font-size: 15px;">策略</a>
+      </div>
+
+      <!-- ============ 内容区：策略详情 ============ -->
+      <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 20px;">
+
+        <!-- 策略标题：Linux 图标 + 进程管控-Linux，下划蓝线 -->
+        <div style="display: flex; align-items: flex-end; height: 50px; flex-shrink: 0; border-bottom: 1px solid #e3e6eb;">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 0 24px 10px 24px; border-bottom: 2px solid #1e88e5; color: #1e88e5; font-size: 16px; font-weight: 700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1e88e5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M6 21c1-5 3.5-7 6-7s5 2 6 7"></path><path d="M8 13l-2 3M16 13l2 3"></path></svg>
+            <span>进程管控-Linux</span>
+          </div>
+        </div>
+
+        <!-- 策略基本信息 -->
+        <div style="margin-top: 14px; background: #f5f7fa; padding: 14px 30px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 40px; font-size: 14px; flex-shrink: 0;">
+          <div style="display: flex; gap: 12px;"><span style="color: #8a94a6; width: 80px;">策略名称：</span><span>全网适配通用查杀</span></div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end;"><span style="color: #8a94a6;">应用范围：</span><span>组<a href="#">[{{ scopeGroups }}]</a></span><span style="margin-left: 16px;">终端<a href="#">[{{ groupTotal }}]</a></span></div>
+          <div style="display: flex; gap: 12px;"><span style="color: #8a94a6; width: 80px;">当前组：</span><span>{{ groupPath }}</span></div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end;"><span style="color: #8a94a6;">应用时间：</span><span>2022年12月22日 12:37</span></div>
+          <div style="display: flex; gap: 12px; grid-column: span 2;"><span style="color: #8a94a6; width: 80px;">描述：</span><span>此处为策略描述</span></div>
+        </div>
+
+        <!-- 策略设置卡片 -->
+        <div style="margin-top: 14px; margin-bottom: 14px; border: 1px solid #e3e6eb; display: flex; flex-direction: column; flex-grow: 1; min-height: 0;">
+          <!-- 卡片标题：左侧蓝色竖条 + 策略设置 -->
+          <div style="height: 40px; flex-shrink: 0; background: #edf0f4; padding: 0 20px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700; color: #1f2d3d; border-bottom: 1px solid #e3e6eb;">
+            <div style="width: 3px; height: 16px; background: #1e88e5;"></div>
+            <span>策略设置</span>
+          </div>
+
+          <div style="padding: 20px 24px; display: flex; flex-direction: column; gap: 22px;">
+
+            <!-- 总开关：一整行醒目的开关条，关掉后下面全部不可操作 -->
+            <div style="display: flex; align-items: center; gap: 14px; padding: 14px 20px; background: {{masterBg}}; border: 1px solid {{masterBorder}}; border-radius: 4px;">
+              <!-- 开关本体：用 button 做成滑块样式 -->
+              <button type="button" onClick="{{toggleEnabled}}" aria-label="开启进程管控" style="width: 44px; height: 22px; border-radius: 11px; border: none; padding: 0; background: {{switchBg}}; position: relative; cursor: pointer; flex-shrink: 0;">
+                <span style="position: absolute; top: 2px; left: {{knobLeft}}; width: 18px; height: 18px; border-radius: 9px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.25);"></span>
+              </button>
+              <span style="font-size: 16px; font-weight: 700; color: #1f2d3d;">开启进程管控</span>
+              <span style="font-size: 12px; padding: 2px 10px; border-radius: 10px; background: {{stateBg}}; color: #ffffff;">{{stateText}}</span>
+              <span style="font-size: 13px; color: #8a94a6;">总开关。关闭后终端不采集、不审计、不拦截，下方「管控模式」和「客户端参数」不可设置。</span>
+            </div>
+
+            <!-- 分组一：管控模式（总开关关闭时置灰且不可点） -->
+            <div style="margin-left: 36px; display: flex; flex-direction: column; gap: 12px; opacity: {{sectionOpacity}}; pointer-events: {{sectionEvents}};">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5a6475" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"></rect><path d="M8 11V7a4 4 0 0 1 7.5-2"></path></svg>
+                <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">管控模式</span>
+                <span style="font-size: 13px; color: #8a94a6;">（三选一，决定终端发现进程后怎么处理）</span>
+              </div>
+
+              <!-- 三张模式卡片；审计、拦截卡片内各自带一个「提示用户」子选项 -->
+              <div style="margin-left: 26px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px;">
+                <template data-sc="for" list="{{modes}}" as="m" hint-placeholder-count="3">
+                  <div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border: 1px solid {{m.border}}; background: {{m.bg}}; border-radius: 4px; min-height: 150px; box-sizing: border-box;">
+                    <label style="display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; color: #1f2d3d; cursor: pointer;">
+                      <input type="radio" name="mode" checked="{{m.checked}}" onChange="{{m.pick}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1e88e5;">
+                      <span>{{m.name}}</span>
+                      <!-- 模式标签：审计 / 拦截 有，学习模式没有 -->
+                      <template data-sc="if" value="{{m.hasTag}}" hint-placeholder-val="{{ true }}">
+                        <span style="font-size: 12px; font-weight: 400; padding: 1px 8px; border-radius: 10px; background: {{m.tagBg}}; color: {{m.tagColor}};">{{m.tag}}</span>
+                      </template>
+                    </label>
+                    <span style="font-size: 13px; color: #5a6475; line-height: 1.6; margin-left: 26px;">{{m.desc}}</span>
+                    <!-- 子选项：只有审计 / 拦截两张卡片有；本卡片未被选中时置灰不可勾 -->
+                    <template data-sc="if" value="{{m.hasOpt}}" hint-placeholder-val="{{ true }}">
+                      <label style="margin-left: 26px; margin-top: auto; padding-top: 10px; border-top: 1px dashed #d5d9e0; display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; opacity: {{m.optOpacity}};">
+                        <input type="checkbox" checked="{{m.optOn}}" disabled="{{m.optDisabled}}" onChange="{{m.optToggle}}" style="width: 14px; height: 14px; margin: 0; accent-color: #1e88e5;">
+                        <span>{{m.optLabel}}</span>
+                        <span style="font-size: 12px; color: #8a94a6;">{{m.optHint}}</span>
+                      </label>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <!-- 分组二：客户端参数 -->
+            <div style="margin-left: 36px; display: flex; flex-direction: column; gap: 12px; opacity: {{sectionOpacity}}; pointer-events: {{sectionEvents}};">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5a6475" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"></rect><path d="M8 11V7a4 4 0 0 1 7.5-2"></path></svg>
+                <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">客户端参数</span>
+                <span style="font-size: 13px; color: #8a94a6;">（终端与 SOC 中心的通信频率，一般不用改）</span>
+              </div>
+              <label style="margin-left: 26px; display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                <span style="width: 80px;">上报间隔：</span>
+                <span>客户端每</span>
+                <input type="number" value="360" aria-label="上报间隔秒数" style="width: 80px; height: 30px; border: 1px solid #d5d9e0; border-radius: 3px; font-family: inherit; font-size: 13px; text-align: center; box-sizing: border-box;">
+                <span>秒上报一次进程信息</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 底部操作：应用 / 取消
+               应用 = 保存策略 + 直接下发到当前组（含子组）的终端：在线终端立即生效，离线终端上线后自动生效 -->
+          <div style="margin-top: auto; padding: 14px 24px; border-top: 1px solid #e3e6eb; display: flex; align-items: center; gap: 12px;">
+            <button type="button" onClick="{{ apply }}" style="height: 32px; padding: 0 22px; background: #1e88e5; color: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; font-family: inherit; font-size: 14px; cursor: pointer;">应用</button>
+            <button type="button" style="height: 32px; padding: 0 22px; background: #ffffff; color: #333333; border: 1px solid #d5d9e0; border-radius: 3px; font-family: inherit; font-size: 14px; cursor: pointer;">取消</button>
+            <span style="margin-left: 8px; font-size: 12px; color: #8a94a6;">点「应用」后保存策略并立即下发到「{{ groupPath }}」的 {{ groupTotal }} 台终端</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 操作提示：点「应用」后在页面上方中间出现，3 秒后自动消失 -->
+  <template data-sc="if" value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; background: #1f2d3d; color: #ffffff; border-radius: 4px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); font-size: 14px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#66bb6a" stroke-width="3"><path d="M5 12l5 5 9-10"></path></svg>
+      <span>{{ toast }}</span>
+    </div>
+  </template>
+</div>
+
+</template>
+
+<script>
+// 页面属性的默认值（设计稿右侧属性面板里的那些开关）
+const PROP_DEFS = {"$preview": {"width": 1920, "height": 1080}};
+
+// ======================================================================
+// 小渲染器：替代设计工具的运行时，让页面脱离设计工具也能直接打开
+// 支持：{{ a.b }} 取值、<template data-sc="for"> 循环、<template data-sc="if"> 条件、
+//      onClick / onChange 事件、setState 后整页重新渲染
+// ======================================================================
+
+// 页面逻辑类的父类：提供 props（属性默认值）、state（页面状态）、setState（改状态并重绘）
+class DCLogic {
+  constructor(props) {
+    this.props = props || {};
+    this.state = {};
+  }
+  setState(patch) {
+    Object.assign(this.state, patch);   // 合并新状态
+    render();                           // 重新画整页
+  }
+}
+
+// 按 "a.b.c" 从作用域里取值；true / false / 数字 这种字面量直接返回
+function lookup(scope, path) {
+  path = path.trim();
+  if (path === 'true') return true;
+  if (path === 'false') return false;
+  if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+  let cur = scope;
+  for (const key of path.split('.')) {
+    if (cur == null) return undefined;
+    cur = cur[key];
+  }
+  return cur;
+}
+
+const WHOLE = /^\s*\{\{([^}]+)\}\}\s*$/;   // 整个属性值就是一个 {{ }}（要保留原始类型，比如函数、布尔）
+const PART = /\{\{([^}]+)\}\}/g;           // 字符串里夹着的 {{ }}
+
+// 把字符串里的 {{ }} 都换成值
+function interp(str, scope) {
+  return str.replace(PART, (_, p) => {
+    const v = lookup(scope, p);
+    return v == null ? '' : String(v);
+  });
+}
+
+// 递归渲染一个模板节点，结果追加到 parent 里
+function renderNode(node, scope, parent) {
+  // 文字节点：替换 {{ }}
+  if (node.nodeType === 3) {
+    parent.appendChild(document.createTextNode(interp(node.nodeValue, scope)));
+    return;
+  }
+  if (node.nodeType !== 1) return;   // 注释等其他节点跳过
+
+  // 循环：<template data-sc="for" list="{{ rows }}" as="r">
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'for') {
+    const list = lookup(scope, node.getAttribute('list').replace(/[{}]/g, '')) || [];
+    const as = node.getAttribute('as');
+    list.forEach((item, i) => {
+      // 子作用域：继承外层，再加上当前这一项和序号
+      const child = Object.create(scope);
+      child[as] = item;
+      child.$index = i;
+      node.content.childNodes.forEach((n) => renderNode(n, child, parent));
+    });
+    return;
+  }
+  // 条件：<template data-sc="if" value="{{ x }}">，值为真才渲染里面的内容
+  if (node.tagName === 'TEMPLATE' && node.dataset.sc === 'if') {
+    const v = lookup(scope, node.getAttribute('value').replace(/[{}]/g, ''));
+    if (v) node.content.childNodes.forEach((n) => renderNode(n, scope, parent));
+    return;
+  }
+
+  // 普通元素：复制标签，逐个处理属性
+  // 必须按原节点的命名空间创建：svg / path 这些图标属于 SVG 命名空间，
+  // 用 createElement 建出来是"假的 svg"，浏览器不会画（之前小箭头、图标不显示就是这个原因）
+  const el = node.namespaceURI === 'http://www.w3.org/1999/xhtml'
+    ? document.createElement(node.localName)
+    : document.createElementNS(node.namespaceURI, node.localName);
+  const props = {};   // 要在插入后设置的属性（selected / checked / value）
+  for (const attr of Array.from(node.attributes)) {
+    const name = attr.name;
+    const m = attr.value.match(WHOLE);
+    if (m) {
+      const v = lookup(scope, m[1]);
+      if (name.startsWith('on')) {
+        // 事件：onClick → click；链接 href="#" 的点击不跳页面
+        if (typeof v === 'function') {
+          el.addEventListener(name.slice(2).toLowerCase(), (e) => {
+            if (el.tagName === 'A' && el.getAttribute('href') === '#') e.preventDefault();
+            v(e);
+          });
+        }
+      } else if (name === 'checked' || name === 'selected' || name === 'value') {
+        props[name] = v;                      // 这几个要用属性赋值才生效
+      } else if (v === false || v == null) {
+        // false / 空值：不写这个属性
+      } else {
+        el.setAttribute(name, String(v));
+      }
+    } else if (attr.value.indexOf('{{') >= 0) {
+      el.setAttribute(name, interp(attr.value, scope));
+    } else if (name === 'checked' || name === 'selected') {
+      props[name] = true;                     // 写死的 checked / selected
+    } else {
+      el.setAttribute(name, attr.value);
+    }
+  }
+  // 子节点（<template> 自己的内容在 .content 里）
+  const kids = node.tagName === 'TEMPLATE' ? node.content.childNodes : node.childNodes;
+  kids.forEach((n) => renderNode(n, scope, el));
+  parent.appendChild(el);
+  // 插入后再设置属性（option 的 selected 必须在进了 select 之后设）
+  if ('value' in props) el.value = props.value == null ? '' : props.value;
+  if ('checked' in props) el.checked = !!props.checked;
+  if ('selected' in props) el.selected = !!props.selected;
+}
+
+let TPL = null;    // 页面模板（只解析一次）
+let COMP = null;   // 页面逻辑实例
+
+// 整页渲染：取最新数据 → 按模板生成 DOM → 替换掉旧的
+function render() {
+  const vals = COMP.renderVals();
+  const root = document.getElementById('app');
+  const frag = document.createDocumentFragment();
+  TPL.content.childNodes.forEach((n) => renderNode(n, vals, frag));
+  // 保留页面滚动位置，避免每次点击后跳回顶部
+  const x = window.scrollX, y = window.scrollY;
+  root.replaceChildren(frag);
+  window.scrollTo(x, y);
+}
+
+// 启动：读模板、按属性默认值创建页面逻辑、第一次渲染
+window.addEventListener('DOMContentLoaded', () => {
+  TPL = document.getElementById('page-tpl');
+  const defaults = {};
+  for (const [k, cfg] of Object.entries(PROP_DEFS)) {
+    if (cfg && typeof cfg === 'object' && 'default' in cfg) defaults[k] = cfg.default;
+  }
+  COMP = new Component(defaults);
+  render();
+});
+
+// ======================================================================
+// 页面逻辑（和设计稿里完全一样）：renderVals() 返回模板要用的数据和点击处理函数
+// ======================================================================
+
+// 页面逻辑：记录 4 个状态
+//   enabled  —— 总开关是否打开
+//   mode     —— 当前模式：collect 学习 / audit 审计 / block 拦截
+//   auditTip —— 审计模式下「开启告警提示用户」是否勾选
+//   blockTip —— 拦截模式下「开启拦截提示用户」是否勾选
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    // 默认：总开关打开，审计模式，两个提示都勾选
+    this.state = { enabled: true, mode: 'audit', auditTip: true, blockTip: true };
+  }
+  renderVals() {
+    const s = this.state;
+
+    // ---------- 终端分组（和概览页一致：分组名 → [在线, 总数]）----------
+    const GROUPS = { '默认分组': [2, 3], '服务器': [3, 4], 'wrh': [3, 3], 'verify-dept': [1, 1], '办公区': [1, 2], '研发部': [1, 1], '试点组': [2, 2] };
+    const curGroup = (s && s.group) || '根管理组';
+    const rootOpen = !s || s.rootOpen !== false;          // 根管理组默认展开
+    const cnt = (g) => g === '根管理组'
+      ? Object.values(GROUPS).reduce((a, v) => [a[0] + v[0], a[1] + v[1]], [0, 0])
+      : GROUPS[g];
+    const node = (name, isRoot) => {
+      const on = name === curGroup, c = cnt(name);
+      return {
+        name, isRoot, on, online: c[0], total: c[1],
+        indent: isRoot ? 12 : 44,
+        sign: rootOpen ? '−' : '+',
+        bg: on ? '#e8f1fb' : 'transparent', fg: on ? '#1e88e5' : '#333333', icoColor: on ? '#1e88e5' : '#5a6475',
+        pick: () => this.setState({ group: name }),
+        toggle: (e) => { e.stopPropagation(); this.setState({ rootOpen: !rootOpen }); },
+      };
+    };
+    const groups = [node('根管理组', true)].concat(rootOpen ? Object.keys(GROUPS).map((g) => node(g, false)) : []);
+    const cg = cnt(curGroup);
+    const groupOnline = cg[0], groupTotal = cg[1];
+    const groupPath = curGroup === '根管理组' ? '根管理组' : '根管理组 / ' + curGroup;   // 「当前组」
+    const scopeGroups = curGroup === '根管理组' ? Object.keys(GROUPS).length : 1;        // 「应用范围」里的组数
+
+    // ---------- 左侧导航菜单 ----------
+    // 进程管控 下有二级菜单：概览 / 进程管理 / 白名单 / 黑名单（CUR_SUB = 本页要高亮的那一项，空 = 都不高亮）
+    const NAV_ACTIVE_BG = '#0d3479';   // 选中 / 悬停：底色（比导航底色亮一点的深蓝，截图 13 取色）
+    const NAV_BAR = '#08a7ff';         // 选中 / 悬停：左侧竖条（亮蓝）
+    const NAV_TEXT = '#c5d4fd';        // 普通状态文字 / 图标（浅蓝白）
+    const NAV_TEXT_ON = '#ffffff';     // 选中状态文字
+    const NAV_ICON_ON = '#33b8ff';     // 选中 / 悬停：一级菜单图标（亮蓝）
+    // 二级菜单跳转地址：画布里只有「概览」能跳（其他页面在另一块画布）；导出 demo 时这一行会换成 demo 里的全部文件名
+    const SUB_LINKS = {"概览": "概览.html", "进程管理": "进程管控列表.html", "白名单": "白名单列表.html", "黑名单": "黑名单列表.html"};
+    const CUR_SUB = '概览';         // 当前页面对应的二级菜单
+    const menus = [
+      { label: '安全中心', icon: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z' },
+      { label: '安全态势', icon: 'M3 20h18M4 16l5-6 4 4 7-8' },
+      { label: '全网终端', icon: 'M3 5h18v12H3zM8 21h8M8 9l3 2-3 2M13 13h3' },
+      { label: '病毒查杀', icon: 'M12 3l2 4h4l-2 4 2 4h-4l-2 4-2-4H6l2-4-2-4h4z' },
+      { label: 'EDR', icon: 'M12 3a9 9 0 1 0 9 9M12 12l5-5M12 7v5h5' },
+      { label: '防火墙', icon: 'M4 4h16v16H4zM4 10h16M4 16h16M10 4v6M14 10v6M10 16v4' },
+      { label: '漏洞扫描', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8M12 11v2' },
+      { label: '资产管理', icon: 'M3 10l3-6h12l3 6v10H3zM3 10h18M9 14h6' },
+      { label: '进程管控', icon: 'M4 5h16v14H4zM8 9h8M8 13h5M15 13l2 2 3-3',
+        children: ['概览', '进程管理', '白名单', '黑名单'].map((label) => ({ label, current: label === CUR_SUB })) },
+      { label: '行为审计', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M8 13l3-4 2 3 3-5' },
+      { label: '安全基线', icon: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6zM12 8v8M9 12h6' },
+      { label: '桌面管理', icon: 'M3 4h18v12H3zM8 20h8M12 16v4M15 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4' },
+      { label: '移动安全', icon: 'M8 3h8v18H8zM11 18h2' },
+      { label: '策略中心', icon: 'M12 3l8 4-8 4-8-4zM4 12l8 4 8-4M4 17l8 4 8-4' },
+      { label: '计划任务', icon: 'M4 5h16v15H4zM4 10h16M8 3v4M16 3v4M9 15l2 2 4-4' },
+      { label: '报告预警', icon: 'M12 4a6 6 0 0 0-6 6v4l-2 3h16l-2-3v-4a6 6 0 0 0-6-6M10 20h4' },
+      { label: '升级中心', icon: 'M7 17a4 4 0 0 1 1-8 6 6 0 0 1 11 2 3 3 0 0 1 0 6zM12 17v-6M9 14l3-3 3 3' },
+      { label: '系统中心', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 8a3 3 0 1 0 0 6 3 3 0 0 0 0-6M7 19c1-3 3-4 5-4s4 1 5 4' },
+      { label: '级联中心', icon: 'M4 4h6v5H4zM14 15h6v5h-6zM7 9v4h10v2' },
+    ].map((m) => {
+      const hasSub = !!(m.children && m.children.length);
+      // 有二级菜单的默认展开（当前页面就在里面）；点一级菜单切换展开 / 收起
+      const navClosed = (this.state && this.state.navClosed) || {};
+      const expanded = hasSub && !navClosed[m.label];
+      // 一级菜单高亮：收起后，如果当前页面在它下面，就把一级标成选中，免得看不出在哪
+      const on = hasSub && !expanded && m.children.some((c) => c.current);
+      return {
+        ...m,
+        hasSub,
+        expanded,
+        caret: expanded ? '180deg' : '0deg',   // 箭头：展开朝上、收起朝下
+        toggle: hasSub ? () => this.setState({ navClosed: { ...navClosed, [m.label]: expanded } }) : null,
+        bg:  on ? NAV_ACTIVE_BG : 'transparent',
+        bar: on ? NAV_BAR : 'transparent',
+        fg:  on ? NAV_TEXT_ON : NAV_TEXT,
+        icoColor: on ? NAV_ICON_ON : NAV_TEXT,
+        children: (m.children || []).map((c) => ({
+          ...c,
+          href: SUB_LINKS[c.label] || '#',           // 跳转页面（没有的不跳）
+          bg:  c.current ? NAV_ACTIVE_BG : 'transparent',
+          bar: c.current ? NAV_BAR : 'transparent',
+          fg:  c.current ? NAV_TEXT_ON : NAV_TEXT,
+          dot: c.current ? NAV_BAR : 'currentColor', // 当前页面的小圆点是亮蓝色，其他跟文字同色
+        })),
+      };
+    });
+
+    // ---------- 三种模式：名称、标签、说明、以及各自带的子选项（学习模式没有） ----------
+    const defs = [
+      { id: 'collect', name: '学习模式', tag: '', desc: '只采集终端上的进程信息并上报，用于摸清进程情况。',
+        hasOpt: false },
+      { id: 'audit',   name: '审计模式', tag: '只告警',         desc: '检测到进程不在信任白名单或命中黑名单，系统将自动生成安全告警记录。',
+        hasOpt: true, optKey: 'auditTip', optLabel: '开启告警提示用户', optHint: '（终端右下角弹窗提示告警进程信息）' },
+      { id: 'block',   name: '拦截模式', tag: '拦截 + 告警',    desc: '系统将拦截命中黑名单或未在白名单内的进程，阻止其运行，并生成安全告警记录。',
+        hasOpt: true, optKey: 'blockTip', optLabel: '开启拦截提示用户', optHint: '（终端右下角弹窗提示拦截进程信息）' }
+    ];
+    const modes = defs.map(d => {
+      const checked = s.mode === d.id;
+      return {
+        ...d,
+        checked,
+        // 选中的卡片蓝框浅蓝底，未选中灰框白底
+        border: checked ? '#1e88e5' : '#e3e6eb',
+        bg: checked ? '#eef4fc' : '#ffffff',
+        hasTag: !!d.tag,   // 学习模式 tag 为空 → 不显示标签
+        tagBg: checked ? '#1e88e5' : '#eef0f3',
+        tagColor: checked ? '#ffffff' : '#5a6475',
+        pick: () => this.setState({ mode: d.id }),
+        // 子选项：只有本卡片被选中时才能勾；未选中时置灰
+        optOn: d.hasOpt ? s[d.optKey] : false,
+        optDisabled: !checked,
+        optOpacity: checked ? 1 : 0.45,
+        optToggle: (e) => { if (d.hasOpt) this.setState({ [d.optKey]: e.target.checked }); }
+      };
+    });
+
+    // ---------- 应用：保存策略并直接下发到当前组的终端（演示：弹提示，3 秒后消失） ----------
+    const toast = s.toast || '';
+    const toastOn = !!toast;
+    const MODE_NAME = { collect: '学习模式', audit: '审计模式', block: '拦截模式' };
+    const apply = () => {
+      const offline = groupTotal - groupOnline;
+      const what = s.enabled ? '「' + MODE_NAME[s.mode] + '」' : '「进程管控已关闭」';
+      const msg = '策略已保存，' + what + '已下发到「' + groupPath + '」的 ' + groupTotal + ' 台终端'
+        + (offline ? '（在线 ' + groupOnline + ' 台立即生效，离线 ' + offline + ' 台上线后自动生效）' : '，已立即生效');
+      this.setState({ toast: msg });
+      clearTimeout(this._toastTimer);
+      this._toastTimer = setTimeout(() => this.setState({ toast: '' }), 3000);
+    };
+
+    return {
+      apply, toast, toastOn,
+      menus, groups, groupOnline, groupTotal, groupPath, scopeGroups,
+      modes,
+      // 总开关条的样式：开 = 蓝色，关 = 灰色
+      masterBg: s.enabled ? '#eef4fc' : '#f5f7fa',
+      masterBorder: s.enabled ? '#1e88e5' : '#e3e6eb',
+      switchBg: s.enabled ? '#1e88e5' : '#c4c8cf',
+      knobLeft: s.enabled ? '24px' : '2px',
+      stateText: s.enabled ? '已开启' : '已关闭',
+      stateBg: s.enabled ? '#1e88e5' : '#c4c8cf',
+      // 总开关关闭时：下面两组变淡，且不响应点击
+      sectionOpacity: s.enabled ? 1 : 0.4,
+      sectionEvents: s.enabled ? 'auto' : 'none',
+      toggleEnabled: () => this.setState({ enabled: !s.enabled })
+    };
+  }
+}
+
+</script>
+</body>
+</html>
