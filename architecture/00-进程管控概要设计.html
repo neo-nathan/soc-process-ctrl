@@ -256,7 +256,7 @@ hr.thin{border:0;border-top:1px solid var(--line);margin:28px 0}
 <table>
 <tr><th style="width:120px">列</th><th>显示什么</th><th style="width:110px">数据从哪来</th><th style="width:250px">表 · 字段</th></tr>
 <tr><td>终端名称</td><td>一期点击只弹提示「终端视角页面暂未提供」，不跳转。</td><td>终端登记信息</td><td class="small src"><code>EPINFO.COMPUTERNAME</code></td></tr>
-<tr><td>IP 地址 / 所在组 / 操作系统</td><td>照终端登记信息显示，操作系统带版本。</td><td>终端登记信息</td><td class="small src"><code>EPINFO.IP</code>；<code>EPINFO.GROUPID</code> → <code>GROUPINFO.GROUPNAME</code>；<code>EPINFO.OS</code> + <code>EPINFO.VERSION</code></td></tr>
+<tr><td>IP 地址 / 所在组 / 操作系统</td><td>照终端登记信息显示，操作系统带版本。</td><td>终端登记信息</td><td class="small src"><code>EPINFO.IP</code>；<code>EPINFO.GROUPID</code> → <code>GROUPINFO.GROUPNAME</code>；<code>EPINFO.SYSTYPE</code>（系统类型串，自带版本）</td></tr>
 <tr><td>策略模式</td><td>两个小标签：① 模式 —— <span class="tag red">拦截</span> <span class="tag orange">审计</span> <span class="tag blue">学习</span> <span class="tag gray">未开启</span>；② 终端正在用的名单类型 —— <span class="tag green">白名单</span> 或 <span class="tag gray">黑名单</span>，学习、未开启或没在用名单时不显示。没上报过显示 <code>--</code>。</td><td><strong>终端上报</strong>的实际状态</td><td class="small src"><code>EPSTATE</code>，每台终端两行：键 <code>EPKEY='procaudit'</code> 的 <code>VALUE</code>（0 未开启、1 学习、2 审计、3 拦截）；键 <code>EPKEY='proclib'</code> 的 <code>VALUE</code>（0 无、1 白名单、2 黑名单）</td></tr>
 <tr><td>策略来源</td><td>「所在组」或「分配」（在策略中心单独给这台终端分配了策略）。</td><td>中心的配置</td><td class="small src"><code>POLICYOBJECT</code>：这台终端（<code>OBJTYPE=2</code>、<code>OBJID</code> = 终端编号）有没有挂着进程策略的行；有 → 分配，没有 → 所在组</td></tr>
 <tr><td>白名单 / 黑名单</td><td>这台终端所在组挂的名单，显示「类型-名称」，如「白名单-办公软件白名单」；鼠标悬停显示来源。没有名单显示 <code>--</code>，悬停「中心未下发名单」。</td><td>中心的配置</td><td class="small src"><code>POLICYOBJECT</code>（<code>OBJTYPE=1</code>、<code>OBJID</code> = 所在组号）挂的名单行 → <code>POLICY.POLICYTYPE</code>（2 白、3 黑）+ <code>POLICY.PNAME</code></td></tr>
@@ -321,7 +321,7 @@ hr.thin{border:0;border-top:1px solid var(--line);margin:28px 0}
   <div class="k">左侧分组树</div><div>选一个组，看这个组的日志（不含子组）。组管理员只看自己管的组。</div>
   <div class="k">加白 / 加黑按钮</div><div>只有主账号看得到。先勾选日志，再点。</div>
   <div class="k">日志列表</div><div>可跨页勾选；每页 10 / 20 / 50 条。</div>
-  <div class="k">底部统计</div><div>当前筛选条件下的：日志总数、已拦截数、告警数。同一张日志表、同样的筛选条件：总行数、<code>PROCACTION=1</code> 的行数、<code>PROCACTION=0</code> 的行数。</div>
+  <div class="k">底部统计</div><div>当前筛选条件下的日志总数、已拦截数、告警数 = 同一筛选条件下日志表的总行数、<code>PROCACTION=1</code> 的行数、<code>PROCACTION=0</code> 的行数。</div>
 </div>
 
 <table class="tight">
@@ -351,7 +351,7 @@ hr.thin{border:0;border-top:1px solid var(--line);margin:28px 0}
 </div>
 <ol>
   <li>勾选日志（可以跨页勾），点「加白」或「加黑」。</li>
-  <li>弹出「选择白名单（Linux/信创）」或「选择黑名单（Linux/信创）」弹窗：列出同系统类型的名单（<code>POLICY</code> 里产品号是名单产品号、<code>EPTYPE</code> 同系统、<code>POLICYTYPE</code> 对应白或黑的行，显示 <code>PNAME</code>），可以多选；也可以在弹窗里「+ 创建白名单」，建好直接勾上。</li>
+  <li>弹出「选择白名单（Linux/信创）」或「选择黑名单（Linux/信创）」弹窗：列出同系统类型的名单（<code>POLICY</code> 里产品号是名单产品号、<code>EPTYPE</code> 同系统、<code>POLICYTYPE</code> 对应白或黑的行，显示 <code>PNAME</code>），可以多选；也可以在弹窗里「+ 创建白名单 / 黑名单」，建好直接勾上。</li>
   <li>点「确定」。后端按日志里的「路径 + 哈希」加进选中的名单，然后提示：加入了几条、已存在几条、跳过几条。</li>
 </ol>
 <div class="callout">
@@ -616,7 +616,7 @@ hr.thin{border:0;border-top:1px solid var(--line);margin:28px 0}
 <tr><td>进程名称</td><td>路径最后一段，后面带状态标签：<span class="tag green">新增</span>（加了还没发布）、<span class="tag red">移除</span>（标记了移除还没发布，整行删除线）；已发布的没有标签</td><td class="small src"><code>RPW_WPROC.PROCPATH</code> 的最后一段；标签看 <code>STATUS</code>：1 新增、2 移除、0 没标签</td></tr>
 <tr><td>文件哈希</td><td>前面灰色小标签标出算法 <code>MD5</code> 或 <code>SHA256</code></td><td class="small src"><code>FILEHASH</code>；算法 <code>ALGO</code>：0 MD5、8 SHA256</td></tr>
 <tr><td>进程路径 / 添加时间</td><td>—</td><td class="small src"><code>PROCPATH</code> / <code>CREATETIME</code></td></tr>
-<tr><td>操作</td><td>普通行和新增行显示「移除」；待移除行显示「恢复」</td><td class="small src">按 <code>STATUS</code> 决定；「移除」标签悬停显示的「谁、什么时候标记移除」来自 <code>UPDATEUSER</code> / <code>UPDATETIME</code></td></tr>
+<tr><td>操作</td><td>普通行和新增行显示「移除」；待移除行显示「恢复」</td><td class="small src">按 <code>STATUS</code> 决定；「移除」标签悬停显示的「谁、什么时候标记移除」来自 <code>UPDATEUSER</code> / <code>UPDATETIME</code>（新加的列）</td></tr>
 </table>
 <p class="small muted">没写表名的字段都在 <code>RPW_WPROC</code> 里（黑名单是 <code>RPW_BPROC</code>，字段一样）。</p>
 
@@ -655,12 +655,12 @@ hr.thin{border:0;border-top:1px solid var(--line);margin:28px 0}
 <tr><th style="width:200px">表</th><th style="width:70px">来源</th><th>存什么</th><th style="width:110px">谁写</th></tr>
 <tr><td><code>POLICY</code></td><td>现有</td><td>三种行都在这一张表：进程策略行、白名单行、黑名单行。名单行用一个专用的产品号，所以策略中心按产品找策略时看不到名单，也就不会和进程策略互相顶掉。新加两列：<strong>白 / 黑</strong>（2 白、3 黑）、<strong>发布状态</strong>（0 空、1 待发布、2 已发布、3 有变更）。名单行的「策略内容」里存的是名单库文件的说明（文件名、下载路径、校验值、版本），不存进程明细。<div class="small muted" style="margin-top:4px">关键字段：<code>PID</code> 编号、<code>PGUID</code> 唯一标识、<code>PNAME</code> 名称、<code>DESCRIPTION</code> 描述、<code>PRODUCTID</code> 产品号（进程策略 / 名单各一个）、<code>EPTYPE</code> 系统（2 Linux）、<code>PTYPE</code>（0 默认策略、1 用户策略）、<code>POLICYJSON</code> 策略内容、<code>POLICYVER</code> 版本、<code>POLICYTYPE</code>（新：2 白、3 黑）、<code>STATUS</code>（新：发布状态）、<code>CREATEUSER</code> / <code>CREATETIME</code> / <code>UPDATETIME</code></div></td><td>中心</td></tr>
 <tr><td><code>POLICYOBJECT</code></td><td>现有</td><td>策略挂在哪些组、哪些终端上；名单挂在哪些组上（只挂组）。<div class="small muted" style="margin-top:4px">关键字段：<code>PID</code> 哪条策略 / 名单、<code>OBJTYPE</code>（1 组、2 终端）、<code>OBJID</code> 组号或终端编号、<code>UPDATETIME</code>（策略页的「应用时间」）</div></td><td>中心</td></tr>
-<tr><td><code>RPW_WPROC</code> / <code>RPW_BPROC</code></td><td>新表</td><td>白 / 黑名单里的进程规则，一行一条：所属名单、路径、哈希、算法、<strong>状态</strong>（0 已确认、1 新增、2 待移除）、添加人和时间。同一份名单内，算法 + 哈希 + 路径不能重复；同一条规则可以同时在几份名单里。不存进程名称。<div class="small muted" style="margin-top:4px">关键字段：<code>BWID</code> 所属名单（= <code>POLICY.PID</code>）、<code>PROCPATH</code> 路径、<code>FILEHASH</code> 哈希、<code>ALGO</code> 算法（0 MD5、8 SHA256）、<code>STATUS</code>、<code>CREATETIME</code> 添加时间、<code>UPDATEUSER</code> / <code>UPDATETIME</code> 标记移除的人和时间</div></td><td>中心</td></tr>
+<tr><td><code>RPW_WPROC</code> / <code>RPW_BPROC</code></td><td>新表</td><td>白 / 黑名单里的进程规则，一行一条：所属名单、路径、哈希、算法、<strong>状态</strong>（0 已确认、1 新增、2 待移除）、添加人和时间。同一份名单内，算法 + 哈希 + 路径不能重复；同一条规则可以同时在几份名单里。不存进程名称。<div class="small muted" style="margin-top:4px">关键字段：<code>BWID</code> 所属名单（= <code>POLICY.PID</code>）、<code>PROCPATH</code> 路径、<code>FILEHASH</code> 哈希、<code>ALGO</code> 算法（0 MD5、8 SHA256）、<code>STATUS</code>、<code>CREATETIME</code> 添加时间、<code>UPDATEUSER</code> / <code>UPDATETIME</code> 标记移除的人和时间（新加的列）</div></td><td>中心</td></tr>
 <tr><td><code>RPW_EXECFILEINFO</code></td><td>新表</td><td>学习模式采集的「运行过的程序」：终端、路径、哈希、算法、上报时间。每台终端每个程序一行，重复上报只更新时间。<div class="small muted" style="margin-top:4px">关键字段：<code>SGUID</code> 终端编号、<code>PROCPATH</code>、<code>FILEHASH</code>、<code>ALGO</code>、<code>TIME</code> 上报时间</div></td><td>后台程序（Java）</td></tr>
 <tr><td><code>RPW_PACKAGEINFO</code></td><td>新表</td><td>学习模式采集的安装包。一期只入库，不展示。<div class="small muted" style="margin-top:4px">关键字段：<code>SGUID</code>、<code>PACKAGENAME</code> 包名、<code>PACKAGEVERSION</code> 版本、<code>TIME</code></div></td><td>后台程序（Java）</td></tr>
 <tr><td><code>RPW_PROCESSAUDITINFO</code></td><td>新表</td><td>审计 / 拦截日志：时间、终端、路径、哈希、算法、<strong>原因</strong>（1 在黑名单、2 不在白名单）、<strong>动作</strong>（0 告警、1 拦截），以及进程号、命令行、运行用户。只追加，按保留天数自动清理。<div class="small muted" style="margin-top:4px">关键字段：<code>SGUID</code>、<code>TIME</code>、<code>PROCPATH</code>、<code>FILEHASH</code>、<code>ALGO</code>、<code>ACTIONREASON</code> 原因、<code>PROCACTION</code> 动作、<code>PID</code> / <code>PPID</code> / <code>CMD</code> / <code>PROCUSER</code>、<code>LOGEDATE</code> 入库时间（清理按它）</div></td><td>后台程序（Java）</td></tr>
 <tr><td><code>EPSTATE</code></td><td>现有</td><td>终端上报的实时状态，加两个键：<strong>实际模式</strong>（0 未开启、1 学习、2 审计、3 拦截）、<strong>在用名单类型</strong>（0 无、1 白、2 黑）。概览页的「策略模式」列读它。<div class="small muted" style="margin-top:4px">关键字段：<code>SGUID</code>、<code>EPKEY</code> 键名（<code>procaudit</code> 模式、<code>proclib</code> 名单类型）、<code>VALUE</code> 值</div></td><td>后台程序（Java）</td></tr>
-<tr><td><code>EPINFO</code> / <code>GROUPINFO</code> / <code>EPPRODUCTINFO</code></td><td>现有</td><td>终端、分组、终端装了哪些模块。各页面的终端名称、IP、所在组都从这里取；「装了进程管控」靠 <code>EPPRODUCTINFO</code> 判断。<div class="small muted" style="margin-top:4px">关键字段：<code>EPINFO</code>：<code>SGUID</code>、<code>COMPUTERNAME</code>、<code>IP</code>、<code>MAC</code>、<code>OS</code> / <code>VERSION</code>、<code>SYSTYPE</code>、<code>GROUPID</code>、<code>UNSET</code>（1 已卸载）；<code>GROUPINFO</code>：<code>ID</code>、<code>GROUPNAME</code>、<code>PARENTID</code>；<code>EPPRODUCTINFO</code>：<code>SGUID</code>、<code>PRODGUID</code> 模块编号</div></td><td>现有</td></tr>
+<tr><td><code>EPINFO</code> / <code>GROUPINFO</code> / <code>EPPRODUCTINFO</code></td><td>现有</td><td>终端、分组、终端装了哪些模块。各页面的终端名称、IP、所在组都从这里取；「装了进程管控」靠 <code>EPPRODUCTINFO</code> 判断。<div class="small muted" style="margin-top:4px">关键字段：<code>EPINFO</code>：<code>SGUID</code>、<code>COMPUTERNAME</code>、<code>IP</code>、<code>MAC</code>、<code>SYSTYPE</code> 操作系统、<code>GROUPID</code>、<code>UNSET</code>（1 已卸载）；<code>GROUPINFO</code>：<code>ID</code>、<code>GROUPNAME</code>、<code>PARENTID</code>；<code>EPPRODUCTINFO</code>：<code>SGUID</code>、<code>PRODGUID</code> 模块编号</div></td><td>现有</td></tr>
 <tr><td><code>LOG_CLEAN</code></td><td>现有</td><td>审计日志的保留天数，默认 60 天，和其他日志表一样的配置方式。<div class="small muted" style="margin-top:4px">关键字段：<code>TABLENAME</code> 表名、<code>DAYS</code> 保留天数</div></td><td>脚本插一行</td></tr>
 </table>
 
