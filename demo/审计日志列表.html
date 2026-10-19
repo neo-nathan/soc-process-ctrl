@@ -345,7 +345,7 @@ html,body{margin:0}
   <template data-sc="if" value="{{ pk.open }}" hint-placeholder-val="{{ false }}">
   <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 40; background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center;">
     <div role="dialog" aria-modal="true" aria-label="{{ pk.title }}" style="width: 520px; background: #ffffff; border-radius: 4px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column;">
-      <!-- 标题栏：选择白名单 / 选择黑名单 + 关闭叉 -->
+      <!-- 标题栏：选择白名单 / 选择黑名单（系统类型）+ 关闭叉；系统类型放标题括号里，列表项不再逐个显示 -->
       <div style="height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; background: #f5f7fa; border-bottom: 1px solid #e3e6eb; border-radius: 4px 4px 0 0;">
         <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">{{ pk.title }}</span>
         <button onClick="{{ pk.close }}" aria-label="关闭" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #8a94a6; border: 0; background: transparent; cursor: pointer; padding: 0;">
@@ -353,7 +353,7 @@ html,body{margin:0}
         </button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px; padding: 18px 22px 4px; font-size: 13px;">
-        <!-- 说明：勾选了几条日志、是哪种系统；右边「+ 创建白名单 / 黑名单」 -->
+        <!-- 说明：勾选了几条日志（系统类型已在标题括号里，这里不重复）；右边「+ 创建白名单 / 黑名单」 -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
           <span style="color: #333333;">{{ pk.desc }}</span>
           <button onClick="{{ pk.newOpen }}" style="display: flex; align-items: center; gap: 4px; flex-shrink: 0; border: 0; background: transparent; padding: 0; color: #1e88e5; font-size: 13px; font-family: inherit; cursor: pointer;">
@@ -367,10 +367,6 @@ html,body{margin:0}
             <label class="mitem" style="display: flex; align-items: center; gap: 8px; height: 34px; flex-shrink: 0; padding: 0 12px; cursor: pointer; color: #333333;">
               <input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}">
               <span style="flex-grow: 1;">{{ o.label }}</span>
-              <!-- 系统类型标签：系统图标 + 名称（Windows 蓝 / Linux/信创 绿） -->
-              <span style="display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 8px; border-radius: 10px; font-size: 12px; background: {{ o.osBg }}; color: {{ o.osFg }}; white-space: nowrap;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="{{ o.osIcon }}"></path></svg>{{ o.os }}
-              </span>
             </label>
           </template>
         </div>
@@ -884,15 +880,10 @@ class Component extends DCLogic {
     const quote = (names) => '「' + names.join('」「') + '」';   // 名单名加书名号，多个连着写
     const pk = {
       open: !!pkSt,
-      title: '选择' + pkName,
-      desc: '将已勾选的 ' + selCount + ' 条日志的进程（' + pkCat + '）加入以下' + pkName + '：',
+      title: '选择' + pkName + '（' + pkCat + '）',   // 例：选择白名单（Linux/信创）；列表只含这一类名单，所以列表项不再逐个标系统类型
+      desc: '将已勾选的 ' + selCount + ' 条日志的进程加入以下' + pkName + '：',
       items: pkAll.map((label) => ({
         label,
-        // 系统类型标签：和名单列表页一致，Windows 蓝 / Linux/信创 绿
-        os: LIST_META[label][0],
-        osIcon: LIST_META[label][0] === 'Windows' ? WIN : LNX,
-        osBg: LIST_META[label][0] === 'Windows' ? '#e3f0fc' : '#e8f5e9',
-        osFg: LIST_META[label][0] === 'Windows' ? '#1e88e5' : '#2e7d32',
         on: pkSel.indexOf(label) >= 0,
         toggle: () => this.setState({ pkSel: pkSel.indexOf(label) >= 0 ? pkSel.filter((x) => x !== label) : pkSel.concat(label) }),
       })),

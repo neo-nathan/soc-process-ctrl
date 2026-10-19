@@ -417,7 +417,7 @@ html,body{margin:0}
   <template data-sc="if" value="{{ pk.open }}" hint-placeholder-val="{{ false }}">
   <div style="position: absolute; top: 0; left: 0; z-index: 40; width: 1920px; height: 1080px; background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center;">
     <div role="dialog" aria-modal="true" aria-label="{{ pk.title }}" style="width: 520px; background: #ffffff; border-radius: 4px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column;">
-      <!-- 标题栏：选择白名单 / 选择黑名单 + 关闭叉 -->
+      <!-- 标题栏：选择白名单 / 选择黑名单（系统类型）+ 关闭叉；系统类型放标题括号里，列表项不再逐个显示 -->
       <div style="height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; background: #f5f7fa; border-bottom: 1px solid #e3e6eb; border-radius: 4px 4px 0 0;">
         <span style="font-size: 15px; font-weight: 700; color: #1f2d3d;">{{ pk.title }}</span>
         <button onClick="{{ pk.close }}" aria-label="关闭" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #8a94a6; border: 0; background: transparent; cursor: pointer; padding: 0;">
@@ -425,7 +425,7 @@ html,body{margin:0}
         </button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px; padding: 18px 22px 4px; font-size: 13px;">
-        <!-- 说明：要加入的是哪些进程（勾选的 N 个 / 查询出的全部 N 个） -->
+        <!-- 说明：要加入的是哪些进程（勾选的 N 个 / 查询出的全部 N 个）；系统类型已在标题括号里，这里不重复 -->
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
           <span style="color: #333333;">{{ pk.desc }}</span>
           <!-- 创建白名单 / 创建黑名单：链接样式的按钮，点了在上层弹出创建表单 -->
@@ -437,13 +437,10 @@ html,body{margin:0}
         <!-- 名单列表：只列出和所选进程同一系统类型的名单；可多选 -->
         <div role="group" aria-label="{{ pk.title }}" style="display: flex; flex-direction: column; max-height: 280px; overflow-y: auto; border: 1px solid #e3e6eb; border-radius: 3px; padding: 4px 0;">
           <template data-sc="for" list="{{ pk.items }}" as="o" hint-placeholder-count="6">
-            <!-- 每项：勾选框 + 名单名称 + 右侧系统类型标签（系统图标 + 名称；Windows 蓝 / Linux/信创 绿，和审计日志列表一致） -->
+            <!-- 每项：勾选框 + 名单名称（系统类型已在标题括号里，列表项不再逐个显示，和审计日志列表一致） -->
             <label class="mitem" style="display: flex; align-items: center; gap: 8px; height: 34px; flex-shrink: 0; padding: 0 12px; cursor: pointer; color: #333333;">
               <input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}">
               <span class="ell" style="flex-grow: 1; min-width: 0;">{{ o.label }}</span>
-              <span style="display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; height: 20px; padding: 0 8px; border-radius: 10px; font-size: 12px; background: {{ o.tagBg }}; color: {{ o.tagFg }}; white-space: nowrap;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="{{ o.tagIcon }}"></path></svg>{{ o.os }}
-              </span>
             </label>
           </template>
         </div>
@@ -1044,19 +1041,14 @@ class Component extends DCLogic {
       close: () => this.setState({ pkNew: null }),
       ok: () => pkCreate(),
     };
-    // 系统类型标签：图标 + 颜色；Windows 用四格窗口图标、蓝色，Linux/信创 用企鹅图标、绿色
-    const osTag = (os) => os === 'Windows'
-      ? { os, tagIcon: WIN, tagFg: '#1e88e5', tagBg: '#e3f0fc' }
-      : { os: os || '--', tagIcon: LNX, tagFg: '#2e7d32', tagBg: '#e8f5e9' };
     const pk = {
       open: !!pkSt,
-      title: '选择' + pkName,
+      title: '选择' + pkName + '（' + pkCat + '）',   // 例：选择白名单（Linux/信创）；列表只含这一类名单，所以列表项不再逐个标系统类型
       desc: pkSt && pkSt.scope === 'all'
-        ? '将查询出的全部 ' + pkItems.length + ' 个进程（' + pkCat + '）加入以下' + pkName + '：'
-        : '将已勾选的 ' + pkItems.length + ' 个进程（' + pkCat + '）加入以下' + pkName + '：',
+        ? '将查询出的全部 ' + pkItems.length + ' 个进程加入以下' + pkName + '：'
+        : '将已勾选的 ' + pkItems.length + ' 个进程加入以下' + pkName + '：',
       items: pkAll.map((label) => ({
         label,
-        ...osTag((LIST_META[label] || [])[0]),   // 系统类型标签
         on: pkSel.indexOf(label) >= 0,
         toggle: () => this.setState({ pkSel: pkSel.indexOf(label) >= 0 ? pkSel.filter((x) => x !== label) : pkAll.filter((x) => x === label || pkSel.indexOf(x) >= 0) }),
       })),
