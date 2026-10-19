@@ -142,35 +142,33 @@ CREATE TABLE `RPW_BWLIST`  (
 -- 白名单进程表
 DROP TABLE IF EXISTS `RPW_WPROC`;
 CREATE TABLE `RPW_WPROC`  (
-  `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `EID` varchar(32) NOT NULL,
-  `BWID`  bigint(20) NOT NULL, //所属白名单ID
-  `PROCName` varchar(20)  NOT NULL,  
-  `PROCPATH` varchar(500)  NOT NULL,    
-  `FILEHASH` varchar(64) NOT NULL,
-  `ALGO` int(11) NOT NULL,
-  `CREATETIME` datetime NOT NULL,
-  `STATUS` INT  NOT NULL,				//0已确认 1添加 2移除 
-  `LOGEDATE` int(11) NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `index_id` (`BWID`)
+    `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `EID` varchar(32) NOT NULL,
+    `BWID`  bigint(20) NOT NULL, //所属白名单ID
+    `PROCPATH` varchar(500)  NOT NULL,
+    `FILEHASH` varchar(64) NOT NULL,
+    `ALGO` int(11) NOT NULL,
+    `CREATETIME` datetime NOT NULL,
+    `STATUS` INT  NOT NULL,				//0已确认 1添加 2移除
+    `LOGEDATE` int(11) NOT NULL,
+    PRIMARY KEY (`ID`),
+    KEY `index_id` (`BWID`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 -- 黑名单进程表
 DROP TABLE IF EXISTS `RPW_BPROC`;
 CREATE TABLE `RPW_BPROC`  (
-  `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `EID` varchar(32) NOT NULL,
-  `BWID`  bigint(20) NOT NULL, //所属白名单ID
-  `PROCName` varchar(20)  NOT NULL,  
-  `PROCPATH` varchar(500)  NOT NULL,    
-  `FILEHASH` varchar(64) NOT NULL,
-  `ALGO` int(11) NOT NULL,
-  `CREATETIME` datetime NOT NULL,
-  `STATUS` INT  NOT NULL,				//0已确认 1添加 2移除 
-  `LOGEDATE` int(11) NOT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `index_id` (`BWID`)
+    `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `EID` varchar(32) NOT NULL,
+    `BWID`  bigint(20) NOT NULL, //所属白名单ID
+    `PROCPATH` varchar(500)  NOT NULL,
+    `FILEHASH` varchar(64) NOT NULL,
+    `ALGO` int(11) NOT NULL,
+    `CREATETIME` datetime NOT NULL,
+    `STATUS` INT  NOT NULL,				//0已确认 1添加 2移除
+    `LOGEDATE` int(11) NOT NULL,
+    PRIMARY KEY (`ID`),
+    KEY `index_id` (`BWID`)
 ) ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 <!--

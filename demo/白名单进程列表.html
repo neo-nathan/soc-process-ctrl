@@ -814,7 +814,7 @@ class Component extends DCLogic {
     const advColor = advOpen ? '#1e88e5' : '#4a5568';
     const advDeg = advOpen ? 180 : 0;
 
-    const EMPTY = { field: 'proc', kw: '', from: '', to: '' };
+    const EMPTY = { field: 'path', kw: '', from: '', to: '' };   // 默认按进程路径搜
     if (!this._draft) this._draft = { ...EMPTY };
     const draft = this._draft;
     const applied = st.applied || EMPTY;
@@ -860,7 +860,8 @@ class Component extends DCLogic {
     const timeChips  = chips('time',  [['all', '全部'], ['7d', '近 7 天'], ['30d', '近 30 天']], () => {
       draft.from = ''; draft.to = ''; return { applied: { ...applied, from: '', to: '' }, dateErr: '' };
     });
-    const FIELDS = [['proc', '进程名称'], ['hash', '文件哈希'], ['path', '进程路径']];   // 维护者列已去掉，搜索字段也不再提供
+    // 维护者列已去掉，搜索字段也不再提供；也不提供「进程名称」：库里没有这个字段，名称是从进程路径取的，按名称搜就是按路径搜
+    const FIELDS = [['path', '进程路径'], ['hash', '文件哈希']];
     const fieldOpts = FIELDS.map(([value, label]) => ({ value, label, sel: draft.field === value }));
     const kwPlaceholder = '请输入' + (FIELDS.find((f) => f[0] === draft.field) || FIELDS[0])[1] + '关键字';
 

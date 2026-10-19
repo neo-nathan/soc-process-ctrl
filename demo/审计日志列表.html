@@ -758,7 +758,7 @@ class Component extends DCLogic {
     const groups = [node('根管理组', true)].concat(rootOpen ? Object.keys(GROUPS).map((g) => node(g, false)) : []);
     const cg = cnt(curGroup);
     const groupOnline = cg[0], groupTotal = cg[1];
-    const Q_EMPTY = { field: 'proc', kw: '', from: '', to: '' };
+    const Q_EMPTY = { field: 'path', kw: '', from: '', to: '' };   // 默认按进程路径搜
     if (!this._draft) this._draft = { ...Q_EMPTY };
     const draft = this._draft;
     const applied = st.applied || Q_EMPTY;
@@ -802,7 +802,8 @@ class Component extends DCLogic {
     });
     // 时间的点选项：点了就清掉指定日期（两者只取一个）
     const clearDates = () => { draft.from = ''; draft.to = ''; return { applied: { ...applied, from: '', to: '' }, dateErr: '' }; };
-    const fieldOpts = [['proc', '进程名称'], ['md5', '文件哈希'], ['path', '进程路径'], ['host', '终端名称'], ['ip', 'IP地址']].map(([value, label]) => ({ value, label, sel: draft.field === value }));
+    // 不提供「进程名称」：库里没有单独的进程名称字段，名称是从进程路径取的，按名称搜就是按路径搜
+    const fieldOpts = [['path', '进程路径'], ['md5', '文件哈希'], ['host', '终端名称'], ['ip', 'IP地址']].map(([value, label]) => ({ value, label, sel: draft.field === value }));
     const kwPlaceholder = '请输入关键字';
 
     // 面板展开 / 折叠（页面加载时默认折叠）

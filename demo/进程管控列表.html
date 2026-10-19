@@ -165,14 +165,15 @@ html,body{margin:0}
 
 
       <!-- ============ 高级搜索 · 查询面板（参考截图 12） ============
-           全部条件（已加状态 / 终端 / 进程名称 / 文件哈希 / 进程路径）都是先选好、填好，点「查询」或在输入框里按回车才筛选；
+           全部条件（已加状态 / 终端 / 文件哈希 / 进程路径）都是先选好、填好，点「查询」或在输入框里按回车才筛选；
+           不设「进程名称」条件：数据库里没有单独的进程名称字段，进程名称就是从进程路径取的，按名称搜等于按路径搜，用「进程路径」即可；
            「重置」清空全部条件（左上角系统类型回到 Linux/信创） -->
       <template data-sc="if" value="{{ advOpen }}" hint-placeholder-val="{{ false }}">
       <div style="flex-shrink: 0; margin: 0 10px 10px; padding: 8px 16px; background: #f5f7fa; display: flex; flex-direction: column; gap: 2px;">
-        <!-- 查询条件：三个状态下拉 + 分组 / 终端多选 + 五个关键字输入框（模糊匹配），共用一个「查询」按钮；在任一输入框里按回车 = 查询 -->
+        <!-- 查询条件：已加状态下拉 + 终端多选 + 两个关键字输入框（文件哈希 / 进程路径，模糊匹配），共用一个「查询」按钮；在任一输入框里按回车 = 查询 -->
         <div style="display: flex; align-items: flex-start; padding: 6px 0 4px;">
           <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;">
-          <!-- 每行 3 个条件，共 2 行：① 已加状态 / 终端 / 进程名称  ② 文件哈希 / 进程路径 + 查询 / 重置 -->
+          <!-- 4 个条件排一行：已加状态 / 终端 / 文件哈希 / 进程路径，后面跟 查询 / 重置 -->
           <label style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
             <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">已加状态：</span>
             <select aria-label="已加状态" value="{{ q.d.fList }}" onChange="{{ q.on.fList }}" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
@@ -202,12 +203,6 @@ html,body{margin:0}
             </div>
           </div>
           <label style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
-            <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">进程名称：</span>
-            <input id="q-proc" type="text" aria-label="进程名称" value="{{ q.d.proc }}" onChange="{{ q.on.proc }}" onKeyDown="{{ q.onKey }}" placeholder="如 nginx" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
-          </label>
-          <!-- 换行：第二行 -->
-          <div style="flex-basis: 100%; height: 0;"></div>
-          <label style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
             <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">文件哈希：</span>
             <input id="q-md5" type="text" aria-label="文件哈希" value="{{ q.d.md5 }}" onChange="{{ q.on.md5 }}" onKeyDown="{{ q.onKey }}" placeholder="可只输入一部分" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
           </label>
@@ -215,8 +210,8 @@ html,body{margin:0}
             <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">进程路径：</span>
             <input id="q-path" type="text" aria-label="进程路径" value="{{ q.d.path }}" onChange="{{ q.on.path }}" onKeyDown="{{ q.onKey }}" placeholder="如 /tmp 或 C:\Users" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
           </label>
-            <!-- 查询 / 重置：放第二行末尾，「查询」的左边在上面第 3 列输入框（进程名称）右边再往右 16px；查询让上面的输入条件生效；重置清空全部条件（含点选条件和左上角系统类型） -->
-            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 296px;">
+            <!-- 查询 / 重置：跟在「进程路径」后面（间距 16px）；查询让上面的输入条件生效；重置清空全部条件（含点选条件和左上角系统类型） -->
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
               <button class="pbtn" onClick="{{ q.query }}" style="height: 30px; padding: 0 22px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 2px; color: #ffffff; font-size: 13px; cursor: pointer; font-family: inherit;">查询</button>
               <button class="tbtn" onClick="{{ q.reset }}" style="height: 30px; padding: 0 16px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 2px; color: #333333; font-size: 13px; cursor: pointer; font-family: inherit;">重置</button>
             </div>
@@ -833,11 +828,11 @@ class Component extends DCLogic {
     const blOf = (r) => merge(BASE_B[r.path + '|' + r.md5.slice(0, 8)] || [], addB[pmKey(r)] || []);
     const fOs    = st.fOs    || 'Linux/信创';   // 系统类型（左上角下拉框）：默认 Linux/信创，没有「全部」
     // 输入类条件：qD = 正在填的（还没点查询），qA = 点了查询后生效的
-    // fList 已加状态：all / w 已加白 / b 已加黑 / nw 未加白 / nb 未加黑；host 终端多选（数组，空 = 全部）；proc / md5 / path 关键字
-    const Q_DEF = { fList: 'all', host: [], proc: '', md5: '', path: '' };
+    // fList 已加状态：all / w 已加白 / b 已加黑 / nw 未加白 / nb 未加黑；host 终端多选（数组，空 = 全部）；md5 / path 关键字（不设进程名称：库里没有这个字段，名称就是从路径取的）
+    const Q_DEF = { fList: 'all', host: [], md5: '', path: '' };
     const qD = { ...Q_DEF, ...(st.qD || {}) };
     const qA = { ...Q_DEF, ...(st.qA || {}) };
-    const Q_TEXT = [['proc', '进程名称'], ['md5', '文件哈希'], ['path', '进程路径']];   // 模糊匹配，不区分大小写
+    const Q_TEXT = [['md5', '文件哈希'], ['path', '进程路径']];   // 模糊匹配，不区分大小写
 
     // 明细记录逐条过滤，过滤完再按「路径 + 文件哈希」聚合
     const rows = allRows.filter((r) => {
@@ -916,7 +911,7 @@ class Component extends DCLogic {
     Q_TEXT.forEach(([k, label]) => { if (String(qA[k]).trim()) activeParts.push(label + ' 包含「' + String(qA[k]).trim() + '」'); });
     const q = {
       d: qD,
-      on: { fList: setQ('fList'), proc: setQ('proc'), md5: setQ('md5'), path: setQ('path') },
+      on: { fList: setQ('fList'), md5: setQ('md5'), path: setQ('path') },
       onKey: (e) => { if (e.key === 'Enter') doQuery(); },   // 回车 = 点查询
       query: doQuery,
       reset: () => this.setState({ fOs: 'Linux/信创', qD: null, qA: null, qOpen: '', ...PAGE1 }),
