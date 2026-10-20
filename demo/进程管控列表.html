@@ -315,7 +315,7 @@ html,body{margin:0}
         <!-- 查询：选字段 + 输入关键字（模糊匹配）+ 搜索；在输入框里按回车也是搜索 -->
         <div style="display: flex; align-items: center;">
           <select aria-label="搜索字段" value="{{ hd.field }}" onChange="{{ hd.onField }}" style="height: 30px; width: 180px; padding: 0 8px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
-            <template data-sc="for" list="{{ hd.fields }}" as="o" hint-placeholder-count="4">
+            <template data-sc="for" list="{{ hd.fields }}" as="o" hint-placeholder-count="3">
               <option value="{{ o.v }}">{{ o.t }}</option>
             </template>
           </select>
@@ -330,8 +330,7 @@ html,body{margin:0}
           <div style="width: 160px; flex-shrink: 0; padding: 0 12px; border-left: 1px solid #e3e6eb;">所在组</div>
           <div style="width: 140px; flex-shrink: 0; padding: 0 12px; border-left: 1px solid #e3e6eb;">IP地址</div>
           <div style="width: 160px; flex-shrink: 0; padding: 0 12px; border-left: 1px solid #e3e6eb;">MAC</div>
-          <div style="width: 170px; flex-shrink: 0; padding: 0 12px; border-left: 1px solid #e3e6eb;">上报时间</div>
-          <div style="width: 80px; flex-shrink: 0; padding: 0 12px; border-left: 1px solid #e3e6eb;">状态</div>
+          <div style="width: 250px; flex-shrink: 0; padding: 0 12px; border-left: 1px solid #e3e6eb;">上报时间</div>
           </div>
           <div style="height: 324px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column;">
             <template data-sc="for" list="{{ hd.rows }}" as="h" hint-placeholder-count="3">
@@ -344,11 +343,7 @@ html,body{margin:0}
                 <div class="ell" title="{{ h.group }}" style="width: 160px; flex-shrink: 0; padding: 0 12px;">{{ h.group }}</div>
                 <div class="ell" style="width: 140px; flex-shrink: 0; padding: 0 12px;">{{ h.ip }}</div>
                 <div class="ell" style="width: 160px; flex-shrink: 0; padding: 0 12px; color: #5a6475; font-family: Menlo, Consolas, monospace; font-size: 12px;">{{ h.mac }}</div>
-                <div class="ell" style="width: 170px; flex-shrink: 0; padding: 0 12px; color: #5a6475;">{{ h.time }}</div>
-                <!-- 状态：在线绿色描边标签 / 离线灰色描边标签（标签样式参考截图 17 的「未下发」） -->
-                <div style="width: 80px; flex-shrink: 0; padding: 0 12px;">
-                  <span style="display: inline-block; padding: 0 6px; height: 20px; line-height: 18px; border: 1px solid {{ h.stColor }}; border-radius: 2px; color: {{ h.stColor }}; font-size: 12px;">{{ h.stText }}</span>
-                </div>
+                <div class="ell" style="width: 250px; flex-shrink: 0; padding: 0 12px; color: #5a6475;">{{ h.time }}</div>
               </div>
             </template>
             <template data-sc="if" value="{{ hd.empty }}" hint-placeholder-val="{{ false }}">
@@ -1114,13 +1109,14 @@ class Component extends DCLogic {
       '193.168.15.85': '00-0C-29-F9-7F-0C', 'srv-web-02': '00-50-56-A1-0B-35', 'kylin-01': '00-1C-42-6E-2D-90',
       'ak360-PC': '00-0C-29-8D-44-1A', 'qihuan-test': '00-0C-29-C2-93-5E', 'wmx': '00-0C-29-07-B8-E4',
     };
-    const HD_FIELDS = [['ip', 'IP地址'], ['host', '终端名称'], ['mac', 'MAC'], ['group', '所在组']];
+    // 搜索字段：IP地址 / 终端名称 / MAC（不按所在组搜）
+    const HD_FIELDS = [['ip', 'IP地址'], ['host', '终端名称'], ['mac', 'MAC']];
     const hdSt = st.hd || null;
     const hdField = st.hdField || 'ip';                 // 默认按 IP 地址搜（和截图 17 一致）
     const hdQ = st.hdQ || null;                        // 生效的搜索：{ field, text }
     const hdAll = hdSt ? allRows.filter((x) => x.path === hdSt.path && x.md5 === hdSt.md5)   // 路径和文件哈希都相同的终端
       .filter((x, i, a) => a.findIndex((y) => y.host === x.host) === i)   // 一台终端只列一次
-      .map((x) => ({ ...x, mac: MAC[x.host] || '--', stText: x.osColor === ON ? '在线' : '离线', stColor: x.osColor === ON ? '#43a047' : '#8a94a6' })) : [];
+      .map((x) => ({ ...x, mac: MAC[x.host] || '--' })) : [];   // 不再单列「状态」，在线 / 离线只看终端名称前的图标颜色
     const hdRows = hdAll.filter((x) => !hdQ || !hdQ.text || String(x[hdQ.field] || '').toLowerCase().indexOf(hdQ.text.toLowerCase()) >= 0);
     const hdSearch = () => this.setState({ hdQ: { field: hdField, text: String(st.hdKw || '').trim() } });
     const hd = {
