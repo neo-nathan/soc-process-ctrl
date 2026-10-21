@@ -1,0 +1,25 @@
+# changelog/ 索引(INDEX.md)
+
+> **本文件是生成物,禁止手工编辑** —— 每次运行
+> `python3 .claude/scripts/gen-index.py changelog --write` 都会整体覆盖。
+> 说明文字改 `.claude/skills/update-changelog/assets/INDEX.head.tmpl`,
+> 条目内容改各 changelog 文件的 frontmatter(`name` / `description`)和二级标题。
+>
+> **怎么用**:新任务开机先重跑生成器(刷新日期窗口),再只读下方「一、最近 3 个自然日」;
+> 需要追查某次修改的细节时,按链接打开那一篇 changelog 原文,不要无差别扫目录。
+
+## 一、最近 3 个自然日
+
+@@RECENT@@
+
+## 二、全量索引(共 @@TOTAL@@ 篇,断链 @@BROKEN@@,按本机日期 @@TODAY@@ 生成)
+
+> 按自然月分组、组内按时间升序。`↳ 段落:` 是该篇正文的二级标题列表,
+> 多轮追加的记录也能在这里看到追加段。
+>
+> 维护规则:新建 / 追加 / 改 frontmatter 后必须同回合重跑生成器;
+> `description` 不超过 @@DESC_MAX@@ 字,超了生成器拒绝写入;
+> changelog 只增不删,条目变少时生成器会拒绝(误删保护),确需删除加 `--allow-shrink`。
+> 写法见 `.claude/skills/update-changelog/SKILL.md`。
+
+@@BODY@@

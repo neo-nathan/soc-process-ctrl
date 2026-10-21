@@ -1,6 +1,9 @@
 # 本地私有配置：含凭据，禁止提交
 CLAUDE.local.md
-# 本机工具配置和系统文件
-.claude/
+# .claude/ 下的 skills/、scripts/ 是项目规则，要入库；只排除本机配置
+.claude/settings.local.json
+.claude/launch.json
+.claude/worktrees/
+# IDE 和系统文件
 .idea/
 .DS_Store
