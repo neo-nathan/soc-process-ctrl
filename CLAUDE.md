@@ -44,6 +44,7 @@
 | `demo/` | 页面演示（有效页面与作废页面见上方「页面 demo」） |
 | `screenshot/` | 现有 SOC 中心页面截图 |
 | `research/{NN}-{主题}.md` | 调研文档 |
+| `plans/PL-{NN}-{主题}.md` | 实施计划（引用写 `PL-01`，子任务写 `PL-01 TK-n`）；编号顺序递增。历史审查文件名里的 `PL-06` 指设计文档 01，与本目录编号无关 |
 | `review/RV-{类型}-{YYYYMMDD}-{HHmm}-{受审对象}.md` | 审查报告；类型：req / design / impl / others。现有 3 份 `RV-20261013-0833-PL-06-v0.7/0.8/0.9.md` 是本规则建立前的历史命名（审查对象都是 `architecture/01`），不改名 |
 | `others/dbscript/rpw.sql`、`others/policy/policy.md` | 数据库脚本、客户端策略协议 |
 | `.claude/skills/`、`.claude/scripts/` | 三机制的 skill 与生成 / 检查脚本（入库）；`.claude/launch.json` 等本机配置不入库 |
