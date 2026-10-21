@@ -188,7 +188,7 @@ html,body{margin:0}
           <!-- 策略模式（终端通过 epstate 表上报） -->
           <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
             <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">策略模式：</span>
-            <template data-sc="for" list="{{ modeChips }}" as="c" hint-placeholder-count="5">
+            <template data-sc="for" list="{{ modeChips }}" as="c" hint-placeholder-count="8">
               <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
             </template>
           </div>
@@ -247,15 +247,12 @@ html,body{margin:0}
               <div class="tcell ell" title="{{ r.osFull }}" style="flex: 105 1 0px; min-width: 0;">{{ r.osFull }}</div>
               <!-- ================================================================
                    策略模式（数据来源）：终端通过 epstate 表上报 —— 终端【实际】在用的状态
-                   两个标签：① 策略模式（拦截 = 红 / 审计 = 橙 / 学习 = 蓝 / 未开启 = 灰）
-                            ② 名单类型（白名单 = 绿描边 / 黑名单 = 深灰描边；学习、未开启时不显示）
-                   审计 / 拦截模式下，终端在用的名单和中心下发的不一致时（如中心已下发白名单、终端还没应用，仍在用黑名单或还没用上任何名单），后面加橙色感叹号，悬停看说明
+                   只有一个标签：终端上报一个值（0～6），模式和名单类型合在一起，对照表见脚本里的 STATE
+                     0 未开启 = 灰 / 1 学习中 = 蓝 / 2 审计·白、3 审计·黑 = 橙 / 4 拦截·白、5 拦截·黑 = 红 / 6 无基线库 = 紫
+                   审计 / 拦截 / 无基线库（2～6）时，终端在用的名单和中心下发的不一致（如中心已下发白名单、终端还没应用，仍在用黑名单或还没用上任何名单），后面加橙色感叹号，悬停看说明
                    ================================================================ -->
               <div class="tcell" style="flex: 130 1 0px; min-width: 0; display: flex; justify-content: center; align-items: center; gap: 4px;">
                 <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 2px; font-size: 12px; background: {{ r.modeBg }}; color: {{ r.modeFg }}; white-space: nowrap;">{{ r.mode }}</span>
-                <template data-sc="if" value="{{ r.hasUse }}" hint-placeholder-val="{{ true }}">
-                  <span style="display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border: 1px solid {{ r.useBd }}; border-radius: 2px; font-size: 12px; color: {{ r.useFg }}; white-space: nowrap;">{{ r.useText }}</span>
-                </template>
                 <!-- 不一致提示：橙色实心圆 + 白色感叹号（和表头 info 图标同一种样式），鼠标移上去在上方弹出说明气泡（.mm:hover 显示 .mm-pop） -->
                 <template data-sc="if" value="{{ r.mismatch }}" hint-placeholder-val="{{ false }}">
                   <span class="mm" style="position: relative; display: inline-flex; flex-shrink: 0; cursor: help;" aria-label="{{ r.mismatchTip }}">
@@ -270,7 +267,7 @@ html,body{margin:0}
               <!-- 策略来源：中心下发，纯文字「所在组 / 分配」（概览只能查看，不能点） -->
               <div class="tcell ell" style="flex: 80 1 0px; min-width: 0; text-align: center; color: #333333;">{{ r.source }}</div>
               <!-- 白名单/黑名单：中心下发的名单，图标 + 纯文字「类型-名称」，如「白名单-办公软件白名单」；没有显示灰色 --
-                   图标：白名单 = 绿色盾牌带对勾 / 黑名单 = 深灰禁止符号（颜色和策略模式列的名单标签一致）
+                   图标：白名单 = 绿色盾牌带对勾 / 黑名单 = 深灰禁止符号
                    鼠标悬停看来源（所在组 = 从分组名单继承 / 分配 = 单独分配给这台终端） -->
               <div class="tcell" title="{{ r.listTip }}" style="flex: 200 1 0px; min-width: 0; display: flex; align-items: center; gap: 6px; color: {{ r.listFg }};">
                 <template data-sc="if" value="{{ r.hasList }}" hint-placeholder-val="{{ true }}">
@@ -553,11 +550,10 @@ class Component extends DCLogic {
 
     // ======== 终端数据（和审计日志 / 学习任务 / 黑白名单页一致）========
     // 字段：host 终端名称 / ip / group 所在组 / os 系统名（版本号另见 OS_FULL）/ on 是否在线
-    //      mode 策略模式（拦截 / 审计 / 学习 / 未开启）
-    //        /* 注释：策略模式由终端通过 epstate 表上报，页面只负责显示，不在这里计算 */
-    //   ── 以下是【终端上报】的实际状态（终端通过 epstate 表上报）──
-    //      mode 策略模式（拦截 / 审计 / 学习 / 未开启）
-    //      use  终端当前实际使用的名单类型：w 白名单 / b 黑名单 / 空 = 没用名单（学习、未开启时）
+    //   ── 以下是【终端上报】的实际状态（终端通过 epstate 表上报，页面只负责显示，不在这里计算）──
+    //      state 策略模式，一个值 0～6，模式和名单类型合在一起：
+    //            0 未开启 / 1 学习中 / 2 审计·白 / 3 审计·黑 / 4 拦截·白 / 5 拦截·黑 / 6 无基线库
+    //            终端在用的名单类型由它推出来（见下面 STATE 的 use），不再单独上报
     //   ── 以下是【中心下发】的配置 ──
     //      source 策略来源 / wl 白名单来源 / bl 黑名单来源，三列取值相同：
     //        所在组 = 策略 / 名单是从终端所在分组的策略 / 名单继承来的
@@ -565,33 +561,33 @@ class Component extends DCLogic {
     //        空     = 没有（只用于白名单 / 黑名单，显示灰色 --）
     //      lists 中心下发的名单名称（一台终端最多 1 个）
     //   中心下发 ≠ 终端上报 是可能的：例如中心刚下发了白名单，终端还没应用（离线 / 未同步），仍在用黑名单
-    //   演示数据里 OA-PC-203 就是这种情况：中心下发「办公软件白名单」，终端离线，上报的仍是「黑名单 拦截」
-    //   srv-db-01 是另一种：中心刚下发「数据库服务白名单」，终端还没下载完，上报「审计」但没用任何名单（此时终端不做判断）
-    //   srv-log-04 是第三种：中心已经不下发名单（名单被删 / 组被移出应用范围），终端离线还没同步，仍在用旧的白名单 → 显示感叹号
-    //   srv-mq-03 是两边都没有名单：上报「拦截」，中心没下发名单、终端也没用名单 → 不算不一致，不显示感叹号（P17 已定：不提示）
+    //   演示数据里 OA-PC-203 就是这种情况：中心下发「办公软件白名单」，终端离线，上报的仍是「拦截·黑」
+    //   srv-db-01 是另一种：中心刚下发「数据库服务白名单」，终端还没下载完，上报「无基线库」（手里没有名单，此时终端不做判断）
+    //   srv-log-04 是第三种：中心已经不下发名单（名单被删 / 组被移出应用范围），终端离线还没同步，仍上报「审计·白」 → 显示感叹号
+    //   srv-mq-03 是两边都没有名单：上报「无基线库」，中心也没下发名单 → 不算不一致，不显示感叹号（P17 已定：不提示）
     //      规则：一台终端最多只有 1 个名单 —— 要么 1 个白名单、要么 1 个黑名单，不能两个都有，也不能有多个 / lists 名单名称（鼠标悬停显示，所以只会是一个名字）
-    // 顺序按分组排；第 1 页（每页 10 条）里四种策略模式都能看到
+    // 顺序按分组排；第 1 页（每页 10 条）里 7 种策略模式取值都能看到
     const TERMS = [
-      { host: 'OA-PC-017',    ip: '192.168.2.17',  group: '默认分组',    os: 'Windows',   on: true,  mode: '拦截', source: '所在组', wl: '', bl: '分配', lists: '远控木马黑名单', use: 'b' },
-      { host: 'OA-PC-042',    ip: '192.168.2.42',  group: '默认分组',    os: 'Windows',   on: true,  mode: '拦截', source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单', use: 'w' },
-      { host: 'OA-PC-203',    ip: '192.168.2.203', group: '默认分组',    os: 'Windows',   on: false, mode: '拦截', source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单', use: 'b' },
-      { host: 'srv-web-02',   ip: '10.20.1.22',    group: '服务器',      os: 'Ubuntu', on: true,  mode: '审计', source: '分配',   wl: '分配', bl: '', lists: '运维工具白名单', use: 'w' },
-      { host: 'srv-db-01',    ip: '10.20.1.11',    group: '服务器',      os: 'CentOS',   on: true,  mode: '审计', source: '所在组', wl: '所在组', bl: '', lists: '数据库服务白名单', use: '' },
-      { host: 'srv-db-02',    ip: '10.20.1.12',    group: '服务器',      os: 'CentOS',   on: true,  mode: '审计', source: '所在组', wl: '', bl: '分配', lists: '挖矿程序黑名单', use: 'b' },
-      { host: 'srv-app-05',   ip: '10.20.1.35',    group: '服务器',      os: 'CentOS',   on: false, mode: '未开启', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'srv-mq-03',    ip: '10.20.1.43',    group: '服务器',      os: 'CentOS',   on: true,  mode: '拦截', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'srv-log-04',   ip: '10.20.1.44',    group: '服务器',      os: 'CentOS',   on: false, mode: '审计', source: '所在组', wl: '', bl: '', lists: '', use: 'w' },
-      { host: 'OA-PC-088',    ip: '192.168.2.88',  group: '办公区',      os: 'Windows',   on: true,  mode: '学习', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'OA-PC-131',    ip: '192.168.2.131', group: '办公区',      os: 'Windows',   on: false, mode: '学习', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'FIN-PC-003',   ip: '192.168.5.33',  group: 'wrh',         os: 'Windows',   on: true,  mode: '拦截', source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单', use: 'w' },
-      { host: 'HR-LAPTOP-07', ip: '192.168.3.77',  group: 'wrh',         os: 'Windows',   on: true,  mode: '拦截', source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单', use: 'w' },
-      { host: 'HR-PC-011',    ip: '192.168.3.11',  group: 'wrh',         os: 'Windows',   on: true,  mode: '拦截', source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单', use: 'w' },
-      { host: 'WIN11-PILOT-05', ip: '192.168.8.5', group: '试点组',      os: 'Windows',   on: true,  mode: '学习', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'WIN11-NEW-02', ip: '192.168.8.22',  group: '试点组',      os: 'Windows',   on: true,  mode: '学习', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'DEV-PC-117',   ip: '192.168.6.117', group: '研发部',      os: 'Ubuntu', on: true,  mode: '审计', source: '所在组', wl: '所在组', bl: '', lists: '运维工具白名单', use: 'w' },
-      { host: 'DEV-LIN-07',   ip: '192.168.3.70',  group: 'verify-dept', os: 'Ubuntu', on: true,  mode: '审计', source: '所在组', wl: '所在组', bl: '', lists: '运维工具白名单', use: 'w' },
-      { host: 'NEW-PC-301',   ip: '192.168.9.31',  group: '根管理组',    os: 'Windows',   on: true,  mode: '未开启', source: '所在组', wl: '', bl: '', lists: '', use: '' },
-      { host: 'NEW-LIN-302',  ip: '10.20.9.32',    group: '根管理组',    os: 'CentOS',    on: false, mode: '未开启', source: '所在组', wl: '', bl: '', lists: '', use: '' },
+      { host: 'OA-PC-017',    ip: '192.168.2.17',  group: '默认分组',    os: 'Windows',   on: true,  state: 5, source: '所在组', wl: '', bl: '分配', lists: '远控木马黑名单' },
+      { host: 'OA-PC-042',    ip: '192.168.2.42',  group: '默认分组',    os: 'Windows',   on: true,  state: 4, source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单' },
+      { host: 'OA-PC-203',    ip: '192.168.2.203', group: '默认分组',    os: 'Windows',   on: false, state: 5, source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单' },
+      { host: 'srv-web-02',   ip: '10.20.1.22',    group: '服务器',      os: 'Ubuntu', on: true,  state: 2, source: '分配',   wl: '分配', bl: '', lists: '运维工具白名单' },
+      { host: 'srv-db-01',    ip: '10.20.1.11',    group: '服务器',      os: 'CentOS',   on: true,  state: 6, source: '所在组', wl: '所在组', bl: '', lists: '数据库服务白名单' },
+      { host: 'srv-db-02',    ip: '10.20.1.12',    group: '服务器',      os: 'CentOS',   on: true,  state: 3, source: '所在组', wl: '', bl: '分配', lists: '挖矿程序黑名单' },
+      { host: 'srv-app-05',   ip: '10.20.1.35',    group: '服务器',      os: 'CentOS',   on: false, state: 0, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'srv-mq-03',    ip: '10.20.1.43',    group: '服务器',      os: 'CentOS',   on: true,  state: 6, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'srv-log-04',   ip: '10.20.1.44',    group: '服务器',      os: 'CentOS',   on: false, state: 2, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'OA-PC-088',    ip: '192.168.2.88',  group: '办公区',      os: 'Windows',   on: true,  state: 1, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'OA-PC-131',    ip: '192.168.2.131', group: '办公区',      os: 'Windows',   on: false, state: 1, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'FIN-PC-003',   ip: '192.168.5.33',  group: 'wrh',         os: 'Windows',   on: true,  state: 4, source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单' },
+      { host: 'HR-LAPTOP-07', ip: '192.168.3.77',  group: 'wrh',         os: 'Windows',   on: true,  state: 4, source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单' },
+      { host: 'HR-PC-011',    ip: '192.168.3.11',  group: 'wrh',         os: 'Windows',   on: true,  state: 4, source: '所在组', wl: '所在组', bl: '', lists: '办公软件白名单' },
+      { host: 'WIN11-PILOT-05', ip: '192.168.8.5', group: '试点组',      os: 'Windows',   on: true,  state: 1, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'WIN11-NEW-02', ip: '192.168.8.22',  group: '试点组',      os: 'Windows',   on: true,  state: 1, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'DEV-PC-117',   ip: '192.168.6.117', group: '研发部',      os: 'Ubuntu', on: true,  state: 2, source: '所在组', wl: '所在组', bl: '', lists: '运维工具白名单' },
+      { host: 'DEV-LIN-07',   ip: '192.168.3.70',  group: 'verify-dept', os: 'Ubuntu', on: true,  state: 2, source: '所在组', wl: '所在组', bl: '', lists: '运维工具白名单' },
+      { host: 'NEW-PC-301',   ip: '192.168.9.31',  group: '根管理组',    os: 'Windows',   on: true,  state: 0, source: '所在组', wl: '', bl: '', lists: '' },
+      { host: 'NEW-LIN-302',  ip: '10.20.9.32',    group: '根管理组',    os: 'CentOS',    on: false, state: 0, source: '所在组', wl: '', bl: '', lists: '' },
     ];
     // 操作系统完整名称（带版本号），按终端名称查；列表「操作系统」列显示这个
     // 高级搜索「系统类型」、终端图标仍按 os（只有系统名）判断
@@ -602,17 +598,23 @@ class Component extends DCLogic {
       'srv-web-02': 'Ubuntu 22.04', 'DEV-LIN-07': 'Ubuntu 22.04', 'DEV-PC-117': 'Ubuntu 22.04',
       'srv-db-01': 'CentOS 7.9', 'srv-db-02': 'CentOS 7.9', 'srv-app-05': 'CentOS 7.9', 'srv-mq-03': 'CentOS 7.9', 'srv-log-04': 'CentOS 7.9', 'NEW-LIN-302': 'CentOS 7.9',
     };
-    const MODE = {
-      '拦截':   { bg: '#fdecea', fg: '#c62828' },
-      '审计':   { bg: '#fff3e0', fg: '#e65100' },
-      '学习':   { bg: '#e3f0fc', fg: '#1e88e5' },
-      '未开启': { bg: '#eceff3', fg: '#5a6475' },
+    // 策略模式取值对照表：终端上报的值 → 显示文字、标签颜色、终端在用的名单类型
+    //   颜色按模式分：拦截 = 红 / 审计 = 橙 / 学习中 = 蓝 / 未开启 = 灰 / 无基线库 = 紫
+    //   use：终端在用的名单类型，用来和中心下发的比对（不一致显示感叹号）
+    //        'w' 白名单 / 'b' 黑名单 / '' 没用名单（无基线库）/ null 不比对（未开启、学习中不用名单）
+    const STATE = {
+      0: { label: '未开启',   bg: '#eceff3', fg: '#5a6475', use: null },
+      1: { label: '学习中',   bg: '#e3f0fc', fg: '#1e88e5', use: null },
+      2: { label: '审计·白',  bg: '#fff3e0', fg: '#e65100', use: 'w' },
+      3: { label: '审计·黑',  bg: '#fff3e0', fg: '#e65100', use: 'b' },
+      4: { label: '拦截·白',  bg: '#fdecea', fg: '#c62828', use: 'w' },
+      5: { label: '拦截·黑',  bg: '#fdecea', fg: '#c62828', use: 'b' },
+      6: { label: '无基线库', bg: '#f3e5f5', fg: '#8e24aa', use: '' },
     };
-    // 名单类型：白名单 = 绿描边 / 黑名单 = 深灰描边
-    // ico：白名单 = 盾牌带对勾 / 黑名单 = 圆圈加斜杠（禁止）
+    // 中心下发的名单类型（「白名单/黑名单」列用）：fg 文字颜色；ico 白名单 = 盾牌带对勾 / 黑名单 = 圆圈加斜杠（禁止）
     const LIST_TYPE = {
-      w: { name: '白名单', bd: '#81c784', fg: '#2e7d32', ico: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5' },
-      b: { name: '黑名单', bd: '#90a4ae', fg: '#37474f', ico: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M5.6 5.6l12.8 12.8' },
+      w: { name: '白名单', fg: '#2e7d32', ico: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5' },
+      b: { name: '黑名单', fg: '#37474f', ico: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M5.6 5.6l12.8 12.8' },
     };
     const issued = (t) => t.wl ? 'w' : t.bl ? 'b' : '';   // 中心下发的名单类型
     const WIN = 'M3 5l8-1v8H3zM13 4l8-1v9h-8zM3 13h8v8l-8-1zM13 13h8v9l-8-1z';
@@ -654,7 +656,7 @@ class Component extends DCLogic {
     const cols = [
       { label: '终端名称', w: 150, align: 'left' }, { label: 'IP地址', w: 110, align: 'left' },
       { label: '所在组', w: 90, align: 'left' }, { label: '操作系统', w: 105, align: 'left' },
-      { label: '策略模式', w: 130, align: 'center', note: '终端通过 epstate 表上报：当前实际使用的策略模式 + 名单类型' },
+      { label: '策略模式', w: 130, align: 'center', note: '终端通过 epstate 表上报：当前实际使用的策略模式（一个值，含名单类型）' },
       { label: '策略来源', w: 80, align: 'center', tip: '中心下发：所在组 = 从分组策略继承；分配 = 单独分配给这台终端' },
       { label: '白名单/黑名单', w: 200, align: 'left', tip: '中心下发的名单：类型-名称（一台终端最多 1 个）；鼠标悬停看来源（所在组 / 分配）' },
     ].map((c) => ({ ...c, tip: c.note ? '' : (c.tip || c.label), hasNote: !!c.note, cls: c.note ? 'notecol' : 'ell' }));   // 有说明的列：不截断（气泡才能露出来），悬停才显示气泡，不用 title
@@ -685,7 +687,8 @@ class Component extends DCLogic {
     const sub = st.sub || 'in';   // 子组终端：默认「包含」，和改版前一样，点根管理组能看到全部终端
     const subChips  = chips('sub', [['ex', '不包含'], ['in', '包含']], 'in');
     const onChips   = chips('onq', [['all', '全部'], ['on', '在线'], ['off', '离线']]);
-    const modeChips = chips('modeq', [['all', '全部'], ['拦截', '拦截'], ['审计', '审计'], ['学习', '学习'], ['未开启', '未开启']]);
+    // 策略模式：全部 + 7 个取值（按上报值 0～6 排）；选中项存的是上报值（字符串）
+    const modeChips = chips('modeq', [['all', '全部']].concat(Object.keys(STATE).map((v) => [v, STATE[v].label])));
     const fieldOpts = [['host', '终端名称'], ['ip', 'IP地址']].map(([value, label]) => ({ value, label, sel: draft.field === value }));
 
     // ======== 表格行 ========
@@ -695,7 +698,7 @@ class Component extends DCLogic {
     const list = scope.filter((t) => {
       if ((st.onq || 'all') === 'on' && !t.on) return false;
       if ((st.onq || 'all') === 'off' && t.on) return false;
-      if ((st.modeq || 'all') !== 'all' && t.mode !== st.modeq) return false;
+      if ((st.modeq || 'all') !== 'all' && String(t.state) !== st.modeq) return false;
       if (qkw && !String(t[applied.field] || '').toLowerCase().includes(qkw)) return false;   // 关键字模糊匹配
       return true;
     });
@@ -710,23 +713,20 @@ class Component extends DCLogic {
         osFull: OS_FULL[t.host] || t.os,                    // 操作系统列：带版本号，查不到就显示系统名
         osIcon: t.os.indexOf('Windows') === 0 ? WIN : LNX,
         osColor: t.on ? '#1e88e5' : '#b0b8c4',            // 在线蓝 / 离线灰
-        modeBg: MODE[t.mode].bg, modeFg: MODE[t.mode].fg,   // 策略模式标签颜色
-        // 终端上报的名单类型标签（学习 / 未开启时 use 为空，不显示）
-        hasUse: !!t.use,
-        useText: LIST_TYPE[t.use] ? LIST_TYPE[t.use].name : '',
-        useBd: LIST_TYPE[t.use] ? LIST_TYPE[t.use].bd : '', useFg: LIST_TYPE[t.use] ? LIST_TYPE[t.use].fg : '',
+        mode: STATE[t.state].label,                                   // 策略模式标签文字，如「审计·白」
+        modeBg: STATE[t.state].bg, modeFg: STATE[t.state].fg,         // 策略模式标签颜色
         // 中心下发的名单：类型-名称；没有显示 --（灰）
         listText: issued(t) ? LIST_TYPE[issued(t)].name + '-' + t.lists : '--',
         listFg: issued(t) ? '#333333' : GRAY,
         hasList: !!issued(t),
         listIco: issued(t) ? LIST_TYPE[issued(t)].ico : '', listIcoColor: issued(t) ? LIST_TYPE[issued(t)].fg : '',   // 名单类型图标
         listTip: issued(t) ? '来源：' + (t.wl || t.bl) + (t.wl === '分配' || t.bl === '分配' ? '（单独分配给这台终端）' : '（从分组名单继承）') : '中心未下发名单',
-        // 上报和下发对不上：只看审计 / 拦截模式（学习、未开启不用名单，不比较）
-        //   终端在用的名单类型（没用 = 空）和中心下发的（没下发 = 空）不同就提示，三种情况：
-        //   ① 下发白、在用黑（或反过来）  ② 下发了名单、终端还没用上任何名单  ③ 没下发名单、终端还在用旧名单
-        mismatch: (t.mode === '审计' || t.mode === '拦截') && t.use !== issued(t),
+        // 上报和下发对不上：只看 2～6（审计 / 拦截 / 无基线库）；未开启、学习中不用名单，不比较
+        //   终端在用的名单类型（由上报值推出，无基线库 = 空）和中心下发的（没下发 = 空）不同就提示，三种情况：
+        //   ① 下发白、在用黑（或反过来）  ② 下发了名单、终端上报无基线库  ③ 没下发名单、终端还在用旧名单
+        mismatch: STATE[t.state].use !== null && STATE[t.state].use !== issued(t),
         mismatchTip: '与中心下发不一致：中心下发的是' + (issued(t) ? LIST_TYPE[issued(t)].name : '无名单') + '，终端尚未应用，'
-                     + (t.use ? '仍在使用' + LIST_TYPE[t.use].name : '当前未使用任何名单，不做判断'),
+                     + (STATE[t.state].use ? '仍在使用' + LIST_TYPE[STATE[t.state].use].name : '当前未使用任何名单，不做判断'),
       };
     });
     const isEmpty = rows.length === 0;
