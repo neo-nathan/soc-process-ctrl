@@ -27,6 +27,8 @@
 4. 读 `insights/INDEX.md`，挑与本次任务相关的跨任务经验（和 memory 双向同步）。
 5. 设计、编码类任务的基线：原始需求 `requirements/requirements-raw.md`、页面 `demo/`（作废页面见上方「页面 demo」）、开发设计 `architecture/01-进程管控设计文档.md`（其中 12.1 是待对齐清单）、客户端协议 `others/policy/policy.md`、数据库脚本 `others/dbscript/rpw.sql`。需要核实 101 环境数据时，访问参数在 `CLAUDE.local.md`，只读。
 
+执行用户已放行的 `plans/PL-NN` 计划时，用 `implement-plan` skill（`/implement-plan <计划路径>`）：主 Agent 编排、上传 101 和实跑，Executor 改代码 / 文档，Tester 独立验收，内审 + 整体审；svn 不提交。
+
 每完成一步有持久化项目变更的工作，同回合用 `update-changelog` 写 changelog 并重跑生成器刷新 `changelog/INDEX.md`；只有当前事实、阶段、文档状态、检查点、阻塞或下一步发生变化时，才用 `update-current-status` 更新 `CurrentStatus.md`。有可复用的踩坑经验，用 `update-insights` 沉淀到 memory + `insights/`。
 
 # 核心文档与目录
@@ -47,7 +49,7 @@
 | `plans/PL-{NN}-{主题}.md` | 实施计划（引用写 `PL-01`，子任务写 `PL-01 TK-n`）；编号顺序递增。历史审查文件名里的 `PL-06` 指设计文档 01，与本目录编号无关 |
 | `review/RV-{类型}-{YYYYMMDD}-{HHmm}-{受审对象}.md` | 审查报告；类型：req / design / impl / others。现有 3 份 `RV-20261013-0833-PL-06-v0.7/0.8/0.9.md` 是本规则建立前的历史命名（审查对象都是 `architecture/01`），不改名 |
 | `others/dbscript/rpw.sql`、`others/policy/policy.md` | 数据库脚本、客户端策略协议 |
-| `.claude/skills/`、`.claude/scripts/` | 三机制的 skill 与生成 / 检查脚本（入库）；`.claude/launch.json` 等本机配置不入库 |
+| `.claude/skills/`、`.claude/scripts/` | 三机制的 skill 与生成 / 检查脚本、执行计划用的 `implement-plan`（入库）；`.claude/launch.json` 等本机配置不入库 |
 
 # 时间戳命名规则（changelog / insights / review 共用）
 
