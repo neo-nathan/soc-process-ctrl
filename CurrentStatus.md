@@ -5,7 +5,7 @@
 ## 当前结论
 
 - **项目处于设计收尾、前端编码准备阶段**：为 SOC 中心新增「终端进程管控」（通过进程策略和黑白名单控制终端进程运行），一期只做 Linux。
-- **黑白名单列表页前端**：实施计划 [PL-01](plans/PL-01-黑白名单列表页前端实施计划.md) 10-22 04:51 EDT 实施完成（PASS），报告 [IMPL-20261022-0449-PL-01](implement/IMPL-20261022-0449-PL-01.md)；本项目只写前端，后端由其他同事在 101 上开发（代码未进 svn），列表补充字段、发布、应用到组仍走前端 mock，待后端定稿联调；独立外审未做，git / svn 未提交。
+- **黑白名单列表页前端**：实施计划 [PL-01](plans/PL-01-黑白名单列表页前端实施计划.md) 10-22 04:51 EDT 实施完成（PASS），报告 [IMPL-20261022-0449-PL-01](implement/IMPL-20261022-0449-PL-01.md)；本项目只写前端，后端由其他同事在 101 上开发（代码未进 svn），列表补充字段、发布、应用到组仍走前端 mock，待后端定稿联调；独立外审未做；本仓库已本地提交 `aecb6b6`（未推送），svn 未提交。为避免与同事共用的 `processManage.js` 互相覆盖，已起草 [PL-02](plans/PL-02-名单页创建编辑弹窗独立实施计划.md)（名单页自带创建 / 编辑弹窗），待用户放行。
 - **开发设计文档 v1.0**（2026-10-15）：按 v0.9 审查报告修订完成，之后有 10-18、10-19、10-20、10-21 多次补充（取消「进程名称」查询条件、名单弹窗系统类型写进标题、「进程所属终端」弹窗去掉「状态」列和「所在组」搜索项、概览「策略模式」合并为一个标签 / 终端上报一个值 0～6、进程管理高级搜索精简为一行、所有时间条件改为「时间范围：全部 / 本周 / 本月 / 上月 / 指定」），均已同步 demo。v1.0 本身还没做过独立审查。
 - **核心设计结论**见设计文档第 0 节 K1～K14：沿用 PROCM 产品身份；进程策略复用策略中心；白名单 / 黑名单是 `POLICY` 里用名单专用产品号的记录，只挂组；名单明细打成 zip 由终端下载。
 - **给领导的概要设计 00**（单文件 html，按 demo 页面组织）2026-10-19 新增，10-20 同步弹窗改动；它是一次性交付物，领导满意后从项目移除，不与 01 同步维护。
@@ -23,29 +23,31 @@
 | v0.9 审查意见落实 | PASS | v0.9 审查报告（高 9 / 中 21 / 低 24）已在 v1.0 中修订落实；v1.0 本身未审查 |
 | 编码实现 | IN_PROGRESS | 不在本仓库；101 上前后端开发在进行，未进 svn（PL-01 F-1）；与设计有分叉（设计文档版本记录 H1、PL-01 F-6） |
 | 黑白名单列表页前端（PL-01） | PASS | 10-21 05:28 放行（Q8 按默认不改 `layout.html`）；TK-0～TK-7 全部完成，10-22 04:51 Final PASS（TK-0、TK-1、TK-2、TK-3、TK-4、TK-5 已 PASS；TK-6 全量验收 S-1～S-11 在 101 实测通过；整体审 1 条重要项已整改并过内审）；报告与证据 `implement/IMPL-20261022-0449-PL-01.md`、`implement/PL-01/`；SOC 源码新增 `bwlistMock.js`、`processManageList.css`，改 `list.html`、`list.js`、`processManage.js`（都已上传 101，svn 不提交）；独立外审未做；计划状态改「已完成」待用户决定 |
+| 名单页创建编辑弹窗独立（PL-02） | NOT_STARTED | 计划 v0.2 10-22 05:32 EDT 循环自检 4 轮至无问题；新增 Q4（后端按字节限长，默认前端仍按字数 100）待放行时确认（[changelog](changelog/log-20261022-0526-起草PL-02名单弹窗独立计划.md)）；新建 `bwlistModal.js`、名单页自带弹窗、`processManage.js` 还原给同事、F-8 ① 交同事；待用户放行 |
 | 项目治理三机制 | PASS | 2026-10-21 建立，生成器和检查脚本均通过 |
 | 计划实施 skill（implement-plan） | READY | 2026-10-21 从 soc-cascade-syslog 移植并改成本项目形状；经四轮独立复审和循环自检（[changelog](changelog/log-20261021-0430-移植implement-plan技能.md)）；10-21～10-22 首次实跑于 PL-01 并完成，经验见 `insights/` 10-22 三条 |
 
 ## 当前进行中
 
-- 无。PL-01 已于 10-22 04:51 EDT 收尾（等用户决定 git 提交、计划状态与是否外审）；本 loop 恢复入口 [changelog](changelog/log-20261021-0530-实施PL-01.md)，工作目录 `/Users/nick/Workspace/soc-process-ctrl-work/PL-01/`（证据已复制进仓库 `implement/PL-01/`）。
+- 无。PL-01 已于 10-22 04:51 EDT 收尾，05:0x 本地提交 `aecb6b6`（未推送；等用户决定计划状态与是否外审）；本 loop 恢复入口 [changelog](changelog/log-20261021-0530-实施PL-01.md)，工作目录 `/Users/nick/Workspace/soc-process-ctrl-work/PL-01/`（证据已复制进仓库 `implement/PL-01/`）。
 
 ## 阻塞项与待确认事项
 
 - **101 进程管理页「选中加白 / 加黑」全行被拦（10-22 00:06 发现）**：同事 10-21 23:13 EDT 改的后端 `Procmanager` 返回 `SYSTYPE` = `Linux`，而 `processMana.js`（北京 10-22 15:30、16:35 又被同事改过，这段未动）按小写 `linux` / `windows` 判断，任何行都弹「既有 Windows 又有 Linux/信创」。不是 PL-01 改出来的；PL-01 整体审已在页面内存改一行 `SYSTYPE` 后从正式入口实测通过，真实用户仍被挡。关闭条件：用户转告同事、前后端写法对齐。
 - **101 后端名单接口与前端约定不一致（联调注意，10-22 00:56 改写）**：同事 10-21 23:13 EDT 改的 `getWBListAction` 缺省 `timeRange=1`（只给北京本周，PL-01 mock 已显式传 0 绕开）；参数名与页面全不同（北京 10-22 13:14 起名单类型也改读 `policytype`，PL-01 mock 两个名字都带）（systype↔eptype、ctime↔timeRange、cfrom/cto↔begintime/endtime、pubstatus↔status、scope↔objrange、delta↔procstatus，kw 后端没有），关 mock 后高级查询会被静默忽略；发布状态编码后端 1～4 且「已发布 / 有变更」与 PL-01 §4.2 对调；返回字段名不同、EPTYPE 变整数。不阻塞 PL-01 前端（走 mock），阻塞联调。关闭条件：与后端对齐参数名、编码、字段后回改 mock 映射或 `list.js`。
 - **12.1 高优先级待对齐（P9、P2、P8、P19、P22）**：影响名单报文 `policytype`、库文件格式、上报格式与方式（P8 ⑪ 含 10-21 新增的「策略模式一个值 0～6」键名、「无基线库」含义，暂沿用 `procaudit`，`rpw.sql` 注释未改）、各库种建库 / 升级脚本的明文源和改法；不阻塞设计文档继续修订，但阻塞编码定稿。关闭条件：客户端 / 产品 / 数据库脚本维护方 / 中心后端答复后回改设计文档。另有中、低优先级 10 项，见设计文档 12.1。
-- **同事部署会覆盖 PL-01 上传的公共文件（10-22 04:31 EDT 发生）**：北京 16:31 同事同步部署时把 101 `view/processManage.js` 覆盖回开工旧版（名单页创建 / 编辑失效），04:36 EDT 已按上传规则重传 `a2b0eb10…`。关闭条件：用户告知同事，同事同步前先合并 PL-01 的改动（IMPL 报告第 9 节「需告知同事」清单）。
+- **同事部署会覆盖 PL-01 上传的公共文件（10-22 04:31 EDT 发生）**：北京 16:31 同事同步部署时把 101 `view/processManage.js` 覆盖回开工旧版（名单页创建 / 编辑失效），04:36 EDT 已按上传规则重传 `a2b0eb10…`。关闭条件：PL-02 执行完（名单页不再依赖 `processManage.js`，该文件还给同事）；`list.js`、`list.html` 仍可能被按 svn 部署覆盖，根治要 svn 提交（须用户指令）。
 - **101 页面实测要用户在 Chrome 登录（常驻风险）**：Agent 按安全规则不能输入密码。101 后端 `My.php:56-63` 对不带正确 `RSTOCKEN` 请求头的 POST 会直接销毁会话——10-21 22:1x TK-3 内审的一次裸 `fetch` 就把标签 88508831 的会话打掉了（白天两次「原因未查明」的清空很可能同因）。10-21 22:2x 用户已在该标签重新登录；之后所有角色确认会话只用 `RsCore.ajax` 或手工带 `RSTOCKEN` 头。
 - **101 后端与设计的分歧待告知后端**：`POLICY.STATUS` 存名单类型而非发布状态、名单用进程管控产品号（设计 K3 是专用产品号，名单会混进策略中心列表）、名单可重名（PL-01 F-6）；审计日志页没登记 3303（PL-01 F-17）。不阻塞前端（发布状态先 mock），阻塞联调。关闭条件：后端答复后回改设计文档 12.1 或 mock。
 - **概要设计 00 的领导反馈**：建状态页时不知道是否已交给领导、是否认可。关闭条件：用户告知结果。
 
 ## 下一步
 
-1. 用户决定：本仓库 git 提交（PL-01 收尾产物）、计划 PL-01 的状态行是否标为完成、是否另派独立外审（`review/RV-impl-…-PL-01.md`）。
-2. 把 PL-01 IMPL 报告第 9 节「需告知同事」清单转给后端同事（SYSTYPE 大小写、部署覆盖、名单名称转义、日志页日期口径等）；后端定稿后按「联调差异」调整 mock 入参与 `toRow`，再关 mock。
-3. 跟进 12.1 高优先级待对齐项的答复，定了就回改设计文档并同步 demo / 概要设计。
-4. 拿到领导对概要设计 00 的反馈后，按反馈修改或从项目移除 00。
+1. 用户放行 PL-02 后，按 `implement-plan` 执行（前提：用户在 Chrome 登录 101）。
+2. 用户决定：计划 PL-01 的状态行是否标为完成、是否另派独立外审（`review/RV-impl-…-PL-01.md`）、何时推送远端。
+3. 把 PL-01 IMPL 报告第 9 节「需告知同事」清单转给后端同事（SYSTYPE 大小写、部署覆盖、名单名称转义、日志页日期口径等）；后端定稿后按「联调差异」调整 mock 入参与 `toRow`，再关 mock。
+4. 跟进 12.1 高优先级待对齐项的答复，定了就回改设计文档并同步 demo / 概要设计。
+5. 拿到领导对概要设计 00 的反馈后，按反馈修改或从项目移除 00。
 
 ## 最近 3 个自然日摘要
 
@@ -55,7 +57,7 @@
 
 - 原始需求：[requirements/requirements-raw.md](requirements/requirements-raw.md)
 - 开发设计文档：[architecture/01-进程管控设计文档.md](architecture/01-进程管控设计文档.md)（第 0 节结论、12.1 待对齐、14 改动清单）
-- 实施计划：[plans/PL-01-黑白名单列表页前端实施计划.md](plans/PL-01-黑白名单列表页前端实施计划.md)；实施报告：[implement/IMPL-20261022-0449-PL-01.md](implement/IMPL-20261022-0449-PL-01.md)
+- 实施计划：[plans/PL-01-黑白名单列表页前端实施计划.md](plans/PL-01-黑白名单列表页前端实施计划.md)、[plans/PL-02-名单页创建编辑弹窗独立实施计划.md](plans/PL-02-名单页创建编辑弹窗独立实施计划.md)；实施报告：[implement/IMPL-20261022-0449-PL-01.md](implement/IMPL-20261022-0449-PL-01.md)
 - 给领导的概要设计：[architecture/00-进程管控概要设计.html](architecture/00-进程管控概要设计.html)
 - 最新审查报告：[review/RV-20261013-0833-PL-06-v0.9.md](review/RV-20261013-0833-PL-06-v0.9.md)
 - 页面 demo：`demo/`；数据库脚本：[others/dbscript/rpw.sql](others/dbscript/rpw.sql)；客户端协议：[others/policy/policy.md](others/policy/policy.md)
@@ -64,10 +66,10 @@
 
 ## 仓库现场
 
-- 2026-10-22 04:53 EDT 核实：分支 `main`，HEAD `769d7f7`（用户会话 22:13 提交；领先远端 4 个提交，未推送）；此后未提交：`CLAUDE.md`（目录表登记 `implement/`）、`CurrentStatus.md`、`changelog/log-20261021-0530-实施PL-01.md`、`changelog/INDEX.md`、`insights/INDEX.md`，新增 `implement/IMPL-20261022-0449-PL-01.md`、`implement/PL-01/`（47 个证据文件）、`insights/` 下 10-22 三条（`insight-20261022-0447-101共享环境联调的坑.md`、`insight-20261022-0447-今天按哪个时区.md`、`insight-20261022-0447-实施循环留痕与检查器教训.md`）。SOC 源码 svn 改动 7 个：用户自己的 `Index.php`、`index2.php`；PL-01 新增 `bwlistMock.js`、`processManageList.css`，改 `list.html`、`list.js`、`processManage.js`；都未提交。
+- 2026-10-22 05:33 EDT 核实：分支 `main`，在 `aecb6b6`（PL-01 收尾）之上又本地提交一次（PL-02 计划 v0.2、对应 changelog、PL-01 提交后的状态页与 changelog 现场更新；用户 10-22 指示 commit，未推送），提交后工作区干净、领先远端 6 个提交；准确 HEAD 以 `git log -1` 为准。SOC 源码 svn 改动 7 个：用户自己的 `Index.php`、`index2.php`；PL-01 新增 `bwlistMock.js`、`processManageList.css`，改 `list.html`、`list.js`、`processManage.js`；都未提交。
 - 开工仍须实时执行 `git status --short --branch`。
 
 ---
 
-最后更新：2026-10-22 04:53 EDT
+最后更新：2026-10-22 05:33 EDT
 最后精炼：2026-10-21 01:06 EDT
