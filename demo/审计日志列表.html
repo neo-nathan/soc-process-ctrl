@@ -188,13 +188,13 @@ html,body{margin:0}
       </div>
 
       <!-- ============ 高级查询面板：默认折叠，点"高级搜索"展开（样式参考截图 12） ============
-           条件顺序：时间 / 动作 / 原因 / 系统类型 / 筛选条件（动作 已拦截 / 告警 分别对应 拦截 / 审计 模式，所以不单设策略模式条件）
+           条件顺序：时间范围 / 动作 / 原因 / 系统类型 / 筛选条件（动作 已拦截 / 告警 分别对应 拦截 / 审计 模式，所以不单设策略模式条件）
            两类条件：① 点选项，点了立刻筛选；② 输入项（指定日期 / 关键字），填好后点"筛选"才生效 -->
       <template data-sc="if" value="{{ advOpen }}" hint-placeholder-val="{{ false }}">
         <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; margin: 0 10px 10px; padding: 12px 16px; background: #eef1f6; font-size: 13px;">
-          <!-- 时间（点选，点了立刻筛选）；右边"指定"是输入项，填好后点"筛选"生效 -->
+          <!-- 时间范围（点选，点了立刻筛选）：全部 / 本周 / 本月 / 上月；右边"指定"是输入项，填好后点"筛选"生效 -->
           <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
-            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">时间：</span>
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">时间范围：</span>
             <template data-sc="for" list="{{ timeChips }}" as="c" hint-placeholder-count="4">
               <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
             </template>
@@ -759,7 +759,19 @@ class Component extends DCLogic {
     const draft = this._draft;
     const applied = st.applied || Q_EMPTY;
     const TODAY = '2026-09-28';   // 演示用的"今天"（示例数据都在这之前），接后端时换成真实日期
-    const daysAgo = (n) => { const d = new Date(TODAY); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
+    // 时间范围的起止日期（都按 YYYY-MM-DD 字符串比较，用 UTC 计算避免时区把日期算偏一天）：
+    //   本周 = 本周一 ~ 今天；本月 = 本月 1 日 ~ 今天；上月 = 上月 1 日 ~ 上月最后一天
+    const RANGE = (() => {
+      const t = new Date(TODAY + 'T00:00:00Z');
+      const s = (d) => d.toISOString().slice(0, 10);
+      const y = t.getUTCFullYear(), m = t.getUTCMonth();
+      const dow = (t.getUTCDay() + 6) % 7;   // 周一 = 0 … 周日 = 6
+      return {
+        week:      [s(new Date(Date.UTC(y, m, t.getUTCDate() - dow))), TODAY],
+        month:     [s(new Date(Date.UTC(y, m, 1))), TODAY],
+        lastMonth: [s(new Date(Date.UTC(y, m - 1, 1))), s(new Date(Date.UTC(y, m, 0)))],   // 本月 0 日 = 上月最后一天
+      };
+    })();
 
     // 输入框：只记到 _draft；画布里要 forceUpdate 才能看到打的字，demo 页面里不用刷新
     const typing = (key) => (e) => { draft[key] = e.target.value; if (typeof this.forceUpdate === 'function') this.forceUpdate(); };
@@ -771,7 +783,7 @@ class Component extends DCLogic {
       if (draft.from && draft.to && draft.from > draft.to) return '开始日期不能晚于结束日期';
       return '';
     };
-    // 点"筛选"：先检查日期，有错就提示、不筛选；没错时输入项生效（填了指定日期，时间的点选项自动取消）
+    // 点"筛选"：先检查日期，有错就提示、不筛选；没错时输入项生效（填了指定日期，时间范围的点选项自动取消）
     const doQuery = () => {
       const err = checkDates();
       if (err) { this.setState({ dateErr: err }); return; }
@@ -796,7 +808,7 @@ class Component extends DCLogic {
       return { label, pressed: on ? 'true' : 'false', border: on ? '#1e88e5' : 'transparent', bg: on ? '#ffffff' : 'transparent', color: on ? '#1e88e5' : '#333333',
         pick: () => this.setState({ [key]: value, ...(extra ? extra(value) : {}) }) };
     });
-    // 时间的点选项：点了就清掉指定日期（两者只取一个）
+    // 时间范围的点选项：点了就清掉指定日期（两者只取一个）
     const clearDates = () => { draft.from = ''; draft.to = ''; return { applied: { ...applied, from: '', to: '' }, dateErr: '' }; };
     // 不提供「进程名称」：库里没有单独的进程名称字段，名称是从进程路径取的，按名称搜就是按路径搜
     const fieldOpts = [['path', '进程路径'], ['md5', '文件哈希'], ['host', '终端名称'], ['ip', 'IP地址']].map(([value, label]) => ({ value, label, sel: draft.field === value }));
@@ -813,7 +825,7 @@ class Component extends DCLogic {
     const reasonChips = chips('reasonq', [['all', '全部'], ['不在白名单', '不在白名单'], ['在黑名单', '在黑名单']]);
     // 系统类型：点选平铺，点了立刻筛选；「Linux/信创」= CentOS / Ubuntu 及麒麟、统信等所有非 Windows 系统
     const osChips     = chips('osq', [['all', '全部'], ['Windows', 'Windows'], ['Linux', 'Linux/信创']]);
-    const timeChips   = chips('time', [['all', '全部'], ['today', '今天'], ['7d', '近 7 天'], ['30d', '近 30 天']], clearDates);
+    const timeChips   = chips('time', [['all', '全部'], ['week', '本周'], ['month', '本月'], ['lastMonth', '上月']], clearDates);
 
     const all = raw.map((r, i) => {
       const action = actionOf(r);
@@ -843,9 +855,7 @@ class Component extends DCLogic {
       const osq = st.osq || 'all';
       if (osq === 'Windows' && r.os !== 'Windows') return false;
       if (osq === 'Linux' && r.os === 'Windows') return false;   // Linux：CentOS / Ubuntu 都算
-      if (qtime === 'today' && day !== TODAY) return false;
-      if (qtime === '7d' && day < daysAgo(7)) return false;
-      if (qtime === '30d' && day < daysAgo(30)) return false;
+      if (RANGE[qtime] && (day < RANGE[qtime][0] || day > RANGE[qtime][1])) return false;   // 时间范围：本周 / 本月 / 上月
       if (applied.from && day < applied.from) return false;
       if (applied.to && day > applied.to) return false;
       if (qkw && !String(r[applied.field] || '').toLowerCase().includes(qkw)) return false;   // 选中的那一列包含关键字

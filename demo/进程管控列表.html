@@ -142,9 +142,9 @@ html,body{margin:0}
         </div>
       </div>
 
-      <!-- 工具行：左边系统类型筛选 + 选中加白 / 选中加黑 / 按条件加白 -->
+      <!-- 工具行：左边系统类型筛选 + 选中加白 / 选中加黑 / 按搜索条件加白 -->
       <div style="position: relative; z-index: 10; display: flex; align-items: center; justify-content: space-between; height: 40px; flex-shrink: 0; padding: 0 10px;">
-        <!-- 左上角：系统类型筛选下拉框 + 选中加白 / 选中加黑 + 按条件加白 -->
+        <!-- 左上角：系统类型筛选下拉框 + 选中加白 / 选中加黑 + 按搜索条件加白 -->
         <div style="display: flex; align-items: center; gap: 12px;">
           <!-- 系统类型：只有 Windows / Linux/信创 两项，打开页面默认 Linux/信创；选了立刻生效 -->
           <select id="os-filter" aria-label="筛选系统类型" value="{{ fOs }}" onChange="{{ onOs }}" style="height: 28px; min-width: 180px; padding: 0 8px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
@@ -158,66 +158,41 @@ html,body{margin:0}
           <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.white }}">选中加白</button>
           <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.black }}">选中加黑</button>
           <span style="width: 1px; height: 18px; background: #dde1e7; margin: 0 4px;"></span>
-          <!-- 按条件加白：不用勾选，把按当前查询条件查出来的全部进程（所有分页）加入白名单；同样先弹出选择白名单的弹窗 -->
-          <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.allWhite }}" title="{{ act.allTitleW }}">按条件加白</button>
+          <!-- 按搜索条件加白：不用勾选，把按当前查询条件查出来的全部进程（所有分页）加入白名单；同样先弹出选择白名单的弹窗 -->
+          <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.allWhite }}" title="{{ act.allTitleW }}">按搜索条件加白</button>
         </div>
       </div>
 
 
-      <!-- ============ 高级搜索 · 查询面板（参考截图 12） ============
-           全部条件（已加状态 / 终端 / 文件哈希 / 进程路径）都是先选好、填好，点「查询」或在输入框里按回车才筛选；
-           不设「进程名称」条件：数据库里没有单独的进程名称字段，进程名称就是从进程路径取的，按名称搜等于按路径搜，用「进程路径」即可；
-           「重置」清空全部条件（左上角系统类型回到 Linux/信创） -->
+      <!-- ============ 高级搜索 · 查询面板（参考截图 12；按产品给的图精简） ============
+           一行四样：文件哈希 / 进程路径 / 终端（左边下拉选按「终端名称」还是「IP地址」查，右边填关键字）/ 查询；
+           都是模糊匹配；填好后点「查询」或在任一输入框里按回车才筛选；
+           不设「已加状态」「终端多选」「重置」：按图精简掉了（是否加过白 / 黑看列表的白名单、黑名单两列）；
+           不设「进程名称」条件：数据库里没有单独的进程名称字段，进程名称就是从进程路径取的，按名称搜等于按路径搜，用「进程路径」即可 -->
       <template data-sc="if" value="{{ advOpen }}" hint-placeholder-val="{{ false }}">
       <div style="flex-shrink: 0; margin: 0 10px 10px; padding: 8px 16px; background: #f5f7fa; display: flex; flex-direction: column; gap: 2px;">
-        <!-- 查询条件：已加状态下拉 + 终端多选 + 两个关键字输入框（文件哈希 / 进程路径，模糊匹配），共用一个「查询」按钮；在任一输入框里按回车 = 查询 -->
-        <div style="display: flex; align-items: flex-start; padding: 6px 0 4px;">
-          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;">
-          <!-- 4 个条件排一行：已加状态 / 终端 / 文件哈希 / 进程路径，后面跟 查询 / 重置 -->
-          <label style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
-            <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">已加状态：</span>
-            <select aria-label="已加状态" value="{{ q.d.fList }}" onChange="{{ q.on.fList }}" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
-              <template data-sc="for" list="{{ q.opts.fList }}" as="o" hint-placeholder-count="3">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 32px; padding: 6px 0 4px;">
+          <label style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+            <span style="flex-shrink: 0; color: #5a6475; font-size: 13px; white-space: nowrap;">文件哈希：</span>
+            <input id="q-md5" type="text" aria-label="文件哈希" value="{{ q.d.md5 }}" onChange="{{ q.on.md5 }}" onKeyDown="{{ q.onKey }}" placeholder="请输入" style="width: 300px; height: 30px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+            <span style="flex-shrink: 0; color: #5a6475; font-size: 13px; white-space: nowrap;">进程路径：</span>
+            <input id="q-path" type="text" aria-label="进程路径" value="{{ q.d.path }}" onChange="{{ q.on.path }}" onKeyDown="{{ q.onKey }}" placeholder="请输入" style="width: 300px; height: 30px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
+          </label>
+          <!-- 终端：先选查哪个字段（默认终端名称），再填关键字；查出来的是「在这些终端上出现过」的进程 -->
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+            <select aria-label="终端查询字段" value="{{ q.d.hostField }}" onChange="{{ q.on.hostField }}" style="width: 160px; height: 30px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
+              <template data-sc="for" list="{{ q.hostFields }}" as="o" hint-placeholder-count="2">
                 <option value="{{ o.v }}">{{ o.t }}</option>
               </template>
             </select>
-          </label>
-          <div style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
-            <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">终端：</span>
-            <!-- 终端多选下拉：没选 = 全部；选了显示名称（多了省略，悬停看全部）+ 个数 -->
-            <div style="position: relative; width: 200px; flex-shrink: 0;">
-              <button onClick="{{ q.ms.host.toggle }}" aria-label="终端（可多选）" aria-haspopup="listbox" aria-expanded="{{ q.ms.host.open }}" title="{{ q.ms.host.text }}" style="display: flex; align-items: center; gap: 6px; width: 100%; height: 30px; padding: 0 8px 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; font-size: 13px; font-family: inherit; text-align: left; cursor: pointer;">
-                <span style="flex-grow: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: {{ q.ms.host.color }};">{{ q.ms.host.text }}</span>
-                <template data-sc="if" value="{{ q.ms.host.picked }}" hint-placeholder-val="{{ false }}">
-                  <span style="flex-shrink: 0; padding: 0 6px; height: 18px; line-height: 18px; border-radius: 9px; background: #e3f0fc; color: #1e88e5; font-size: 12px;">{{ q.ms.host.count }}</span>
-                </template>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5a6475" stroke-width="2.5" style="flex-shrink: 0; transform: rotate({{ q.ms.host.caret }});"><path d="M6 9l6 6 6-6"></path></svg>
-              </button>
-              <template data-sc="if" value="{{ q.ms.host.open }}" hint-placeholder-val="{{ false }}">
-                <div role="listbox" aria-multiselectable="true" aria-label="终端列表" style="position: absolute; top: 34px; left: 0; z-index: 30; min-width: 100%; max-height: 264px; overflow-y: auto; padding: 4px 0; background: #ffffff; border: 1px solid #e3e6eb; border-radius: 3px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column;">
-                  <template data-sc="for" list="{{ q.ms.host.items }}" as="o" hint-placeholder-count="6">
-                    <label class="mitem" style="display: flex; align-items: center; gap: 8px; height: 32px; flex-shrink: 0; padding: 0 12px; cursor: pointer; color: #333333; font-size: 13px; white-space: nowrap;"><input type="checkbox" checked="{{ o.on }}" onChange="{{ o.toggle }}"> {{ o.label }}</label>
-                  </template>
-                </div>
-              </template>
-            </div>
+            <input id="q-host" type="text" aria-label="终端关键字" value="{{ q.d.hostKw }}" onChange="{{ q.on.hostKw }}" onKeyDown="{{ q.onKey }}" placeholder="请输入" style="width: 300px; height: 30px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
           </div>
-          <label style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
-            <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">文件哈希：</span>
-            <input id="q-md5" type="text" aria-label="文件哈希" value="{{ q.d.md5 }}" onChange="{{ q.on.md5 }}" onKeyDown="{{ q.onKey }}" placeholder="可只输入一部分" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
-          </label>
-          <label style="display: flex; align-items: center; gap: 8px; width: 290px; flex-shrink: 0;">
-            <span style="width: 72px; flex-shrink: 0; text-align: right; color: #5a6475; font-size: 13px; white-space: nowrap;">进程路径：</span>
-            <input id="q-path" type="text" aria-label="进程路径" value="{{ q.d.path }}" onChange="{{ q.on.path }}" onKeyDown="{{ q.onKey }}" placeholder="如 /tmp 或 C:\Users" style="height: 30px; width: 200px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
-          </label>
-            <!-- 查询 / 重置：跟在「进程路径」后面（间距 16px）；查询让上面的输入条件生效；重置清空全部条件（含点选条件和左上角系统类型） -->
-            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-              <button class="pbtn" onClick="{{ q.query }}" style="height: 30px; padding: 0 22px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 2px; color: #ffffff; font-size: 13px; cursor: pointer; font-family: inherit;">查询</button>
-              <button class="tbtn" onClick="{{ q.reset }}" style="height: 30px; padding: 0 16px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 2px; color: #333333; font-size: 13px; cursor: pointer; font-family: inherit;">重置</button>
-            </div>
-          </div>
+          <!-- 查询：让上面的输入条件生效 -->
+          <button class="pbtn" onClick="{{ q.query }}" style="flex-shrink: 0; height: 30px; padding: 0 28px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 2px; color: #ffffff; font-size: 13px; cursor: pointer; font-family: inherit;">查询</button>
         </div>
-        <!-- 已生效的输入条件，提示一下正在按什么查 -->
+        <!-- 已生效的输入条件，提示一下正在按什么查（「按搜索条件加白」加的就是这些条件查出来的进程） -->
         <template data-sc="if" value="{{ q.active }}" hint-placeholder-val="{{ false }}">
           <div style="padding: 0 0 6px 0; color: #5a6475; font-size: 12px;">当前查询：{{ q.activeText }}</div>
         </template>
@@ -274,7 +249,7 @@ html,body{margin:0}
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="color: #4a5568;">当前已选择 <span style="color: #1e88e5;">{{ selCount }}</span> 条记录　|　查询结果 <span style="color: #1e88e5;">{{ resultCount }}</span> 条</span>
           </div>
-          <!-- 分页（右下角）：每页 10 条；当前页蓝底白字。表头的全选框只选当前页，选其他页的进程要翻页再勾，或者用「按条件加白」 -->
+          <!-- 分页（右下角）：每页 10 条；当前页蓝底白字。表头的全选框只选当前页，选其他页的进程要翻页再勾，或者用「按搜索条件加白」 -->
           <div style="display: flex; align-items: center; gap: 6px; color: #4a5568;">
             <span>共 {{ pg.total }} 条</span>
             <button onClick="{{ pg.prev }}" aria-label="上一页" style="min-width: 28px; height: 28px; padding: 0 6px; border-radius: 2px; font-size: 13px; font-family: inherit; cursor: pointer; border: 1px solid #d5d9e0; background: #ffffff; color: {{ pg.prevColor }};">‹</button>
@@ -408,7 +383,7 @@ html,body{margin:0}
     </div>
   </div>
   </template>
-  <!-- ============ 遮罩 + 选择白名单 / 选择黑名单弹窗（点 选中加白 / 选中加黑 / 按条件加白 后出现） ============ -->
+  <!-- ============ 遮罩 + 选择白名单 / 选择黑名单弹窗（点 选中加白 / 选中加黑 / 按搜索条件加白 后出现） ============ -->
   <template data-sc="if" value="{{ pk.open }}" hint-placeholder-val="{{ false }}">
   <div style="position: absolute; top: 0; left: 0; z-index: 40; width: 1920px; height: 1080px; background: rgba(0, 0, 0, 0.35); display: flex; align-items: center; justify-content: center;">
     <div role="dialog" aria-modal="true" aria-label="{{ pk.title }}" style="width: 520px; background: #ffffff; border-radius: 4px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column;">
@@ -820,8 +795,9 @@ class Component extends DCLogic {
     const blOf = (r) => merge(BASE_B[r.path + '|' + r.md5.slice(0, 8)] || [], addB[pmKey(r)] || []);
     const fOs    = st.fOs    || 'Linux/信创';   // 系统类型（左上角下拉框）：默认 Linux/信创，没有「全部」
     // 输入类条件：qD = 正在填的（还没点查询），qA = 点了查询后生效的
-    // fList 已加状态：all / w 已加白 / b 已加黑 / nw 未加白 / nb 未加黑；host 终端多选（数组，空 = 全部）；md5 / path 关键字（不设进程名称：库里没有这个字段，名称就是从路径取的）
-    const Q_DEF = { fList: 'all', host: [], md5: '', path: '' };
+    // md5 / path：文件哈希 / 进程路径关键字（不设进程名称：库里没有这个字段，名称就是从路径取的）
+    // hostField：终端条件按哪个字段查（host 终端名称 / ip IP地址，默认终端名称）；hostKw：终端关键字
+    const Q_DEF = { md5: '', path: '', hostField: 'host', hostKw: '' };
     const qD = { ...Q_DEF, ...(st.qD || {}) };
     const qA = { ...Q_DEF, ...(st.qA || {}) };
     const Q_TEXT = [['md5', '文件哈希'], ['path', '进程路径']];   // 模糊匹配，不区分大小写
@@ -829,11 +805,9 @@ class Component extends DCLogic {
     // 明细记录逐条过滤，过滤完再按「路径 + 文件哈希」聚合
     const rows = allRows.filter((r) => {
       if (r.os !== fOs) return false;   // 按大类筛：Windows / Linux/信创
-      if (qA.fList === 'w'  && !wlOf(r).length) return false;   // 已加白：至少在一个白名单里
-      if (qA.fList === 'b'  && !blOf(r).length) return false;   // 已加黑：至少在一个黑名单里
-      if (qA.fList === 'nw' && wlOf(r).length) return false;    // 未加白：不在任何白名单里
-      if (qA.fList === 'nb' && blOf(r).length) return false;    // 未加黑：不在任何黑名单里
-      if (qA.host.length && qA.host.indexOf(r.host) < 0) return false;      // 是所选终端里的任意一台就算
+      // 终端条件：这条上报记录的终端名称 / IP地址 包含关键字（不区分大小写）；过滤在聚合之前，所以「终端数」只数匹配的终端
+      const hk = String(qA.hostKw || '').trim().toLowerCase();
+      if (hk && String(r[qA.hostField] || '').toLowerCase().indexOf(hk) < 0) return false;
       for (const [k] of Q_TEXT) {
         const t = String(qA[k] || '').trim().toLowerCase();
         if (t && String(r[k] || '').toLowerCase().indexOf(t) < 0) return false;
@@ -864,53 +838,23 @@ class Component extends DCLogic {
     const noData = resultCount === 0;
 
 
-    // ---------- 展开 / 折叠、下拉框、输入框、查询、重置 ----------
+    // ---------- 展开 / 折叠、下拉框、输入框、查询 ----------
     const advOpen = !!st.advOpen;   // 页面加载时默认折叠，点「高级搜索」才展开
     const toggleAdv = () => this.setState({ advOpen: !advOpen });
     const onOs    = (e) => this.setState({ fOs: e.target.value, ...PAGE1 });
     // 输入类条件
-    const uniq = (a) => a.filter((x, i) => a.indexOf(x) === i);
-    const allHosts = uniq(allRows.map((r) => r.host));   // 终端多选：列出全部终端
     const setQ = (k) => (e) => this.setState({ qD: { ...qD, [k]: e.target.value } });
-    // 多选下拉：state.qOpen 记录是否展开着（'host' / ''）
-    const qOpen = st.qOpen || '';
-    const makeMs = (k, all, hint) => {
-      const picked = qD[k];
-      return {
-        open: qOpen === k,
-        caret: qOpen === k ? '180deg' : '0deg',                           // 展开时小三角朝上
-        toggle: () => this.setState({ qOpen: qOpen === k ? '' : k }),     // 点框：展开 / 收起
-        picked: picked.length > 0,
-        count: picked.length,
-        text: picked.length ? picked.join('、') : hint,                     // 没选时浅灰提示
-        color: picked.length ? '#333333' : '#8a94a6',
-        items: all.map((label) => ({
-          label,
-          on: picked.indexOf(label) >= 0,
-          toggle: () => {
-            // 勾上 / 取消：按列表原来的顺序保存
-            const next = picked.indexOf(label) >= 0 ? picked.filter((x) => x !== label) : all.filter((x) => x === label || picked.indexOf(x) >= 0);
-            this.setState({ qD: { ...qD, [k]: next } });
-          },
-        })),
-      };
-    };
-    const doQuery = () => this.setState({ qA: { ...qD }, qOpen: '', ...PAGE1 });
+    const doQuery = () => this.setState({ qA: { ...qD }, ...PAGE1 });
+    const HOST_FIELDS = [{ v: 'host', t: '终端名称' }, { v: 'ip', t: 'IP地址' }];   // 终端条件可选的字段
     const activeParts = [];
-    const OPT_TEXT = { w: '已加白', b: '已加黑', nw: '未加白', nb: '未加黑' };
-    if (qA.fList !== 'all') activeParts.push('已加状态 = ' + OPT_TEXT[qA.fList]);
-    if (qA.host.length) activeParts.push('终端 = ' + qA.host.join(' 或 '));
     Q_TEXT.forEach(([k, label]) => { if (String(qA[k]).trim()) activeParts.push(label + ' 包含「' + String(qA[k]).trim() + '」'); });
+    if (String(qA.hostKw).trim()) activeParts.push(HOST_FIELDS.find((f) => f.v === qA.hostField).t + ' 包含「' + String(qA.hostKw).trim() + '」');
     const q = {
       d: qD,
-      on: { fList: setQ('fList'), md5: setQ('md5'), path: setQ('path') },
+      on: { md5: setQ('md5'), path: setQ('path'), hostField: setQ('hostField'), hostKw: setQ('hostKw') },
       onKey: (e) => { if (e.key === 'Enter') doQuery(); },   // 回车 = 点查询
       query: doQuery,
-      reset: () => this.setState({ fOs: 'Linux/信创', qD: null, qA: null, qOpen: '', ...PAGE1 }),
-      opts: {
-        fList: [{ v: 'all', t: '全部' }, { v: 'w', t: '已加白' }, { v: 'b', t: '已加黑' }, { v: 'nw', t: '未加白' }, { v: 'nb', t: '未加黑' }],
-      },
-      ms: { host: makeMs('host', allHosts, '全部终端（可多选）') },
+      hostFields: HOST_FIELDS,
       active: activeParts.length > 0,
       activeText: activeParts.join('；'),
     };

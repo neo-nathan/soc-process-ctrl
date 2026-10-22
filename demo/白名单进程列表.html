@@ -196,16 +196,16 @@ html,body{margin:0}
       </div>
 
       <!-- ============ 高级查询面板：默认折叠，点"高级搜索"展开 ============
-           ① 点选项（添加时间 / 变化状态）点了立刻筛选；
+           ① 点选项（时间范围 / 变化状态）点了立刻筛选；
            ② 输入项（指定日期 / 关键字）填好后点"筛选"才生效；"重置"清空全部条件
            变化状态和信息条里的 +N / -N 是同一个条件：点 +N 等于这里选"新增"，点 -N 等于选"待移除" -->
       <template data-sc="if" value="{{ advOpen }}" hint-placeholder-val="{{ false }}">
         <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; margin: 0 10px 10px; padding: 12px 16px; background: #eef1f6; font-size: 13px;">
-          <!-- 添加时间：点选（全部 / 近 7 天 / 近 30 天）；右边"指定"是输入项，点"筛选"生效
+          <!-- 时间范围（按添加时间筛）：点选（全部 / 本周 / 本月 / 上月）；右边"指定"是输入项，点"筛选"生效
                日期用文本框固定 YYYY-MM-DD 格式，点日历图标弹出系统日期选择器（和白名单列表页一样） -->
           <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
-            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">添加时间：</span>
-            <template data-sc="for" list="{{ timeChips }}" as="c" hint-placeholder-count="3">
+            <span style="width: 84px; flex-shrink: 0; text-align: right; color: #5a6475;">时间范围：</span>
+            <template data-sc="for" list="{{ timeChips }}" as="c" hint-placeholder-count="4">
               <button class="chip" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="min-width: 76px; height: 28px; padding: 0 14px; border: 1px solid {{ c.border }}; border-radius: 2px; background: {{ c.bg }}; color: {{ c.color }}; font-family: inherit; font-size: 13px; cursor: pointer;">{{ c.label }}</button>
             </template>
             <span style="margin-left: 24px; color: #5a6475;">指定：</span>
@@ -819,7 +819,19 @@ class Component extends DCLogic {
     const draft = this._draft;
     const applied = st.applied || EMPTY;
     const TODAY = '2026-09-29';   // 演示用的"今天"，接后端时换成真实日期
-    const daysAgo = (n) => { const d = new Date(TODAY); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
+    // 时间范围的起止日期（都按 YYYY-MM-DD 字符串比较，用 UTC 计算避免时区把日期算偏一天）：
+    //   本周 = 本周一 ~ 今天；本月 = 本月 1 日 ~ 今天；上月 = 上月 1 日 ~ 上月最后一天
+    const RANGE = (() => {
+      const t = new Date(TODAY + 'T00:00:00Z');
+      const s = (d) => d.toISOString().slice(0, 10);
+      const y = t.getUTCFullYear(), m = t.getUTCMonth();
+      const dow = (t.getUTCDay() + 6) % 7;   // 周一 = 0 … 周日 = 6
+      return {
+        week:      [s(new Date(Date.UTC(y, m, t.getUTCDate() - dow))), TODAY],
+        month:     [s(new Date(Date.UTC(y, m, 1))), TODAY],
+        lastMonth: [s(new Date(Date.UTC(y, m - 1, 1))), s(new Date(Date.UTC(y, m, 0)))],   // 本月 0 日 = 上月最后一天
+      };
+    })();
 
     // 输入框：只记到 _draft；画布里要 forceUpdate 才能看到打的字，demo 页面里不用刷新
     const typing = (key) => (e) => { draft[key] = e.target.value; if (typeof this.forceUpdate === 'function') this.forceUpdate(); };
@@ -831,7 +843,7 @@ class Component extends DCLogic {
       if (draft.from && draft.to && draft.from > draft.to) return '开始日期不能晚于结束日期';
       return '';
     };
-    // 点"筛选"：先检查日期，有错就提示、不筛选；填了指定日期时，添加时间的点选项自动取消
+    // 点"筛选"：先检查日期，有错就提示、不筛选；填了指定日期时，时间范围的点选项自动取消
     const doQuery = () => {
       const err = checkDates();
       if (err) { this.setState({ dateErr: err }); return; }
@@ -856,8 +868,8 @@ class Component extends DCLogic {
         pick: () => this.setState({ [key]: value, page: 1, ...(extra ? extra(value) : {}) }) };   // 换筛选条件就回第 1 页
     });
     const chgChips   = chips('chg',   [['all', '全部'], ['new', '新增'], ['pending', '待移除'], ['normal', '无变化']]);
-    // 点添加时间的点选项时，清掉指定日期（两者只取一个）
-    const timeChips  = chips('time',  [['all', '全部'], ['7d', '近 7 天'], ['30d', '近 30 天']], () => {
+    // 点时间范围的点选项时，清掉指定日期（两者只取一个）
+    const timeChips  = chips('time',  [['all', '全部'], ['week', '本周'], ['month', '本月'], ['lastMonth', '上月']], () => {
       draft.from = ''; draft.to = ''; return { applied: { ...applied, from: '', to: '' }, dateErr: '' };
     });
     // 维护者列已去掉，搜索字段也不再提供；也不提供「进程名称」：库里没有这个字段，名称是从进程路径取的，按名称搜就是按路径搜
@@ -871,8 +883,7 @@ class Component extends DCLogic {
     const rows = allRows.filter((r) => {
       const day = r.added.slice(0, 10);
       if (chg !== 'all' && r.state !== chg) return false;
-      if (time === '7d' && day < daysAgo(7)) return false;
-      if (time === '30d' && day < daysAgo(30)) return false;
+      if (RANGE[time] && (day < RANGE[time][0] || day > RANGE[time][1])) return false;   // 时间范围：本周 / 本月 / 上月
       if (applied.from && day < applied.from) return false;
       if (applied.to && day > applied.to) return false;
       if (kw && !String(r[applied.field] || '').toLowerCase().includes(kw)) return false;
