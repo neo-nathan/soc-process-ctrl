@@ -1,0 +1,3 @@
+#!/bin/bash
+# 经网页只读取 101 上的静态文件算 md5（不需要登录、不需要 SSH）：用法 http101md5.sh public/esm/...
+curl -sk "https://193.168.10.101:10443/$1" | md5 -q

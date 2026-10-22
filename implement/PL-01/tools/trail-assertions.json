@@ -1,0 +1,356 @@
+[
+ {
+  "type": "CLAIM",
+  "id": "cur-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html",
+  "expect": "ed7c0bc49ce4279c4f2aa32202bd4fb9"
+ },
+ {
+  "type": "CLAIM",
+  "id": "cur-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js",
+  "expect": "00efacebf191e2a9b51c9e37c0f08f6d"
+ },
+ {
+  "type": "CLAIM",
+  "id": "cur-processManage.js",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js",
+  "expect": "a2b0eb109e241e94902535e6a52852b0"
+ },
+ {
+  "type": "CLAIM",
+  "id": "cur-bwlistMock",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js",
+  "expect": "8ac7ae5d9f39e0ed8f0878289a941115"
+ },
+ {
+  "type": "CLAIM",
+  "id": "cur-css",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/css/processManageList.css",
+  "expect": "20cbd1160963477f8737f55a7193afcd"
+ },
+ {
+  "type": "CLAIM",
+  "id": "oos1-Index.php",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/esmCenter/controllers/Index.php",
+  "expect": "5b5e6807a736c384ecdbdc56f73848ea"
+ },
+ {
+  "type": "CLAIM",
+  "id": "oos1-index2.php",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/esmCenter/views/esm/Manage/index2.php",
+  "expect": "afd277f54009729276170ea353c70dfd"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-1",
+  "cmd": "md5 -q \"/Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-1/architecture/01-进程管控设计文档.md\"",
+  "expect": "cbc10a63ce1747e401b658482a51f725"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-2",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-2/public/esm/view/processManage/bwlistMock.js",
+  "expect": "8ac7ae5d9f39e0ed8f0878289a941115"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-2-prev3",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-2.prev-0056-c1c25da4/public/esm/view/processManage/bwlistMock.js",
+  "expect": "c1c25da4271a8377605f655902370836"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-2-prev2",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-2.prev-2254-18f7665b/public/esm/view/processManage/bwlistMock.js",
+  "expect": "18f7665b8c87bbd002c86b958ffc8e75"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-2-prev",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-2.prev-0947-ab4d76f2/public/esm/view/processManage/bwlistMock.js",
+  "expect": "ab4d76f29a6eaa9589e001f87165fdfe"
+ },
+ {
+  "type": "CLAIM",
+  "id": "r3b-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/TK-3/executor/round3-before/list.html",
+  "expect": "7339a79bb0c81f893cec43d7ba382be4"
+ },
+ {
+  "type": "CLAIM",
+  "id": "r3b-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/TK-3/executor/round3-before/list.js",
+  "expect": "3c773129cf3a0f961883cc37cf4c63f9"
+ },
+ {
+  "type": "CLAIM",
+  "id": "r3b-css",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/TK-3/executor/round3-before/processManageList.css",
+  "expect": "0ee8f58edf8abdf790c3b5aa8ca2fa6c"
+ },
+ {
+  "type": "STAGE",
+  "id": "101-list.html",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/http101md5.sh public/esm/view/processManage/list.html",
+  "expect": "ed7c0bc49ce4279c4f2aa32202bd4fb9"
+ },
+ {
+  "type": "STAGE",
+  "id": "101-list.js",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/http101md5.sh public/esm/view/processManage/list.js",
+  "expect": "00efacebf191e2a9b51c9e37c0f08f6d"
+ },
+ {
+  "type": "STAGE",
+  "id": "101-css",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/http101md5.sh public/esm/css/processManageList.css",
+  "expect": "20cbd1160963477f8737f55a7193afcd"
+ },
+ {
+  "type": "STAGE",
+  "id": "101-bwlistMock",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/http101md5.sh public/esm/view/processManage/bwlistMock.js",
+  "expect": "8ac7ae5d9f39e0ed8f0878289a941115"
+ },
+ {
+  "type": "STAGE",
+  "id": "101-processManage.js",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/http101md5.sh public/esm/view/processManage.js",
+  "expect": "a2b0eb109e241e94902535e6a52852b0"
+ },
+ {
+  "type": "STAGE",
+  "id": "101-layout",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/101-ref/public/esm/view/layout.html",
+  "expect": "7f5ccd7ba36d4c7ea36dfbf1c09ec9c1"
+ },
+ {
+  "type": "STAGE",
+  "id": "bak-dir",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'find /tmp/procm-bwlist-bak-20261021-0529 -type f | wc -l | tr -d \" \"'",
+  "expect": "4",
+  "trail": "/tmp/procm-bwlist-bak-20261021-0529/",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "pull-layout.html",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pull-baseline/public/esm/view/layout.html",
+  "expect": "10dd689294cdb8a68601571cfef50136"
+ },
+ {
+  "type": "CLAIM",
+  "id": "pull-processManage.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pull-baseline/public/esm/view/processManage.js",
+  "expect": "58064f62b0c900d7b1b9e4cf0ef9c08f"
+ },
+ {
+  "type": "CLAIM",
+  "id": "pull-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pull-baseline/public/esm/view/processManage/list.html",
+  "expect": "a21d99ec347f618387a8a00e2cf01ae5"
+ },
+ {
+  "type": "CLAIM",
+  "id": "pull-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pull-baseline/public/esm/view/processManage/list.js",
+  "expect": "bd5684e870e780a4c01917d195501994"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B2-req",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/requirements/requirements-raw.md",
+  "quote": "删除一律可点（红色）。"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B2-demo",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/demo/白名单列表.html",
+  "quote": "/* 删除按钮：红色图标和文字 */"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B1-demo",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/demo/白名单列表.html",
+  "quote": "「进程管控」可点（回到进程管控概览）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B1-01",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "子菜单跳转也不带 `?g=&copen=` 参数，概览 `overview.js:25、72` 拿不到参数就是空白页"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B1-index",
+  "source": "/Users/nick/Workspace/soc-process-ctrl-work/PL-01/101-ref/public/esm/js/index.js",
+  "quote": "obj['g'] = (GlobaluserInfo && GlobaluserInfo.gValue) ? GlobaluserInfo.gValue : 1;"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B2-css",
+  "source": "/Users/nick/Workspace/soc-process-ctrl-work/PL-01/101-ref/public/esm/css/assetbehaotherstra.css",
+  "quote": "color: rgba(237, 84, 82, 1);"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "I1-basis",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/CLAUDE.md",
+  "quote": "同一主题必须替换 / 移动 / 删除旧状态，不得追加第二份过程记录。"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "S1-basis",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-01-黑白名单列表页前端实施计划.md",
+  "quote": "失败时调 `error`，两种情况都要调 `complete`"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "auth-0807",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/changelog/log-20261021-0530-实施PL-01.md",
+  "quote": "从现在开始由主 Agent 进行判断和裁决 无需等用户拍板 直到当前计划完成"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "plan-ctime-new",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-01-黑白名单列表页前端实施计划.md",
+  "quote": "时间范围快捷项（按创建时间筛，照 demo）：本周（本周一 ~ 今天）/ 本月（本月 1 日 ~ 今天）/ 上月（上月 1 日 ~ 上月最后一天）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "01-ctime-new",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "时间范围快捷项（按创建时间筛，照 demo）：本周（本周一 ~ 今天）/ 本月（本月 1 日 ~ 今天）/ 上月（上月 1 日 ~ 上月最后一天）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "demo-range",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/demo/白名单列表.html",
+  "quote": "本周 = 本周一 ~ 今天；本月 = 本月 1 日 ~ 今天；上月 = 上月 1 日 ~ 上月最后一天"
+ },
+ {
+  "type": "CLAIM",
+  "id": "r4b-bwlistMock",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/TK-2/executor/round4-before/bwlistMock.js",
+  "expect": "ab4d76f29a6eaa9589e001f87165fdfe"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-3-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-3/public/esm/view/processManage/list.html",
+  "expect": "52a48464f3984ce10e6fed4d2fecc340"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-3-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-3/public/esm/view/processManage/list.js",
+  "expect": "f1683a536ebe4cd6ab96425cb9f1e2d7"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-3-processManageList.css",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-3/public/esm/css/processManageList.css",
+  "expect": "7600fd94248da87168ef02c098026c7e"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B1-01-28",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "后端把这三个值转成 `getDateRanges` 的 1 / 2 / 3 即可"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B1-01-904",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "返回 `start`～`end` 左闭右开"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "B1-plan-41",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-01-黑白名单列表页前端实施计划.md",
+  "quote": "后端完成后改成 `false`，页面直接走真接口，业务代码不改"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "I1-85",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "### 8.5 白名单 / 黑名单列表（仅主账号）"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-4-processManage.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-4/public/esm/view/processManage.js",
+  "expect": "a2b0eb109e241e94902535e6a52852b0"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-4-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-4/public/esm/view/processManage/list.js",
+  "expect": "bc1b4dabf62de32b30539875c2ca042c"
+ },
+ {
+  "type": "STAGE",
+  "id": "guard-tool",
+  "cmd": "test -x /Users/nick/Workspace/soc-process-ctrl-work/tools/cs_guard.sh && echo yes",
+  "expect": "yes",
+  "trail": "tools/cs_guard.sh"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "S5-common",
+  "source": "/Users/nick/Workspace/soc-process-ctrl-work/PL-01/101-ref/esmCenter/library/Common.php",
+  "quote": "date_default_timezone_set('Asia/Shanghai');"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "S5-index",
+  "source": "/Users/nick/Workspace/soc-process-ctrl-work/PL-01/101-ref/index.php",
+  "quote": "date_default_timezone_set(\"Asia/Shanghai\");"
+ },
+ {
+  "type": "STAGE",
+  "id": "tool-status-sync",
+  "cmd": "test -f /Users/nick/Workspace/soc-process-ctrl-work/tools/check_status_sync.py && echo yes",
+  "expect": "yes",
+  "trail": "check_status_sync.py"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-5-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-5/public/esm/view/processManage/list.js",
+  "expect": "00efacebf191e2a9b51c9e37c0f08f6d"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-5-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-5/public/esm/view/processManage/list.html",
+  "expect": "ed7c0bc49ce4279c4f2aa32202bd4fb9"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-5-processManageList.css",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-5/public/esm/css/processManageList.css",
+  "expect": "20cbd1160963477f8737f55a7193afcd"
+ },
+ {
+  "type": "CLAIM",
+  "id": "snap-TK-5-prev-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-01/pass-snapshot/TK-5.prev-0312-86172076/public/esm/view/processManage/list.js",
+  "expect": "8617207681fc73f7887c504d8751f4c9"
+ },
+ {
+  "type": "STAGE",
+  "id": "status-sync-run",
+  "cmd": "python3 /Users/nick/Workspace/soc-process-ctrl-work/tools/check_status_sync.py /Users/nick/Workspace/soc-process-ctrl/CurrentStatus.md | grep -c \"^STATUS_SYNC=PASS\"",
+  "expect": "1",
+  "trail": "check_status_sync.py"
+ },
+ {
+  "type": "STAGE",
+  "id": "status-sync-M",
+  "cmd": "grep -c \"M 当前进行中写的文件指纹是本地当前值\" /Users/nick/Workspace/soc-process-ctrl-work/tools/check_status_sync.py",
+  "expect": "1",
+  "trail": "M 项"
+ }
+]

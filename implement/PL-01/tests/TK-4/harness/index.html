@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>PL-01 TK-4 本地自测</title>
+<!-- 和 101 主页面 index2.php 同样的公共样式（本地 svn 版本） -->
+<link rel="stylesheet" href="/public/dep/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" href="/public/esm/css/index.css">
+<link rel="stylesheet" href="/public/esm/css/assetbehaotherstra.css">
+<style>
+  #fakeMsg { position: fixed; top: 0; left: 0; right: 0; height: 24px; background: #333; color: #fff; font-size: 12px; z-index: 99999; padding: 2px 8px; }
+  .rs-page-container { position: absolute; top: 30px; left: 0; right: 0; bottom: 0; }
+</style>
+</head>
+<body>
+<div id="fakeMsg"></div>
+<!-- 照 index2.php：公共布局 processManage.js 渲染进 .rs-page-container，子页面渲染进其中的 .c-page-content -->
+<div class="rs-page-container"></div>
+<script src="/public/dep/jquery.js"></script>
+<script>document.write('<script src="/fakecore.js?t=' + Date.now() + '"><\/script>');</script>
+<script>document.write('<script src="/selftest.js?t=' + Date.now() + '"><\/script>');</script>
+<script src="/public/dep/bootstrap/js/bootstrap.js"></script>
+<script src="/public/dep/require/require.source.js"></script>
+<script>
+var __paths = {
+    js: '../js',
+    text: '../../dep/require/text',
+    css: '../../dep/require/css',
+    mustache: '../../dep/mustache/mustache',
+    table: '/ref/bootstrap-table-101',   // 101 上 require('table') 实际加载的那份（/public/dep/table/bootstrap-table.js）
+    selectric: '../../dep/selectric/jquery.selectric',
+    util_b: '../js/plugin/util_b',
+    datetimepicker: '../../dep/datetimepicker/jquery.datetimepicker',
+    colResizable: '../../dep/colResizable/colResizable-16',
+    dep: '../../dep',
+    moudleComm: '/stub/moudleComm',
+    // 老调用方用 101 上的真文件（本次不改它们；js 和它的 html 模板都从 101 只读副本取）
+    'processManage/processMana': '/ref101/esm/view/processManage/processMana',
+    'processManage/log': '/ref101/esm/view/processManage/log'
+};
+// ?layout=101：公共布局模板用 101 现在的 layout.html（比本地多一个 data=""），默认用 SOC 工作副本里的
+if (/[?&]layout=101/.test(location.search)) { __paths.layout = '/ref101/esm/view/layout'; }
+// ?mut=N：用 /mut/processManage.mN.js 代替真的 processManage.js（变异实验：验证自测能抓到问题）
+(function () {
+    var m = /[?&]mut=(\w+)/.exec(location.search);
+    if (m) {
+        __paths.processManage = '/mut/processManage.m' + m[1];
+        // RequireJS 的 paths 按前缀匹配：改了 processManage 会连带 processManage/* 子模块，所以子模块逐个钉回原路径
+        __paths['processManage/list'] = __paths['processManage/list'] || '/public/esm/view/processManage/list';
+        __paths['processManage/bwlistMock'] = '/public/esm/view/processManage/bwlistMock';
+    }
+    var l = /[?&]lmut=(\w+)/.exec(location.search);
+    if (l) { __paths['processManage/list'] = '/mut/list.m' + l[1]; }
+})();
+require.config({ urlArgs: 'ver=' + (new Date()).getTime(), baseUrl: '/public/esm/view', paths: __paths, waitSeconds: 60 });
+
+// 照 js/router.js：公共布局 processManage 渲染进 .rs-page-container，子页面渲染进 .c-page-content；
+// 切子页面时先 destroy 旧子页面（父布局不动），离开进程管控时先 destroy 子页面再 destroy 布局
+window.__child = null;
+window.__layoutMod = null;
+window.__ensureLayout = function () {
+    return new Promise(function (resolve) {
+        if (window.__layoutMod) { resolve(window.__layoutMod); return; }
+        require(['processManage'], function (m) {
+            m.render('.rs-page-container');
+            window.__layoutMod = m;
+            resolve(m);
+        });
+    });
+};
+window.__goChild = function (name, params) {
+    return window.__ensureLayout().then(function () {
+        return new Promise(function (resolve) {
+            require(['processManage/' + name], function (m) {
+                if (window.__child) { window.__child.destroy(); }
+                history.replaceState(null, '', location.pathname + location.search + '#processManage/' + name + (params ? '?' + params : ''));
+                window.__child = m;
+                if (params && name === 'list') { m.render('.c-page-content', params); } else { m.render('.c-page-content'); }
+                resolve(m);
+            });
+        });
+    });
+};
+window.__leaveAll = function () {
+    if (window.__child) { window.__child.destroy(); window.__child = null; }
+    if (window.__layoutMod) { window.__layoutMod.destroy(); window.__layoutMod = null; }
+};
+</script>
+</body>
+</html>

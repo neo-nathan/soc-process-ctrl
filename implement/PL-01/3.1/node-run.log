@@ -1,0 +1,66 @@
+
+##### 0 被测文件 md5
+MD5 (/Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js) = 8617207681fc73f7887c504d8751f4c9
+MD5 (/Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html) = ed7c0bc49ce4279c4f2aa32202bd4fb9
+MD5 (/Users/nick/Workspace/ESMCenterST/public/esm/css/processManageList.css) = 20cbd1160963477f8737f55a7193afcd
+MD5 (/Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js) = 8ac7ae5d9f39e0ed8f0878289a941115
+MD5 (/Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js) = a2b0eb109e241e94902535e6a52852b0
+MD5 (/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md) = 22093469508566bbb62aa5cbeb1d0e61
+
+##### 1 node --check 三个 JS
+CHECK_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+CHECK_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js
+CHECK_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js
+
+##### 2 ES5 解析（acorn ecmaVersion 5）
+ES5_PARSE_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+ES5_PARSE_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js
+ES5_PARSE_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js
+
+##### 3 TK-1 设计文档验收
+PASS  J8.s0  第 0 节只新增一句（指向 P22/P23、找后端开发），其他行逐字不变
+PASS  J8.s13  第 13 节只改了第 19 条
+PASS  J9.changelog  .claude/scripts/gen-index.py changelog --check 退出码 0
+FAIL  J9.insights  .claude/scripts/gen-index.py insights --check 退出码 0
+      -> [过期] insights/INDEX.md 与文件现状不一致,请加 --write 重新生成
+PASS  J9.status  .claude/skills/update-current-status/scripts/check_current_status.py CurrentStatus.md 退出码 0
+
+合计 166 条：PASS 160，FAIL 6
+exit=1
+
+##### 4 TK-2 Executor 自测
+real 8 行状态分布: 8:1 7:2 6:0 5:1 4:3 3:0 2:2 1:3
+
+166 passed, 0 failed
+exit=0
+
+##### 5 TK-2 Tester 验收（三时区）
+被测文件 md5: 8ac7ae5d9f39e0ed8f0878289a941115
+America/New_York exit=0 断言总数 449，绿 449，红 0；观察项 20
+Asia/Shanghai exit=0 断言总数 449，绿 449，红 0；观察项 20
+Pacific/Auckland exit=0 断言总数 449，绿 449，红 0；观察项 20
+三个时区逐条断言红绿一致
+
+##### 6 TK-3 Tester 验收
+PENDING（旧读数作废、待浏览器复跑，不计入通过）: 0 条 → 
+
+TOTAL 123  PASS 123  FAIL 0
+exit=0
+
+TOTAL 123  PASS 112  FAIL 11
+
+##### 7 TK-5 Tester 文案比对
+执行 77 条：绿 77，红 0
+exit=0
+执行 77 条：绿 0，红 77（--mutate 模式，期望全红）
+##### 101 文件指纹（网页取回）
+public/esm/view/processManage/list.js 101=8617207681fc73f7887c504d8751f4c9 本地=8617207681fc73f7887c504d8751f4c9
+public/esm/view/processManage/list.html 101=ed7c0bc49ce4279c4f2aa32202bd4fb9 本地=ed7c0bc49ce4279c4f2aa32202bd4fb9
+public/esm/css/processManageList.css 101=20cbd1160963477f8737f55a7193afcd 本地=20cbd1160963477f8737f55a7193afcd
+public/esm/view/processManage/bwlistMock.js 101=8ac7ae5d9f39e0ed8f0878289a941115 本地=8ac7ae5d9f39e0ed8f0878289a941115
+public/esm/view/processManage.js 101=a2b0eb109e241e94902535e6a52852b0 本地=a2b0eb109e241e94902535e6a52852b0
+root:root 644 /opt/BDFZ/ESM/data/web/public/esm/view/processManage/list.js
+root:root 644 /opt/BDFZ/ESM/data/web/public/esm/view/processManage/list.html
+rising:rising 644 /opt/BDFZ/ESM/data/web/public/esm/css/processManageList.css
+rising:rising 644 /opt/BDFZ/ESM/data/web/public/esm/view/processManage/bwlistMock.js
+rising:rising 644 /opt/BDFZ/ESM/data/web/public/esm/view/processManage.js

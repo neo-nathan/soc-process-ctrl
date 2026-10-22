@@ -1,0 +1,16 @@
+##### TK-3 Executor 自测壳 http://127.0.0.1:8871/index.html
+undefined
+exit=0
+##### TK-4 Executor 自测壳 http://127.0.0.1:8872/index.html
+"{\"total\":3,\"pass\":2,\"fail\":1,\"red\":[\"EXC 自测中途抛错（后面的用例没跑）：TypeError: Cannot set properties of undefined (setting 'state') | \"]}"
+exit=0
+##### TK-4 Executor 自测壳 http://127.0.0.1:8874/index.html?layout=101
+"{\"total\":3,\"pass\":2,\"fail\":1,\"red\":[\"EXC 自测中途抛错（后面的用例没跑）：TypeError: Cannot set properties of undefined (setting 'state') | \"]}"
+exit=0
+##### TK-5 Executor 自测壳 http://127.0.0.1:8873/index.html
+"{\"total\":111,\"pass\":111,\"fail\":0,\"red\":[]}"
+exit=0
+##### TK-4 自带 serve.py index.html（ref101 processMana.js = 15:30 新版）
+"{\"total\":60,\"pass\":60,\"fail\":0,\"red\":[]}"
+##### TK-4 自带 serve.py index.html?layout=101（ref101 processMana.js = 15:30 新版）
+"{\"total\":60,\"pass\":60,\"fail\":0,\"red\":[]}"
