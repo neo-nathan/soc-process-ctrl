@@ -1,0 +1,19 @@
+== R-4 后端控制器
+da86bf47f018b7a4dba5446030dd883f  /opt/BDFZ/ESM/data/web/esmCenter/controllers/Procmanager.php
+-rw-r--r-- 1 rising rising 58684 2026-10-22 17:25:12.000000000 +0800 /opt/BDFZ/ESM/data/web/esmCenter/controllers/Procmanager.php
+da86bf47f018b7a4dba5446030dd883f
+== node --check
+OK view/processManage/list.js
+OK view/processManage/bwlistModal.js
+OK view/processManage.js
+== Executor 自测
+
+77/77 全绿
+== 完成判据 grep
+grep-exit=1
+== 101 vs 本地 md5
+view/processManage/list.js 101=ddfe927d9230088ad5ef68dbd0090c78 local=ddfe927d9230088ad5ef68dbd0090c78
+view/processManage/list.html 101=d34d7edc6b83975d408b7b1401ef7b94 local=d34d7edc6b83975d408b7b1401ef7b94
+view/processManage/bwlistModal.js 101=bd40efd44a7a42d7c4005e62c447c151 local=bd40efd44a7a42d7c4005e62c447c151
+view/processManage.js 101=58064f62b0c900d7b1b9e4cf0ef9c08f local=58064f62b0c900d7b1b9e4cf0ef9c08f
+css/processManageList.css 101=20cbd1160963477f8737f55a7193afcd local=20cbd1160963477f8737f55a7193afcd

@@ -1,0 +1,20 @@
++-------+----------------------------------+
+| LISTS | P                                |
++-------+----------------------------------+
+|    11 | 35,36,37,38,39,40,41,42,43,60,64 |
++-------+----------------------------------+
++------+------+------+------+------+
+| W64  | B64  | W    | B    | PO   |
++------+------+------+------+------+
+|    0 |    0 |    9 |    0 | 2464 |
++------+------+------+------+------+
+POLICY-SAME
+WPROC-SAME
+58064f62b0c900d7b1b9e4cf0ef9c08f  view/processManage.js
+7f5ccd7ba36d4c7ea36dfbf1c09ec9c1  view/layout.html
+1defe5ddc5af6351ddb1688f0ed378ef  view/processManage/log.js
+ddfe927d9230088ad5ef68dbd0090c78  view/processManage/list.js
+d34d7edc6b83975d408b7b1401ef7b94  view/processManage/list.html
+bd40efd44a7a42d7c4005e62c447c151  view/processManage/bwlistModal.js
+20cbd1160963477f8737f55a7193afcd  css/processManageList.css
+da86bf47f018b7a4dba5446030dd883f  /opt/BDFZ/ESM/data/web/esmCenter/controllers/Procmanager.php

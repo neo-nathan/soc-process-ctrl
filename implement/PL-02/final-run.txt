@@ -1,0 +1,54 @@
+== 时间
+2026-10-22 10:11 EDT
+== R-3 101 指纹（ssh）
+2026年 10月 22日 星期四 22:11:29 CST
+58064f62b0c900d7b1b9e4cf0ef9c08f  view/processManage.js
+7f5ccd7ba36d4c7ea36dfbf1c09ec9c1  view/layout.html
+1defe5ddc5af6351ddb1688f0ed378ef  view/processManage/log.js
+ddfe927d9230088ad5ef68dbd0090c78  view/processManage/list.js
+d34d7edc6b83975d408b7b1401ef7b94  view/processManage/list.html
+bd40efd44a7a42d7c4005e62c447c151  view/processManage/bwlistModal.js
+8ac7ae5d9f39e0ed8f0878289a941115  view/processManage/bwlistMock.js
+20cbd1160963477f8737f55a7193afcd  css/processManageList.css
+61b3ff987ef80589e52492c77fff7e76  js/core.js
+-rw-r--r-- rising rising view/processManage/bwlistModal.js
+-rw-r--r-- rising rising view/processManage.js
+-rw-r--r-- root root view/processManage/list.html
+-rw-r--r-- root root view/processManage/list.js
+da86bf47f018b7a4dba5446030dd883f  /opt/BDFZ/ESM/data/web/esmCenter/controllers/Procmanager.php
+== 本地 md5
+58064f62b0c900d7b1b9e4cf0ef9c08f  view/processManage.js
+ddfe927d9230088ad5ef68dbd0090c78  view/processManage/list.js
+d34d7edc6b83975d408b7b1401ef7b94  view/processManage/list.html
+bd40efd44a7a42d7c4005e62c447c151  view/processManage/bwlistModal.js
+8ac7ae5d9f39e0ed8f0878289a941115  view/processManage/bwlistMock.js
+20cbd1160963477f8737f55a7193afcd  css/processManageList.css
+== node --check
+OK view/processManage/list.js
+OK view/processManage/bwlistModal.js
+OK view/processManage.js
+== 自测
+77/77 全绿
+== 完成判据 grep
+grep-exit=1
+== svn status
+M       /Users/nick/Workspace/ESMCenterST/esmCenter/controllers/Index.php
+M       /Users/nick/Workspace/ESMCenterST/esmCenter/views/esm/Manage/index2.php
+?       /Users/nick/Workspace/ESMCenterST/public/esm/css/processManageList.css
+?       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js
+?       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistModal.js
+M       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html
+M       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+M       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js
+== 开工快照对比（md5）
+unchanged /Users/nick/Workspace/ESMCenterST/esmCenter/controllers/Index.php
+unchanged /Users/nick/Workspace/ESMCenterST/esmCenter/views/esm/Manage/index2.php
+unchanged /Users/nick/Workspace/ESMCenterST/public/esm/css/processManageList.css
+unchanged /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js
+CHANGED /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html
+CHANGED /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+CHANGED /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js
+== git status
+ M CurrentStatus.md
+ M changelog/INDEX.md
+?? "changelog/log-20261022-0535-\345\256\236\346\226\275PL-02.md"

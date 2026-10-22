@@ -1,0 +1,324 @@
+[
+ {
+  "type": "CLAIM",
+  "id": "bak-processManage.js",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /tmp/procm-pl02-bak-20261022173555/processManage.js' | cut -d' ' -f1",
+  "expect": "a2b0eb109e241e94902535e6a52852b0",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "startcopy-processManage.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/start-copy/public/esm/view/processManage.js",
+  "expect": "a2b0eb109e241e94902535e6a52852b0"
+ },
+ {
+  "type": "CLAIM",
+  "id": "bak-list.js",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /tmp/procm-pl02-bak-20261022173555/list.js' | cut -d' ' -f1",
+  "expect": "00efacebf191e2a9b51c9e37c0f08f6d",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "startcopy-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/start-copy/public/esm/view/processManage/list.js",
+  "expect": "00efacebf191e2a9b51c9e37c0f08f6d"
+ },
+ {
+  "type": "CLAIM",
+  "id": "bak-list.html",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /tmp/procm-pl02-bak-20261022173555/list.html' | cut -d' ' -f1",
+  "expect": "ed7c0bc49ce4279c4f2aa32202bd4fb9",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "startcopy-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/start-copy/public/esm/view/processManage/list.html",
+  "expect": "ed7c0bc49ce4279c4f2aa32202bd4fb9"
+ },
+ {
+  "type": "CLAIM",
+  "id": "bak-processManageList.css",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /tmp/procm-pl02-bak-20261022173555/processManageList.css' | cut -d' ' -f1",
+  "expect": "20cbd1160963477f8737f55a7193afcd",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "startcopy-processManageList.css",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/start-copy/public/esm/css/processManageList.css",
+  "expect": "20cbd1160963477f8737f55a7193afcd"
+ },
+ {
+  "type": "CLAIM",
+  "id": "svn-Index",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/esmCenter/controllers/Index.php",
+  "expect": "5b5e6807a736c384ecdbdc56f73848ea"
+ },
+ {
+  "type": "CLAIM",
+  "id": "svn-index2",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/esmCenter/views/esm/Manage/index2.php",
+  "expect": "afd277f54009729276170ea353c70dfd"
+ },
+ {
+  "type": "CLAIM",
+  "id": "svn-mock",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js",
+  "expect": "8ac7ae5d9f39e0ed8f0878289a941115"
+ },
+ {
+  "type": "CLAIM",
+  "id": "colleague-md5",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/colleague-baseline/processManage.js",
+  "expect": "58064f62b0c900d7b1b9e4cf0ef9c08f"
+ },
+ {
+  "type": "ARITH",
+  "id": "colleague-lines",
+  "cmd": "wc -l < /Users/nick/Workspace/soc-process-ctrl-work/PL-02/colleague-baseline/processManage.js",
+  "expect": "56",
+  "trail": "56 行，已复制到工作目录"
+ },
+ {
+  "type": "CLAIM",
+  "id": "ref-layout",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/101-ref/layout.html",
+  "expect": "7f5ccd7ba36d4c7ea36dfbf1c09ec9c1"
+ },
+ {
+  "type": "CLAIM",
+  "id": "ref-core",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/101-ref/core.js",
+  "expect": "61b3ff987ef80589e52492c77fff7e76"
+ },
+ {
+  "type": "CLAIM",
+  "id": "ref-ctl",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/101-ref/Procmanager.php",
+  "expect": "da86bf47f018b7a4dba5446030dd883f"
+ },
+ {
+  "type": "CLAIM",
+  "id": "svn-status-lines",
+  "cmd": "wc -l < /Users/nick/Workspace/soc-process-ctrl-work/PL-02/start-svn-status.txt | tr -d \" \"",
+  "expect": "7",
+  "trail": "`svn status` 7 行"
+ },
+ {
+  "type": "STAGE",
+  "id": "up1-101-list.js",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /opt/BDFZ/ESM/data/web/public/esm/view/processManage/list.js' | cut -d' ' -f1",
+  "expect": "ddfe927d9230088ad5ef68dbd0090c78",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "up1-local-list.js",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js",
+  "expect": "ddfe927d9230088ad5ef68dbd0090c78"
+ },
+ {
+  "type": "STAGE",
+  "id": "up1-101-list.html",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /opt/BDFZ/ESM/data/web/public/esm/view/processManage/list.html' | cut -d' ' -f1",
+  "expect": "d34d7edc6b83975d408b7b1401ef7b94",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "up1-local-list.html",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html",
+  "expect": "d34d7edc6b83975d408b7b1401ef7b94"
+ },
+ {
+  "type": "STAGE",
+  "id": "up1-101-bwlistModal.js",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /opt/BDFZ/ESM/data/web/public/esm/view/processManage/bwlistModal.js' | cut -d' ' -f1",
+  "expect": "bd40efd44a7a42d7c4005e62c447c151",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "up1-local-bwlistModal.js",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistModal.js",
+  "expect": "bd40efd44a7a42d7c4005e62c447c151"
+ },
+ {
+  "type": "CLAIM",
+  "id": "selftest",
+  "cmd": "node /Users/nick/Workspace/soc-process-ctrl-work/PL-02/TK-1/executor/bwlistModal.selftest.js 2>&1 | tail -1",
+  "expect": "77/77 全绿",
+  "trail": "自测 77/77"
+ },
+ {
+  "type": "ARITH",
+  "id": "lines-PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "cmd": "wc -l < \"/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md\"",
+  "expect": "142",
+  "trail": "`plans/PL-02-名单页创建编辑弹窗独立实施计划.md` (142)"
+ },
+ {
+  "type": "ARITH",
+  "id": "lines-PL-01-黑白名单列表页前端实施计划.md",
+  "cmd": "wc -l < \"/Users/nick/Workspace/soc-process-ctrl/plans/PL-01-黑白名单列表页前端实施计划.md\"",
+  "expect": "233",
+  "trail": "`plans/PL-01-黑白名单列表页前端实施计划.md` (233)"
+ },
+ {
+  "type": "ARITH",
+  "id": "lines-01-进程管控设计文档.md",
+  "cmd": "wc -l < \"/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md\"",
+  "expect": "1518",
+  "trail": "`architecture/01-进程管控设计文档.md` (1518)"
+ },
+ {
+  "type": "ARITH",
+  "id": "lines-白名单列表.html",
+  "cmd": "wc -l < \"/Users/nick/Workspace/soc-process-ctrl/demo/白名单列表.html\"",
+  "expect": "1076",
+  "trail": "`demo/白名单列表.html` (1076)"
+ },
+ {
+  "type": "ARITH",
+  "id": "lines-黑名单列表.html",
+  "cmd": "wc -l < \"/Users/nick/Workspace/soc-process-ctrl/demo/黑名单列表.html\"",
+  "expect": "1076",
+  "trail": "`demo/黑名单列表.html` (1076)"
+ },
+ {
+  "type": "ARITH",
+  "id": "lines-CLAUDE.md",
+  "cmd": "wc -l < \"/Users/nick/Workspace/soc-process-ctrl/CLAUDE.md\"",
+  "expect": "87",
+  "trail": "`CLAUDE.md` (87)"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk0-done",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "基线 md5、备份路径、两边现场写进 changelog"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk1-done",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "按「上传规则」上传后：S-1～S-5、S-7 通过；`grep -nE \"layoutPage|addNewList|require\\('processManage'\\)\" list.js bwlistModal.js` 为 0 处（注释里说明历史的除外；不用 `listModal` 做关键字，它会命中新文件名 `bwlistModal`）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk2-done",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "本地 md5 = `58064f62…`；101 = `58064f62…`，或按 R-1 已是同事自己部署的版本（不含 `listModal`）；S-6 通过"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk3-done",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "§七 全部通过（S-6 里 PL-01 F-8 ① 复现按 Q2 记「已知、交同事」）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk4-done",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "自检问题全部回答；无遗留红项"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk1-tester",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "TK-1 的 Tester 写 §七 全部用例（S-6 等 TK-2 做完才跑）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "tk2-way",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "主 Agent 亲做（文件来自基线原样复制，不是写代码）"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "d-85",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "名称：必填，最长 100 字符"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "d-88-14",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "统一叫「描述」"
+ },
+ {
+  "type": "CLAIM",
+  "id": "cov-ids-missing",
+  "cmd": "python3 /Users/nick/Workspace/soc-process-ctrl-work/tools/cov_ids_missing.py \"/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md\" \"/Users/nick/Workspace/soc-process-ctrl/changelog/log-20261022-0535-实施PL-02.md\"",
+  "expect": "0",
+  "trail": "断言 `cov-ids-missing` = 0"
+ },
+ {
+  "type": "STAGE",
+  "id": "status-fresh",
+  "cmd": "python3 /Users/nick/Workspace/soc-process-ctrl-work/tools/status_fresh.py \"/Users/nick/Workspace/soc-process-ctrl/changelog/log-20261022-0535-实施PL-02.md\" \"/Users/nick/Workspace/soc-process-ctrl/CurrentStatus.md\"",
+  "expect": "OK",
+  "trail": "断言应比较状态页修改时间与最新 Task 段时间"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "d-82-skip",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/architecture/01-进程管控设计文档.md",
+  "quote": "「加白」跳过「拦截且原因为在黑名单」的；「加黑」跳过「原因为在黑名单」的。"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "s6-orig",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "日志页「加入名单 → 新建名单」能建成名单"
+ },
+ {
+  "type": "ANCHOR",
+  "id": "f5-note",
+  "source": "/Users/nick/Workspace/soc-process-ctrl/plans/PL-02-名单页创建编辑弹窗独立实施计划.md",
+  "quote": "TK-1 全部换掉，注释同步"
+ },
+ {
+  "type": "STAGE",
+  "id": "tk2-101-pm",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /opt/BDFZ/ESM/data/web/public/esm/view/processManage.js' | cut -d' ' -f1",
+  "expect": "58064f62b0c900d7b1b9e4cf0ef9c08f",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "tk2-local-pm",
+  "cmd": "md5 -q /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js",
+  "expect": "62fc1ba5cc78b31548f5ae3f9706cf4d"
+ },
+ {
+  "type": "CLAIM",
+  "id": "tk2-nolistmodal",
+  "cmd": "grep -c listModal /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js",
+  "expect": "0",
+  "trail": "`listModal` 0 处"
+ },
+ {
+  "type": "CLAIM",
+  "id": "tk3-policy-same",
+  "cmd": "diff -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/TK-3/db-before-policy-rows.txt /Users/nick/Workspace/soc-process-ctrl-work/PL-02/TK-3/db-after-policy-rows.txt >/dev/null && echo SAME",
+  "expect": "SAME",
+  "trail": "两份逐行指纹 diff 无差异"
+ },
+ {
+  "type": "STAGE",
+  "id": "tk3-ctl",
+  "cmd": "/Users/nick/Workspace/soc-process-ctrl-work/tools/s101.sh 'md5sum /opt/BDFZ/ESM/data/web/esmCenter/controllers/Procmanager.php' | cut -d' ' -f1",
+  "expect": "da86bf47f018b7a4dba5446030dd883f",
+  "needs": "ssh"
+ },
+ {
+  "type": "CLAIM",
+  "id": "pass-snap-listjs",
+  "cmd": "md5 -q /Users/nick/Workspace/soc-process-ctrl-work/PL-02/pass-snapshot/TK-1/public/esm/view/processManage/list.js",
+  "expect": "ddfe927d9230088ad5ef68dbd0090c78"
+ }
+]

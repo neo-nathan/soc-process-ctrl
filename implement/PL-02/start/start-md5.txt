@@ -1,0 +1,7 @@
+5b5e6807a736c384ecdbdc56f73848ea  /Users/nick/Workspace/ESMCenterST/esmCenter/controllers/Index.php
+afd277f54009729276170ea353c70dfd  /Users/nick/Workspace/ESMCenterST/esmCenter/views/esm/Manage/index2.php
+20cbd1160963477f8737f55a7193afcd  /Users/nick/Workspace/ESMCenterST/public/esm/css/processManageList.css
+8ac7ae5d9f39e0ed8f0878289a941115  /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js
+ed7c0bc49ce4279c4f2aa32202bd4fb9  /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html
+00efacebf191e2a9b51c9e37c0f08f6d  /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+a2b0eb109e241e94902535e6a52852b0  /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js

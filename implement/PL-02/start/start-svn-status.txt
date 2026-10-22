@@ -1,0 +1,7 @@
+M       /Users/nick/Workspace/ESMCenterST/esmCenter/controllers/Index.php
+M       /Users/nick/Workspace/ESMCenterST/esmCenter/views/esm/Manage/index2.php
+?       /Users/nick/Workspace/ESMCenterST/public/esm/css/processManageList.css
+?       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistMock.js
+M       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.html
+M       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+M       /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage.js
