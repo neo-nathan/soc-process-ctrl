@@ -1,0 +1,40 @@
+2026年 10月 23日 星期五 13:29:54 CST
+== POLICY 名单
+PID	PNAME	POLICYTYPE	EPTYPE	STATUS
+37	刘洋的白名单	2	2	4
+38	test3	2	2	3
+39	黑名单1	3	2	3
+41	test666	2	2	3
+42	test7	2	2	3
+43	test8	2	2	2
+60	Web 服务器白名单 101	2	2	1
+64	rrr	2	2	1
+75	数据库服务器白名单	2	2	1
+76	邮件服务器白名单	2	2	1
+78	xcvvccx	2	2	1
+79	q1	2	2	1
+80	q2	2	2	1
+== WPROC
+BWID	STATUS	N
+37	0	1
+38	1	21
+41	1	21
+42	1	21
+43	1	1
+== BPROC
+== 孤儿进程行(PID 86,87)
+COUNT(*)
+0
+COUNT(*)
+0
+4f0a0082375b47f4e11d5b3de6bef5bd  public/esm/view/processManage/list.js
+a0c9eb484f56eeda247abd60b7533d78  public/esm/view/processManage/list.html
+92f52f6194cf9ae652fb4e4ffd253da8  public/esm/view/processManage/bwlistAdapter.js
+7126259d7d0c6aa6df320e86107903b9  public/esm/view/processManage/bwlistProc.js
+447b5a6280e2ed311eeb2c0e500117b9  public/esm/view/processManage/bwlistProc.html
+77448051ddc1a715975e3adf7837db91  public/esm/view/processManage/bwlistMock.js
+bd40efd44a7a42d7c4005e62c447c151  public/esm/view/processManage/bwlistModal.js
+56ae83924867ec9c1d5d987ae98f198c  public/esm/css/processManageList.css
+9125fffee84a9b7f040c8230e16f2654  esmCenter/controllers/Procmanager.php
+1a559cbd7ed1b31fb5e23222101f60ec  esmCenter/models/BaseDA/Procmanager.php
+0

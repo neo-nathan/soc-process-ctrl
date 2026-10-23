@@ -1,0 +1,54 @@
+总用量 176
+-rw-r--r-- 1 rising rising 11205 10月 23 09:50 bwlistAdapter.js
+-rw-r--r-- 1 rising rising 20278 10月 23 10:20 bwlistMock.js
+-rw-r--r-- 1 rising rising 14972 10月 22 17:56 bwlistModal.js
+-rw-r--r-- 1 root   root   21172 10月 22 17:56 list.html
+-rw-r--r-- 1 root   root   83534 10月 23 10:20 list.js
+-rw-r--r-- 1 rising rising 20295 10月 22 13:36 processManageList.css
+== POLICY 名单
+PID	PNAME	POLICYTYPE	EPTYPE	STATUS
+37	刘洋的白名单	2	2	4
+38	test3	2	2	3
+39	黑名单1	3	2	3
+41	test666	2	2	3
+42	test7	2	2	3
+43	test8	2	2	2
+60	Web 服务器白名单 101	2	2	1
+64	rrr	2	2	1
+75	数据库服务器白名单	2	2	1
+76	邮件服务器白名单	2	2	1
+78	xcvvccx	2	2	1
+79	q1	2	2	1
+80	q2	2	2	1
+== WPROC
+BWID	STATUS	N
+37	0	1
+38	1	21
+41	1	21
+42	1	21
+43	1	1
+== BPROC
+== PID38 rows
+ID	PROCPATH	H	ALGO	STATUS	CREATETIME
+3	/opt/BDFZ/ESM/a.txt	11111	1	0	2026-10-19 09:33:32
+4	/opt/BDFZ/ESM/a.txt	11111	1	1	2026-10-19 09:36:39
+17	/opt/BDFZ/ESM/bin/redis-server	03D5BFD0249C	0	1	2026-10-23 10:20:50
+18	/usr/lib/x86_64-linux-gnu/ld-2.31.so	107BE5EBDAA2	0	1	2026-10-23 10:20:50
+19	/opt/BDFZ/ESM/bin/instool.sh	214B56348A20	0	1	2026-10-23 10:20:50
+20	/usr/bin/dde-printer-helper	35C18400DC56	0	1	2026-10-23 10:20:50
+21	/opt/BDFZ/ESM/bin/nginx	64AEA9BECDB7	0	1	2026-10-23 10:20:50
+22	/usr/lib/i386-linux-gnu/ld-2.31.so	658836F913E2	0	1	2026-10-23 10:20:50
+23	/opt/BDFZ/ESM/bin/monitor.sh	65C0C3F81311	0	1	2026-10-23 10:20:50
+24	/opt/BDFZ/ESM/plugins/elasticsearch/bin/elasticsearch-cli	65EED11A2CD7	0	1	2026-10-23 10:20:50
+25	/root/3.0.50.36/setup/x86_64/lsupdate.bin	70147D06B283	0	1	2026-10-23 10:20:50
+26	/usr/lib/vmware/bin/vmware-usbarbitrator	7DE35DBDA18E	0	1	2026-10-23 10:20:50
+27	/opt/BDFZ/ESM/bin/rscron	92D9767FC0C8	0	1	2026-10-23 10:20:50
+28	/opt/BDFZ/ESM/bin/java	A019E20B3C3A	0	1	2026-10-23 10:20:50
+29	/opt/BDFZ/ESM/bin/delfiles.sh	AE5C63064BFC	0	1	2026-10-23 10:20:50
+30	/opt/BDFZ/ESM/plugins/java/UpdatePostTask.sh	B17EFB84AF0C	0	1	2026-10-23 10:20:50
+31	/root/3.0.50.36/setup.sh	B304D19D55CD	0	1	2026-10-23 10:20:50
+32	/opt/BDFZ/ESM/bin/php-fpm	D4D2A4B5E9C9	0	1	2026-10-23 10:20:50
+33	/opt/BDFZ/ESM/plugins/java/UpdatePreTask.sh	DD2F170C764F	0	1	2026-10-23 10:20:50
+34	/opt/BDFZ/ESM/bin/mysqld	EAD04818AAC7	0	1	2026-10-23 10:20:50
+35	/opt/BDFZ/ESM/plugins/elasticsearch/bin/elasticsearch-keystore	F1BEDD66E2F3	0	1	2026-10-23 10:20:50
+36	/usr/lib/dpkg-db/info/com.rising.antivirus.prerm	F2CF5B9B4A0D	0	1	2026-10-23 10:20:50

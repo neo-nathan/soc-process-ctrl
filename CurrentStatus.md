@@ -11,7 +11,7 @@
 - **核心设计结论**见设计文档第 0 节 K1～K14：沿用 PROCM 产品身份；进程策略复用策略中心；白名单 / 黑名单是 `POLICY` 里用名单专用产品号的记录，只挂组；名单明细打成 zip 由终端下载。
 - **给领导的概要设计 00**（单文件 html，按 demo 页面组织）2026-10-19 新增，10-20 同步弹窗改动；它是一次性交付物，领导满意后从项目移除，不与 01 同步维护。
 - **待对齐 16 项**（设计文档 12.1，10-21 PL-01 TK-1 新增 P22、P23，10-22 PL-03 新增 P24）全部按推荐暂定，其中高优先级 5 项（P9、P2、P8、P19、P22）定错要返工。
-- **名单进程页（PL-04）**：v0.2 计划待放行，走真接口（查询、添加、恢复直调后端，移除等后端补 ACL），前端自做查重和「至少保留 1 个」；后端缺口整理在 [docs/02](docs/02-名单进程接口补改清单.md)，最急的是移除接口 `delProcFromBW` 补 ACL。
+- **名单进程页（PL-04）**：10-23 放行并直接实施（不走 `implement-plan`），01:3x EDT 完成到「除移除 / 恢复的实测外已完成」：名单页内切出进程视图（新文件 `bwlistProc.js` / `.html`），查询、添加、恢复走真接口，前端查重和「至少保留 1 个」；内审 2 轮 PASS；101 实测除移除、恢复外通过（移除接口 `delProcFromBW` 未登记 ACL，S-6 BLOCKED、S-7 未做）；设计 01 已同步（9.1.7 等）；svn 未提交。
 - **项目治理三机制**（CurrentStatus / changelog / insights）2026-10-21 从 soc-cascade-syslog 移植建立；此前的修改历史以 `git log` 为准。同日移植计划实施编排 skill `implement-plan`，用来执行放行后的 PL-01。
 
 ## 阶段与文档状态
@@ -28,7 +28,7 @@
 | 名单页创建编辑弹窗独立（PL-02） | PASS | 10-22 05:3x EDT 放行（Q4 按默认：前端按字数 100），10:1x EDT Final PASS；TK-1 内审 2 轮、整体审 1 轮收敛，§七 S-1～S-7 在 101 通过；报告与证据 `implement/IMPL-20261022-1012-PL-02.md`、`implement/PL-02/`（[changelog](changelog/log-20261022-0535-实施PL-02.md)）；SOC 源码新增 `bwlistModal.js`、改 `list.html`、`list.js`（都已在 101，svn 不提交）；101 `processManage.js` 还原为同事版，本地已 `svn revert`；用户决定不外审、计划已标「已完成」 |
 | 名单列表切真实 getWBList（PL-03） | PASS | 10-22 21:22 EDT 放行（Q4、Q5 按默认；用户要求不走 `implement-plan`，直接改），21:5x 完成：新建 `bwlistAdapter.js`（参数 / 字段转换），`bwlistMock.js` 只拦发布、应用到组且成功不改列表、删 fake 模式，`list.js` 接线；101 实测 S-1～S-7 通过；顺带修 mock 提示弹不出的旧缺陷；循环自检 + 独立内审（opus high）4 轮收敛；设计 01 §9.1 同步、12.1 新增 P24；最终指纹 adapter `7c197a47…`、mock `d76b79d6…`、`list.js` `b8b61a22…`；svn 未提交（[changelog](changelog/log-20261022-2150-实施PL-03.md)、证据 `implement/PL-03/`） |
 | 名单发布切真实 releaseWBList | PASS | 10-22 用户定推荐方案、22:2x EDT 完成：`list.js` 发布改调 `Procmanager/releaseWBList`、成功提示按返回的 `OBJCOUNT` 拼两种；`bwlistMock.js` 只拦应用到组 2 个地址；单测 + 101 实测 R-0～R-5 通过（测试名单 PID 81 已删）；有应用范围的发布没实测（只单测）；设计 01 第 0 节、7.4、第 9 节、9.1.1、9.1.3、P24 ⑩～⑭ 同步；指纹 `list.js` `22133e74…`、`bwlistMock.js` `77448051…`；svn 未提交（[changelog](changelog/log-20261022-2231-发布切真实releaseWBList接口.md)、证据 `implement/releaseWBList/`） |
-| 名单进程页前端（PL-04） | IN_PROGRESS | v0.2 草稿待放行（10-23 00:14 EDT）：用户 10-23 改定走真接口——查询 `showWBList`、添加 `addProcToWBList`、恢复 `resProcFromBW` 直调后端，移除 `delProcFromBW` 等后端补 ACL，前端自做查重和「至少保留 1 个」，测试只用自建 `PL04测试-` 名单；名单页内切换出进程视图（新文件 `bwlistProc.js` / `.html`，`bwlistAdapter.js` 加 2 个函数，`bwlistMock.js` 不改）；自检 3 轮 + 独立复审 2 轮 + 用户要求的循环自检收敛（期间后端北京 10-23 12:19 又把恢复接口改成单条 `id` + `policytype`，计划已跟上）；给后端的 `docs/02-名单进程接口补改清单.md` 已按 12:19 版写好；代码未改（[changelog](changelog/log-20261022-2339-起草PL-04名单进程页计划与后端清单.md)） |
+| 名单进程页前端（PL-04） | PASS（移除 / 恢复实测待 ACL） | 10-23 用户放行（Q1～Q7 默认，Q5 改为直接改 + 循环自检 + 独立内审）；SOC 源码新建 `bwlistProc.js`、`bwlistProc.html`，改 `bwlistAdapter.js`（`toProcRow` / `toProcList`）、`list.js`、`list.html`、`processManageList.css`（都已上传 101，svn 不提交）；单测 24 条；内审 2 轮 PASS（低 4 条已改）；101 实测 S-1～S-5、S-8～S-10 通过，S-6 BLOCKED、S-7 未做（ACL）；点左侧同一菜单会停在进程视图（Q1 预判，照实记录）；测试名单已删、SQL 与基线一致；最终指纹 `list.js` `4f0a0082…`、`list.html` `a0c9eb48…`、adapter `92f52f61…`、`bwlistProc.js` `7126259d…`、`.html` `447b5a62…`、css `56ae8392…`；设计 01 版本记录、7.1、7.3、8.6、第 9 节、9.1.7、P24 同步（[changelog](changelog/log-20261023-0125-实施PL-04名单进程页.md)、证据 `implement/PL-04/`） |
 | 项目治理三机制 | PASS | 2026-10-21 建立，生成器和检查脚本均通过 |
 | 计划实施 skill（implement-plan） | READY | 2026-10-21 从 soc-cascade-syslog 移植并改成本项目形状；经四轮独立复审和循环自检（[changelog](changelog/log-20261021-0430-移植implement-plan技能.md)）；10-21～10-22 首次实跑于 PL-01、10-22 再用于 PL-02，都已完成；经验见 `insights/` 10-22 四条（PL-01 三条、PL-02 一条，另在留痕教训那条补了 PL-02 的内容） |
 
@@ -38,7 +38,7 @@
 
 ## 阻塞项与待确认事项
 
-- **移除接口 `delProcFromBW` 未登记 ACL（10-23 12:14 CST 复核仍未登记）**：101 后端 `My.php:36-37` 对未登记地址一律拒绝，名单进程页的移除、恢复（恢复要先有待移除的行）实测做不了。不阻塞 PL-04 开工和其余用例（按 PL-04 §六「ACL 没补时怎么收尾」，S-6、S-7 记 BLOCKED）。关闭条件：后端登记 ACL 后补跑 S-6、S-7。
+- **移除接口 `delProcFromBW` 未登记 ACL（10-23 12:14 CST 复核仍未登记）**：101 后端 `My.php:36-37` 对未登记地址一律拒绝，名单进程页的移除、恢复（恢复要先有待移除的行）实测做不了。PL-04 已按 §六收尾（S-6 BLOCKED、S-7 未做，10-23 北京 13:29 复核仍未登记）。关闭条件：后端登记 ACL 后按 PL-04 §六补跑 S-6、S-7（需新建 `PL04测试-` 名单、S-7 要发布 1 次）。
 - **101 进程管理页「选中加白 / 加黑」全行被拦（10-22 00:06 发现）**：同事 10-21 23:13 EDT 改的后端 `Procmanager` 返回 `SYSTYPE` = `Linux`，而 `processMana.js`（北京 10-22 15:30、16:35 又被同事改过，这段未动）按小写 `linux` / `windows` 判断，任何行都弹「既有 Windows 又有 Linux/信创」。不是 PL-01 改出来的；PL-01 整体审已在页面内存改一行 `SYSTYPE` 后从正式入口实测通过，真实用户仍被挡。关闭条件：用户转告同事、前后端写法对齐。
 - **101 后端名单接口与前端约定不一致（10-22 21:56 EDT 改写）**：列表部分已由 PL-03 在前端转换解决（列表走真接口）。发布已切真接口（10-22 22:2x EDT）。剩下的写在设计 01 12.1 P24（14 项）：后端缺终端数、关键字查询，`procstatus=0` 和「无变更」意思不同，排序、脏数据 PID 36～43、状态重算错（「有变更」再加进程变「待发布」，空名单加第一个进程变「有变更」）、不返回 `PRODUCTID`、移除进程接口没写、`STATUS` NULL 口径；应用到组后端叫 `usedGroup`，前端 mock 叫 `setWBListGroups`；发布实现和设计 7.4 不同（6 个带密码 zip、路径、无行锁）、写 Redis 失败仍报成功、删除名单不清 zip、`algo=1` 存成 0。关闭条件：P24 和后端对齐后，另立计划切应用到组真接口。
 - **12.1 高优先级待对齐（P9、P2、P8、P19、P22）**：影响名单报文 `policytype`、库文件格式、上报格式与方式（P8 ⑪ 含 10-21 新增的「策略模式一个值 0～6」键名、「无基线库」含义，暂沿用 `procaudit`，`rpw.sql` 注释未改）、各库种建库 / 升级脚本的明文源和改法；不阻塞设计文档继续修订，但阻塞编码定稿。关闭条件：客户端 / 产品 / 数据库脚本维护方 / 中心后端答复后回改设计文档。另有中、低优先级 10 项，见设计文档 12.1。
@@ -50,9 +50,9 @@
 
 ## 下一步
 
-1. 用户放行 PL-04 v0.2（Q1～Q7 有默认），按 `implement-plan` 执行。
+1. 后端给 `delProcFromBW` 登记 ACL 后，补跑 PL-04 S-6、S-7（§六），再把计划改「已完成」。
 2. 把 `docs/02-名单进程接口补改清单.md`（最急：移除接口补 ACL）和设计 01 12.1 P24（后端缺项 / 不一致 14 项，含 ⑩～⑭）一起转给后端同事。
-3. 用户决定：PL-01、PL-02、PL-03 和发布切真接口的 svn 提交时机（须用户指令，走 `svn-commit`）。
+3. 用户决定：PL-01、PL-02、PL-03、发布切真接口和 PL-04 的 svn 提交时机（须用户指令，走 `svn-commit`）。
 4. 把 PL-01、PL-02 IMPL 报告第 9 节「给同事的清单」转给同事（SYSTYPE 大小写、`view` 未定义一行改法、部署覆盖、名单名称转义、后端按字节限长等）；用户另决定 PL-01 状态行是否标完成、是否外审。
 5. 跟进后端答复：应用到组接口（`usedGroup`、`showUsedGroup`）对齐后另立计划切真接口、再删 mock；12.1 高优先级待对齐项的答复（定了回改设计文档、demo、概要设计）；拿到领导对概要设计 00 的反馈后修改或移除 00。
 
@@ -64,7 +64,7 @@
 
 - 原始需求：[requirements/requirements-raw.md](requirements/requirements-raw.md)
 - 开发设计文档：[architecture/01-进程管控设计文档.md](architecture/01-进程管控设计文档.md)（第 0 节结论、12.1 待对齐、14 改动清单）
-- 名单进程接口给后端的补改清单：[docs/02-名单进程接口补改清单.md](docs/02-名单进程接口补改清单.md)；PL-04 草稿：[plans/PL-04-名单进程页前端实施计划.md](plans/PL-04-名单进程页前端实施计划.md)
+- 名单进程接口给后端的补改清单：[docs/02-名单进程接口补改清单.md](docs/02-名单进程接口补改清单.md)；PL-04：[plans/PL-04-名单进程页前端实施计划.md](plans/PL-04-名单进程页前端实施计划.md)（除移除 / 恢复实测外已完成）
 - 实施计划：[plans/PL-01-黑白名单列表页前端实施计划.md](plans/PL-01-黑白名单列表页前端实施计划.md)、[plans/PL-02-名单页创建编辑弹窗独立实施计划.md](plans/PL-02-名单页创建编辑弹窗独立实施计划.md)、[plans/PL-03-名单列表切真实getWBList接口实施计划.md](plans/PL-03-名单列表切真实getWBList接口实施计划.md)（草稿）；实施报告：[implement/IMPL-20261022-0449-PL-01.md](implement/IMPL-20261022-0449-PL-01.md)、[implement/IMPL-20261022-1012-PL-02.md](implement/IMPL-20261022-1012-PL-02.md)
 - 给领导的概要设计：[architecture/00-进程管控概要设计.html](architecture/00-进程管控概要设计.html)
 - 最新审查报告：[review/RV-20261013-0833-PL-06-v0.9.md](review/RV-20261013-0833-PL-06-v0.9.md)
@@ -74,10 +74,10 @@
 
 ## 仓库现场
 
-- 2026-10-23 00:22 EDT 核实：分支 `main`；PL-04 v0.2、`docs/02`、它们的 changelog、索引、本状态页已本地提交（提交说明「落盘 PL-04 名单进程页前端实施计划 v0.2 与后端补改清单 docs/02」，父提交 `47b078e`），**未推送**；未提交的只有用户自己改的 `docs/01-api.md`。SOC 源码 svn：改动 `Index.php`、`index2.php`（用户自己的）、`list.html`、`list.js`，未纳管新文件 `bwlistAdapter.js`、`bwlistMock.js`、`bwlistModal.js`、`processManageList.css`；都未提交（本回合没动 SOC 源码）。
+- 2026-10-23 01:3x EDT 核实：分支 `main`，领先 `origin/main` 1 个提交（PL-04 计划落盘，未推送）；本回合 PL-04 实施的文档改动（设计 01、计划状态、changelog、索引、`implement/PL-04/`、本状态页）**未提交**；`docs/01-api.md` 是用户自己的改动。SOC 源码 svn：改动 `Index.php`、`index2.php`（用户自己的）、`list.html`、`list.js`，未纳管新文件 `bwlistAdapter.js`、`bwlistMock.js`、`bwlistModal.js`、`bwlistProc.js`、`bwlistProc.html`、`processManageList.css`；都未提交。
 - 开工仍须实时执行 `git status --short --branch`。
 
 ---
 
-最后更新：2026-10-23 00:21 EDT
+最后更新：2026-10-23 01:31 EDT
 最后精炼：2026-10-21 01:06 EDT
