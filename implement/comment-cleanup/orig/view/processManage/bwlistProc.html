@@ -1,0 +1,144 @@
+<!--
+    进程管控 · 名单进程视图（PL-04 §五；白名单、黑名单共用，文案由 bwlistProc.js 用 mustache 填进来）
+    放在名单页 list.html 的空容器 .js_procm_procpane 里；点名单展开行的「进程」时显示，点「返回」时隐藏（PL-04 Q1）。
+    结构：导航条（返回 + 面包屑）→ 信息条（发布状态 / 系统类型 / 进程数 / 应用范围 / 创建时间 / 刷新）
+          → 主体（工具栏 + 高级查询 + 表格，交给 bootstrapTable 排版）→ 添加进程弹窗
+    ⚠️ 防撞名（PL-04 §5.6）：名单列表页的事件委托也挂在同一个页面容器上，
+       所以这里的钩子类一律用 js_procm_proc_ 开头，id 一律用 procmProc 开头，不复用列表页的任何类名和 id。
+    样式在 css/processManageList.css 第八节，类名都以 procm-proc- 开头。
+-->
+<div class="procm-proc">
+    <!-- 导航条：最左「返回」（回名单列表）+ 面包屑 进程管控 / 白名单 / 名单名 / 进程列表（照 demo） -->
+    <div class="procm-proc-crumb">
+        <a href="javascript:void(0);" class="procm-proc-back js_procm_proc_back" title="返回{{name}}列表">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"></path></svg>
+            <span>返回</span>
+        </a>
+        <a href="javascript:void(0);" class="procm-crumb-link js_procm_proc_overview">进程管控</a>
+        <span class="procm-crumb-sep">/</span>
+        <a href="javascript:void(0);" class="procm-crumb-link js_procm_proc_back">{{name}}</a>
+        <span class="procm-crumb-sep">/</span>
+        <!-- 名单名：由 bwlistProc.js 用 text 填（用户数据，不当 HTML） -->
+        <span class="procm-proc-pname js_procm_proc_pname"></span>
+        <span class="procm-crumb-sep">/</span>
+        <span class="procm-crumb-cur">进程列表</span>
+    </div>
+
+    <!-- 信息条：这条名单的发布状态等（数据以后端 getWBList 为准，PL-04 Q2）；里面的内容由 bwlistProc.js 每次取数后重画 -->
+    <div class="procm-proc-info">
+        <!-- 发布状态：圆点 + 文字，悬停看说明（title） -->
+        <div class="procm-proc-info-item">
+            <span class="procm-proc-st js_procm_proc_st"></span>
+        </div>
+        <div class="procm-proc-info-item">系统类型：<span class="procm-proc-val js_procm_proc_os">--</span></div>
+        <!-- 进程数：已发布版本的数量 + 还没发布的新增（+N 绿）/ 待移除（-M 红）；点 +N 只看新增、点 -M 只看待移除，再点取消 -->
+        <div class="procm-proc-info-item">进程数：<span class="procm-blue js_procm_proc_num">0</span> 个
+            <button type="button" class="procm-proc-delta procm-proc-delta-add js_procm_proc_delta" data-chg="new" title="点击只看新增的进程，再点一次显示全部" style="display: none;"></button>
+            <button type="button" class="procm-proc-delta procm-proc-delta-del js_procm_proc_delta" data-chg="pending" title="点击只看待移除的进程，再点一次显示全部" style="display: none;"></button>
+        </div>
+        <div class="procm-proc-info-item">应用范围：<span class="js_procm_proc_scope">--</span></div>
+        <div class="procm-proc-info-item">创建时间：<span class="procm-proc-val js_procm_proc_ctime">--</span></div>
+        <!-- 右侧：刷新（同时重取进程行和名单信息，PL-04 §3.2） -->
+        <a href="javascript:void(0);" class="procm-proc-refresh js_procm_proc_refresh" title="刷新">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>
+        </a>
+    </div>
+
+    <!-- 主体：工具栏、高级查询区、表格（.log-content 沿用现有页面的高级查询样式，和名单列表页一样） -->
+    <div class="log-content policy-form procm-proc-main">
+        <!-- 工具栏左侧：添加进程（bootstrapTable 的 toolbar 选项会把它挪进表格工具栏左边；右边是表格自带的「高级搜索」「列设置」） -->
+        <div id="procmProcToolbar" class="form-inline static-toolbar mt5">
+            <a href="javascript:void(0);" class="add termpack-btn-type addIcon w105 js_procm_proc_add" title="手动添加进程">添加进程</a>
+        </div>
+
+        <!-- 高级查询区（写法照名单列表页：点选项点了立刻筛；指定日期、关键字点「筛选」才生效；「重置」清空全部）
+             每组点选的 data-key = 条件名（bwlistAdapter.toProcList 的 cond），a 的 val = 条件值（空 = 不限） -->
+        <div id="procmProcSearchBox">
+            <form class="form-horizontal js_procm_proc_form">
+                <div class="control-group">
+                    <label class="control-label">时间范围：</label>
+                    <!-- 按添加时间筛：本周 = 本周一 ~ 今天、本月 = 本月 1 日 ~ 今天、上月 = 上月 1 日 ~ 上月最后一天（「今天」按北京时间） -->
+                    <div class="controls js_procm_proc_chips" data-key="time">
+                        <a href="javascript:void(0);" class="active" val="">全部</a>
+                        <a href="javascript:void(0);" val="week">本周</a>
+                        <a href="javascript:void(0);" val="month">本月</a>
+                        <a href="javascript:void(0);" val="lastmonth">上月</a>
+                        <!-- 指定日期：用现有 datetimepicker 选日期（只读输入框），点「筛选」才生效；开始晚于结束时红字提示 -->
+                        <span class="date procm-date">
+                            <span class="procm-date-label">指定：</span>
+                            <input id="procmProcTimeStart" type="text" value="" class="input-time js_procm_proc_from" placeholder="开始日期" maxlength="10" autocomplete="off" readonly> —
+                            <input id="procmProcTimeEnd" type="text" value="" class="input-time js_procm_proc_to" placeholder="结束日期" maxlength="10" autocomplete="off" readonly>
+                        </span>
+                        <span class="procm-proc-err js_procm_proc_dateerr" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">变化状态：</label>
+                    <!-- new 新增 / pending 待移除 / normal 无变化（上次发布之后没动过）；和信息条的 +N / -M 是同一个条件 -->
+                    <div class="controls js_procm_proc_chips" data-key="chg">
+                        <a href="javascript:void(0);" class="active" val="">全部</a>
+                        <a href="javascript:void(0);" val="new">新增</a>
+                        <a href="javascript:void(0);" val="pending">待移除</a>
+                        <a href="javascript:void(0);" val="normal">无变化</a>
+                    </div>
+                </div>
+                <div class="control-group search-box">
+                    <label class="control-label">筛选条件：</label>
+                    <div class="controls">
+                        <!-- 按哪个字段搜：进程路径（默认）/ 文件哈希（照 demo；没有「进程名称」：名称是从路径取的，按名称搜就是按路径搜） -->
+                        <span>
+                            <select class="input-small js_procm_proc_field" style="width:110px">
+                                <option value="path" selected>进程路径</option>
+                                <option value="hash">文件哈希</option>
+                            </select>
+                        </span>
+                        <input type="text" value="" class="js_procm_proc_kw" maxlength="500" placeholder="请输入进程路径关键字" autocomplete="off">
+                        <button type="button" class="btn js_procm_proc_search">筛选</button>
+                        <button type="button" class="btn procm-btn-reset js_procm_proc_reset">重置</button>
+                        <!-- 已筛选出 X 条，共 Y 条：设了任何筛选条件时显示（PL-04 §5.3） -->
+                        <span class="procm-filtered js_procm_proc_filtered" style="display: none;">已筛选出 <em class="js_procm_proc_x">0</em> 条，共 <em class="js_procm_proc_y">0</em> 条</span>
+                    </div>
+                </div>
+            </form>
+            <div style="clear:both;overflow:hidden;height:0;"></div>
+        </div>
+
+        <!-- 进程表格：bootstrapTable 前端分页，每页 15 条 -->
+        <table id="procmProcTable"></table>
+    </div>
+
+    <!-- 添加进程弹窗（PL-04 §5.4；外壳照名单页创建 / 编辑弹窗 #procmListModal，宽一些放得下 64 位哈希）
+         进程名、哈希算法边输边识别、只读；点「添加」才检查（PL-04 §3.5），不通过红字显示在 .js_procm_proc_adderr 里 -->
+    <div id="procmProcAddModal" class="modal hide procm-proc-add" tabindex="-1" data-backdrop="static">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"></button>
+            <h3 class="alert_drag">手动添加进程</h3>
+        </div>
+        <div class="modal-body modal-content">
+            <div class="content-box">
+                <span class="import-icon">*</span>
+                <label>进程路径：</label>
+                <input class="big-input js_procm_proc_addpath" type="text" maxlength="1000" autocomplete="off" placeholder="示例：{{pathEg}}">
+            </div>
+            <div class="content-box">
+                <span class="import-icon">*</span>
+                <label>文件哈希：</label>
+                <input class="big-input procm-proc-mono js_procm_proc_addhash" type="text" maxlength="200" autocomplete="off" placeholder="MD5（32 位）或 SHA256（64 位），按长度自动识别">
+            </div>
+            <div class="content-box">
+                <label>进程名：</label>
+                <span class="procm-proc-auto js_procm_proc_addname">填写进程路径后自动识别</span>
+            </div>
+            <div class="content-box">
+                <label>哈希算法：</label>
+                <span class="procm-proc-auto js_procm_proc_addalgo">填写文件哈希后自动识别</span>
+            </div>
+            <div class="procm-proc-adderr js_procm_proc_adderr" style="display: none;"></div>
+            <div class="procm-proc-addnote">进程名、哈希算法自动识别；终端按「路径 + 哈希」识别要{{verb}}的进程，两者都相同才算重复</div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel js_procm_proc_addcancel">取消</button>
+            <button type="button" class="btn btn-sure js_procm_proc_addok">添加</button>
+        </div>
+    </div>
+</div>

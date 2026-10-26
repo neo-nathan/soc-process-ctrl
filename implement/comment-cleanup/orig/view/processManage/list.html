@@ -1,0 +1,330 @@
+<!--
+    进程管控 · 白名单 / 黑名单列表页（PL-01 §五；白、黑两页共用这一份模板，文案由 list.js 按 tab 配置用 mustache 填进来）
+    结构：面包屑 → 主体（工具栏 + 高级查询 + 表格，交给 bootstrapTable 排版）→ 悬停说明框（10-23 去掉了底部统计）
+          → 名单进程视图的空容器（PL-04：点「进程」时显示，内容由 bwlistProc.js 画）
+    所有自定义样式都在 css/processManageList.css 里，限定在 .procm-bwlist 下
+    最后是 4 个弹窗：发布确认、删除确认（外壳照策略中心 #delStrategy）、应用到组（外壳照策略中心 #setGroup）（PL-01 TK-5）；
+    创建 / 编辑名单 #procmListModal（名单页自带，逻辑在 bwlistModal.js，PL-02 TK-1；不再借用公共布局里的「新建名单」弹窗）
+-->
+<div class="procm-bwlist">
+    <!-- 面包屑：进程管控 / 白名单（黑名单）；「进程管控」可点，回到进程管控概览（照 demo）
+         地址里要带 g（当前选中的组），概览页拿不到 g 就是空白页（设计 01 §3.3）：点击时由 list.js 照左侧子菜单的取法拼地址（goOverview） -->
+    <div class="procm-crumb">
+        <a href="javascript:void(0);" class="procm-crumb-link js_procm_crumb_overview">进程管控</a>
+        <span class="procm-crumb-sep">/</span>
+        <span class="procm-crumb-cur">{{name}}</span>
+    </div>
+
+    <!-- 主体：工具栏、高级查询区、表格（.log-content 沿用现有页面的高级查询样式） -->
+    <div class="log-content policy-form procm-main">
+        <!-- 工具栏左侧：系统类型筛选（隐藏）+ 创建按钮（bootstrapTable 的 toolbar 选项会把它挪进表格工具栏左边） -->
+        <div id="custom-toolbar" class="form-inline static-toolbar mt5">
+            <!-- 系统类型：一期只有 Linux/信创，10-23 起整块隐藏（外面包一层 span 隐藏，因为 selectric 美化后会在 select 外再套一层，
+                 只隐藏 select 本身藏不住）。下拉还留着：接口照样传 eptype=2，值由 list.js 的 EMPTY_COND.systype 固定给；
+                 二期加 Windows 时：去掉这层 display:none、给创建按钮加回 ml10、把「全部系统类型」选项和 list.js 的固定值一起改回来。 -->
+            <span class="js_procm_systype_wrap" style="display: none;">
+                <select id="procmSysType" class="filter-select js_procm_systype" style="width: 140px;">
+                    <option value="2" selected>Linux/信创</option>
+                </select>
+            </span>
+            <!-- 创建白名单（黑名单）：点了打开本页自带的弹窗 #procmListModal（PL-02 TK-1，逻辑在 bwlistModal.js）；
+                 系统类型下拉隐藏后它是工具栏第一个，去掉了左边距 ml10 -->
+            <a href="javascript:void(0);" class="add termpack-btn-type addIcon w105 js_procm_create">{{createText}}</a>
+        </div>
+
+        <!-- 高级查询区（照 log.html 的 #customSearchBox 写法；bootstrapTable 的「高级搜索」按钮展开 / 收起）
+             点选项（时间范围、发布状态、应用范围、进程变更）点了立刻查；
+             指定日期、名称关键字点「筛选」才查；「重置」清空全部条件（含工具栏的系统类型）
+             每组点选的 data-key = 接口参数名，a 的 val = 参数值（空 = 不限），见 PL-01 §4.2 -->
+        <div id="customSearchBox">
+            <form class="form-horizontal js_procm_form">
+                <div class="control-group">
+                    <label class="control-label">时间范围：</label>
+                    <!-- 按创建时间筛（照 demo；PL-01 §4.2，10-21 用户拍板由「近 7 天 / 近 30 天 / 本月」改）：
+                         本周 = 本周一 ~ 今天（week）、本月 = 本月 1 日 ~ 今天（month）、上月 = 上月 1 日 ~ 上月最后一天（lastmonth） -->
+                    <div class="controls js_procm_chips" data-key="ctime">
+                        <a href="javascript:void(0);" class="active" val="">全部</a>
+                        <a href="javascript:void(0);" val="week">本周</a>
+                        <a href="javascript:void(0);" val="month">本月</a>
+                        <a href="javascript:void(0);" val="lastmonth">上月</a>
+                        <!-- 指定日期：用现有 datetimepicker 选日期（只读输入框，只能从日历里选），点「筛选」才生效 -->
+                        <span class="date procm-date">
+                            <span class="procm-date-label">指定：</span>
+                            <input id="procmTimeStart" type="text" value="" class="input-time js_procm_from" placeholder="开始日期" maxlength="10" autocomplete="off" readonly> —
+                            <input id="procmTimeEnd" type="text" value="" class="input-time js_procm_to" placeholder="结束日期" maxlength="10" autocomplete="off" readonly>
+                        </span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">发布状态：</label>
+                    <!-- 0 = --（空名单）、1 待发布、2 已发布、3 有变更 -->
+                    <div class="controls js_procm_chips" data-key="pubstatus">
+                        <a href="javascript:void(0);" class="active" val="">全部</a>
+                        <a href="javascript:void(0);" val="0">{{emptyName}}</a>
+                        <a href="javascript:void(0);" val="1">待发布</a>
+                        <a href="javascript:void(0);" val="2">已发布</a>
+                        <a href="javascript:void(0);" val="3">有变更</a>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">应用范围：</label>
+                    <!-- 1 = 已应用（组数 > 0）、0 = 未应用 -->
+                    <div class="controls js_procm_chips" data-key="scope">
+                        <a href="javascript:void(0);" class="active" val="">全部</a>
+                        <a href="javascript:void(0);" val="1">已应用</a>
+                        <a href="javascript:void(0);" val="0">未应用</a>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">进程变更：</label>
+                    <!-- add = 有新增、del = 有移除、none = 无变更 -->
+                    <div class="controls js_procm_chips" data-key="delta">
+                        <a href="javascript:void(0);" class="active" val="">全部</a>
+                        <a href="javascript:void(0);" val="add">有新增</a>
+                        <a href="javascript:void(0);" val="del">有移除</a>
+                        <a href="javascript:void(0);" val="none">无变更</a>
+                    </div>
+                </div>
+                <div class="control-group search-box">
+                    <label class="control-label">筛选条件：</label>
+                    <div class="controls js_search">
+                        <!-- 按哪个字段搜：目前只有「名单名称」（照 demo） -->
+                        <span>
+                            <select class="input-small js_procm_field" style="width:110px">
+                                <option value="name" selected>名单名称</option>
+                            </select>
+                        </span>
+                        <input type="text" value="" class="js_procm_kw" maxlength="100" placeholder="请输入名单名称关键字" oninput="RsCore.validateXss(this)" autocomplete="off">
+                        <button type="button" class="btn js_procm_search">筛选</button>
+                        <button type="button" class="btn procm-btn-reset js_procm_reset">重置</button>
+                        <!-- 已筛选出 X 个，共 Y 个：筛选结果条数和名单总数不一样时才显示（照 demo 的 filtering） -->
+                        <span class="procm-filtered js_procm_filtered" style="display: none;">已筛选出 <em class="js_procm_x">0</em> 个，共 <em class="js_procm_y">0</em> 个</span>
+                    </div>
+                </div>
+            </form>
+            <div style="clear:both;overflow:hidden;height:0;"></div>
+        </div>
+
+        <!-- 名单表格：bootstrapTable 渲染；点行（或箭头、名称）在下面插一行操作按钮 -->
+        <table id="tbClient"></table>
+    </div>
+
+    <!-- 悬停说明框（全页只有一个，默认隐藏；list.js 按鼠标所在位置显示、定位；用 fixed 定位，不会被表格的滚动区域截掉）
+         里面两块：表头说明（固定内容，照 demo 表头说明框）、行说明（list.js 按这一行的数据填）；显示哪块由 list.js 切换
+         表头说明直接放在框里（不另存一份再拷贝），免得流转图里 marker 的 id 重复 -->
+    <div class="procm-tip js_procm_tipbox">
+        <div class="procm-tip-head js_procm_tiphead">
+            <div class="procm-tip-intro">发布 = 把当前进程内容定稿；真正下发到终端看「应用范围」：已发布的名单选了应用范围就自动下发。颜色：灰 没进程，蓝 等着发布，绿 定稿了，橙 有没发布的变更。</div>
+            <div class="procm-tip-key procm-tipc0">--</div>
+            <div class="procm-tip-line">还没有任何进程，不能发布；先到「进程」页添加</div>
+            <div class="procm-tip-key procm-tipc1">待发布</div>
+            <div class="procm-tip-line">加了进程（0 +N），还没发布过；点「发布」定稿，之后才能设置应用范围</div>
+            <div class="procm-tip-key procm-tipc2">已发布</div>
+            <div class="procm-tip-line">内容定稿了，没有待发布的增减。应用范围是 -- 的还没下发到终端，选了应用范围就自动下发；改应用范围也自动下发，不用再发布</div>
+            <div class="procm-tip-key procm-tipc3">有变更</div>
+            <div class="procm-tip-line">发布过，之后进程有增减（+N / -N）还没发布，终端上还是旧版本；点「发布」自动下发。有变更时不能改应用范围；已发布的名单至少保留 1 个进程</div>
+            <!-- 状态流转图（照 demo）：箭头上的字 = 触发状态变化的操作 -->
+            <div class="procm-tip-flow">状态流转（箭头上的字 = 触发变化的操作）</div>
+            <svg role="img" aria-label="发布状态流转图" width="446" height="110" viewBox="0 0 446 110" style="display: block; margin-top: 4px;" font-size="11">
+                <defs><marker id="procmStArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#c5ccd6"></path></marker></defs>
+                <g fill="none" stroke="#c5ccd6" stroke-width="1.2" marker-end="url(#procmStArrow)">
+                    <path d="M66 36H110"></path>
+                    <path d="M186 36H230"></path>
+                    <path d="M306 29H350"></path>
+                    <path d="M350 43H306"></path>
+                    <path d="M268 49V72"></path>
+                </g>
+                <g fill="#c5ccd6" text-anchor="middle">
+                    <text x="88" y="26">添加进程</text>
+                    <text x="208" y="26">发布</text>
+                    <text x="328" y="19">进程增减</text>
+                    <text x="328" y="60">发布</text>
+                    <text x="268" y="88">选 / 改应用范围 → 自动下发</text>
+                    <text x="268" y="104" font-size="10">（状态不变；有变更时不能改范围）</text>
+                </g>
+                <g stroke-width="1.2" text-anchor="middle">
+                    <rect x="6" y="23" width="60" height="26" rx="3" fill="#2b3a4d" stroke="#c5ccd6"></rect><text x="36" y="40" fill="#c5ccd6">--</text>
+                    <rect x="110" y="23" width="76" height="26" rx="3" fill="#2b3a4d" stroke="#90caf9"></rect><text x="148" y="40" fill="#90caf9">待发布</text>
+                    <rect x="230" y="23" width="76" height="26" rx="3" fill="#2b3a4d" stroke="#a5d6a7"></rect><text x="268" y="40" fill="#a5d6a7">已发布</text>
+                    <rect x="350" y="23" width="76" height="26" rx="3" fill="#2b3a4d" stroke="#ffcc80"></rect><text x="388" y="40" fill="#ffcc80">有变更</text>
+                </g>
+            </svg>
+        </div>
+        <!-- 行说明：list.js 按这一行的发布状态填（为什么是这个状态 + 下一步做什么，照 demo） -->
+        <div class="procm-tip-row js_procm_tiprow"></div>
+    </div>
+
+    <!-- 名单进程视图的空容器（PL-04 Q1）：点展开行的「进程」时 list.js 隐藏上面的列表、显示它，内容由 bwlistProc.js 用 bwlistProc.html 画 -->
+    <div class="procm-proc-pane js_procm_procpane" style="display:none;"></div>
+
+    <!-- =====================================================================
+         下面 3 个弹窗归 PL-01 TK-5。
+         ① 弹窗放在本页 .procm-bwlist 里面：页面用的是 bootstrap 2.3.2 的弹窗，它只在弹窗没挂在页面上时才挪到 body 下，
+            已经在页面里的弹窗原地显示（只有遮罩 .modal-backdrop 加在 body 上），所以弹窗样式能限定在 .procm-bwlist 下；
+            离开页面时 list.js 先把开着的弹窗关掉（遮罩随之去掉），再随页面一起清掉。
+         ② id 都用 procm 开头，和策略中心的 #delStrategy、#setGroup、#groupTree 不重名，互不影响（策略中心的文件一个不改）。
+         ③ 外壳照策略中心复制；除了改 id（见②）、改文案、加名单页自己的类名和 type="button"，还去掉了这几处：
+            · 去掉策略中心自己的 JS 挂钩（类名 modal_one_handle、alert_drag，按钮 id，取消按钮上的 href、url-data），名单页自己绑事件；
+            · 发布、删除两个确认按钮去掉 data-dismiss="modal"：策略中心点「确定」就关，是为了接着弹二次认证框，
+              名单页按 PL-01 Q1 不做二次认证；确认框由 list.js 在接口成功后关掉，失败时留着、按钮恢复，可以再点或取消；
+            · 这两个确认按钮去掉 btn-del 类（没有样式和脚本用它），删除按钮另加红色（照 demo）。
+         ===================================================================== -->
+
+    <!-- 发布确认（PL-01 §五「发布」；外壳照策略中心删除弹窗 #delStrategy，strategy/index.html:53-68，PL-01 F-13）
+         文案由 list.js 按这一行拼好填进 .js_procm_confirm_text（名单名称已转义） -->
+    <div id="procmPublishModal" class="modal hide delStrategy procm-confirm-modal" tabindex="-1" data-backdrop="static">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+            </button>
+            <h3 class="alert_drag">发布{{name}}</h3>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center">
+                <span class="orderFlowIco js_procm_confirm_text"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="closed js_procm_modal_cancel">取消</button>
+            <button type="button" class="btn btn-primary btn-sure js_procm_publish_ok">发布</button>
+        </div>
+    </div>
+
+    <!-- 删除确认（PL-01 §五「删除」；外壳同上，照 #delStrategy；确定按钮照 demo 删除弹窗用红色、文字「删除」） -->
+    <div id="procmDelModal" class="modal hide delStrategy procm-confirm-modal" tabindex="-1" data-backdrop="static">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+            </button>
+            <h3 class="alert_drag">删除{{name}}</h3>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center">
+                <span class="orderFlowIco js_procm_confirm_text"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="closed js_procm_modal_cancel">取消</button>
+            <button type="button" class="btn btn-primary btn-sure procm-btn-danger js_procm_del_ok">删除</button>
+        </div>
+    </div>
+
+    <!-- 应用到组（PL-01 §五「应用到组」、F-11；设计 01 §7.5、§8.7）
+         外壳照策略中心 #setGroup（strategy/index.html:303-331）；分组树由公共组件 strategy/tree.js 的 createTree 画进 #procmGroupTree，
+         「已经选中 N 组织」的 N 由它写进 #procmGroupTreeCount（selectedSpanId）；显示「继承」勾选框（showInheritBtn:true，照策略中心，可点；风险见 list.js loadGroupTree）。
+         「应用组：」后面的提示文字按设计 7.5 清空（10-23 用户要求；策略中心原文是「没有应用任何策略的组会自动应用对应的默认策略」）；标题由 list.js 填。
+         外面套一层 .strategy_content.policy-form（10-23）：策略中心的弹窗样式都写成「在这两个类名里面才生效」，
+         套上后树行高、组图标、展开箭头、「继承」勾选框的图片样式等跟策略中心同一套规则，不再在本页手抄（以前手抄漏了几块，样子对不上）。
+         这层只包这一个弹窗；.strategy_content 自身带的外边距、最小宽 1000px、白底由 processManageList.css 的 .procm-set-group-scope 抵消，
+         引用 .strategy_content 的脚本只有策略中心自己的 3 个（本页不加载），不会误绑事件。 -->
+    <div class="strategy_content policy-form procm-set-group-scope">
+    <div id="procmSetGroup" class="modal hide set_strategy modal_type_one tree_type_noe procm-set-group" tabindex="-1"
+        data-backdrop="static">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+            </button>
+            <h3 class="alert_drag js_procm_group_title">已应用组</h3>
+        </div>
+        <div class="modal-body">
+            <div class="set_group_main">
+                <div class="set_group_content">
+                    <h3>应用组：</h3>
+                    <div class="tree_main overflow-scroll overflow-scroll-x">
+                        <ul class="c-account-ul">
+                            <li>
+                                <div class="zTreeDemoBackground left">
+                                    <ul id="procmGroupTree" class="ztree"></ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <h4>已经选中<span id="procmGroupTreeCount">0</span>组织</h4>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="closed js_procm_modal_cancel">取消</button>
+            <button type="button" class="btn btn-primary btn-sure btn-del js_procm_group_ok">应用</button>
+        </div>
+    </div>
+    </div><!-- /.strategy_content.policy-form.procm-set-group-scope -->
+
+    <!-- 已应用组（10-23；设计 01 §8.5「应用范围」列：点「组【 N 】」弹出；逻辑在同目录 bwlistUsedGroup.js）
+         外壳照策略中心 strategy/seeGroup/seeGroup.html 复制，改动：
+         · id 换成 procmSeeGroup 开头（#seeGroup → #procmSeeGroup、表格 #see_group → #procmSeeGroupTable，输入框去掉 id 改用类 js_procm_sg_kw）：
+           策略中心把 #seeGroup 放进公共布局的 #seeGroupBox，别的页面打开过后一直留在页面上，用同一个 id 会撞；
+         · 去掉策略中心自己的 JS 挂钩（类名 modal_one_handle、alert_drag，叉按钮的 id），名单页自己绑事件；按钮加 type="button"；
+         · 标题由 bwlistUsedGroup.js 填「已应用组（名单名称）」。
+         外面和「应用到组」弹窗一样套一层 .strategy_content.policy-form.procm-set-group-scope：策略中心弹窗的通用样式
+         （宽 880、查询行、表格高度、工具栏隐藏等）都写成「在 .strategy_content 里面才生效」，套上就跟策略中心同一套；
+         绑在 #seeGroup 编号上的几条样式在 processManageList.css 里换成 #procmSeeGroup 照抄。 -->
+    <div class="strategy_content policy-form procm-set-group-scope">
+    <div id="procmSeeGroup" class="modal hide set_strategy modal_type_one" tabindex="-1" data-backdrop="static">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+            </button>
+            <h3 class="alert_drag js_procm_sg_title">已应用组</h3>
+        </div>
+        <div class="modal-body log-content">
+            <div class="strategy_search bootstrap-table">
+                <div class="strategy_content_header">
+                    <div class="content_left bootstrap-table">
+                        <div class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label">组名称：</label>
+                                <div class="controls js_search search_ip">
+                                    <input placeholder="请输入组名称" type="text" value="" maxlength="50"
+                                        class="js_logtitle rs_search js_procm_sg_kw" oninput="RsCore.validateXss(this)" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="control-group strategy_search_btn">
+                                <div class="controls js_search query_conteny">
+                                    <button type="button" class="btn js_btn_search js_procm_sg_search">查询</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="set_sys">
+                <table id="procmSeeGroupTable"></table>
+            </div>
+        </div>
+    </div>
+    </div><!-- /.strategy_content.policy-form.procm-set-group-scope（已应用组） -->
+
+    <!-- 创建 / 编辑名单（PL-02 TK-1；计划 §五「弹窗外观」「文案」「字段」）
+         ① 外壳照公共布局 layout.html 里的「新建名单」弹窗复制（PL-02 F-7：modal hide、宽 500、.modal-content .content-box 行、
+            名称 input.big-input、系统类型是文字、描述 textarea），视觉和 PL-01 验收过的一致；和上面 3 个弹窗一样放在本页 .procm-bwlist 里原地显示。
+         ② 和原弹窗不同处：id 改 procmListModal，里面的元素用 js_procm_lm_ 开头的类（lm = list modal），不用原弹窗的 id；
+            去掉原弹窗自己的挂钩类 secondm-hide、alert_drag 和行内 z-index（层级同上面 3 个弹窗）；按钮加 type="button"；
+            「备注」改「描述」、名称 maxlength 300 改 100（设计 01 §8.5、§8.8 第 14 条，PL-02 Q3）；描述 maxlength 200 不变；
+            按钮「关闭」「确定」改「取消」「创建 / 保存」，「取消」不带 data-dismiss，由 bwlistModal.js 绑（右上角叉带 data-dismiss，bootstrap 自己关）。
+         ③ 标题、名称标签（白名单名称 / 黑名单名称）、系统类型文字、两个占位、「创建 / 保存」每次打开由 bwlistModal.js 按参数重填，
+            这里写的只是打开之前的默认内容；白 / 黑两份占位文字在 list.js 的配置里。
+         ④ 两个输入框保留 oninput="RsCore.validateXss(this)"（与原弹窗一致：输入时去掉 < > & "）。 -->
+    <div id="procmListModal" class="modal hide" tabindex="-1" data-backdrop="static" style="width:500px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"></button>
+            <h3 class="alert_drag js_procm_lm_title">创建名单</h3>
+        </div>
+        <div class="modal-body modal-content">
+            <div class="content-box">
+                <span class="import-icon">*</span>
+                <label class="js_procm_lm_name_label">名单名称：</label>
+                <input class="big-input js_procm_lm_name" type="text" maxlength="100" oninput="RsCore.validateXss(this)" autocomplete="off" placeholder="">
+            </div>
+            <div class="content-box">
+                <span class="import-icon">*</span>
+                <label>系统类型：</label>
+                <span class="js_procm_lm_systype">Linux/信创</span>
+            </div>
+            <div class="content-box">
+                <label class="w60 mr15" style="vertical-align:18px;">描述：</label>
+                <textarea class="js_procm_lm_desc" placeholder="" maxlength="200" oninput="RsCore.validateXss(this)" style="width:335px;height:50px;"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-cancel js_procm_lm_cancel">取消</button>
+            <button type="button" class="btn btn-sure js_procm_lm_ok">创建</button>
+        </div>
+    </div>
+</div>

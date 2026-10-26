@@ -1,0 +1,865 @@
+/**
+ * 进程管控 · 白名单 / 黑名单列表页样式（PL-01 §3.1；页面 view/processManage/list.html、list.js）
+ * 全部限定在 .procm-bwlist 下，不影响其他页面（离开名单页后这份样式还留在页面里，但没有元素带 .procm-bwlist，所以不生效）。
+ * 文案照 demo「白名单列表.html」；折叠箭头、展开行按钮照策略中心（见第二节）。
+ * 10-25 起字体、颜色、表格行样式、弹窗一律照策略中心（101 上两边逐项量过）：
+ *   策略中心色板 —— 链接 / 主色 #08a7ff、正文 #414656、次要灰 #767b8b、边线 #dcdee0、表格线 #eee9e9、
+ *   绿 rgba(56,186,92)、红 rgba(237,84,82)、橙 #ff9900（css/assetbehaotherstra.css、index.css 里的取值）；
+ *   原来 demo 的那套颜色（#1e88e5、#2e7d32、#e53935、#ef6c00、#1f2d3d 等）已全部换掉。
+ *   策略中心没有对应物的状态（灰色不可点按钮、待移除行、说明框里的浅色字）保留原样式。
+ */
+
+/* =====================================================================
+ * 一、页面骨架：面包屑 + 主体（工具栏、高级查询、表格）（10-23 去掉了底部统计）
+ * ===================================================================== */
+
+/* 整页：占满内容区，主体按它定位
+ *   字体照策略中心整页外壳 .strategy_content 的「font-family: "Microsoft YaHei"」（10-25）。
+ *   页面 body 的字体写成了 "NotoSansHans,Microsoft YaHei"（整串被引号括成一个字体名，系统里没有这个字体，
+ *   实际会退回浏览器默认字体），名单页原来继承的就是它，所以和策略中心字体不一样。
+ *   不整页套 .strategy_content：101 实测套上后高级查询区的按钮、标签、输入框和页面外边距都会被改掉，只取字体这一条。
+ *   按钮、输入框浏览器不继承字体，和策略中心一样仍用公共样式给的字体。 */
+.procm-bwlist {
+    position: relative;
+    height: 100%;
+    background: #fff;
+    font-family: "Microsoft YaHei";
+}
+
+/* 面包屑：进程管控 / 白名单（黑名单）；策略中心没有面包屑，颜色用策略中心色板：灰字、蓝色链接、当前页正文色 */
+.procm-bwlist .procm-crumb {
+    height: 40px;
+    padding: 0 16px;
+    border-bottom: 1px solid #eee9e9;
+    font-size: 14px;
+    line-height: 40px;
+    color: #767b8b;
+}
+.procm-bwlist .procm-crumb .procm-crumb-link {
+    color: #08a7ff;
+    text-decoration: none;
+}
+.procm-bwlist .procm-crumb .procm-crumb-link:hover {
+    color: #08a7ff;
+    text-decoration: underline;
+}
+.procm-bwlist .procm-crumb .procm-crumb-sep {
+    margin: 0 8px;
+}
+.procm-bwlist .procm-crumb .procm-crumb-cur {
+    color: #414656;
+}
+
+/* 主体：面包屑（40px + 1px 边线）下面一直到底（10-23 去掉底部统计后不再给它留 36px）；表格高度 = 它的高度（list.js 取） */
+.procm-bwlist .procm-main {
+    position: absolute;
+    top: 41px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: auto;
+}
+
+/* 名单表格的数据行：点行任何地方都会展开 / 收起（list.js 绑在 tr[data-index] 上），所以整行鼠标都是手型（10-23）。
+ *   只管名单表格 #tbClient 的数据行：展开后插入的按钮行没有 data-index，不受影响；进程视图的表格是另一个 id，也不受影响。
+ *   这条只设在单元格 td 上，里面的元素是继承来的；自己定了鼠标样式的元素（如发布状态的问号说明 cursor: help）照旧用它自己的。 */
+.procm-bwlist #tbClient > tbody > tr[data-index] > td {
+    cursor: pointer;
+}
+
+/* 表格行样式照策略中心（10-25，assetbehaotherstra.css 里以 .strategy_content 开头的规则，选择器换成 .procm-bwlist）：
+ *   ① 鼠标悬停整行浅蓝底 #f5f9ff（原来没写，吃的是 bootstrap-table.css 默认的 #f4f6fd）；「没有数据」那一行悬停不变色；
+ *   ② 每个单元格带 1px 上边线 #eee9e9（原规则还带左 12px 内边距，但两边都被公共样式的 !important 盖成左 16 右 8，所以不抄）。
+ *      有了上边线，展开后的按钮行顶上就有一条线，和策略中心一样（见第二节末「展开中的那一行」）。
+ *   名单表格、进程视图表格、已应用组弹窗的表格都在 .procm-bwlist 里，一起生效。 */
+.procm-bwlist .fixed-table-container tbody tr:hover td {
+    background-color: #f5f9ff;
+}
+.procm-bwlist .fixed-table-container tbody .no_data_found:hover td {
+    background-color: #fff;
+}
+.procm-bwlist .bootstrap-table .table > tbody > tr > td {
+    border-top: 1px solid #eee9e9;
+}
+/* 表格右上角的「列设置」等小按钮：照策略中心「.strategy_content .fixed-table-toolbar .btn-group .btn」上下不留内边距、
+ * 「.strategy_content .fixed-table-toolbar .columns」行高 46px、「.strategy_content .overview-content .fixed-table-toolbar .columns」
+ * 外边距清零（名单页在 .log-content 里，公共样式给了上 3px、左 5px，工具栏会比策略中心高 3px）。
+ * 多带 .columns-right 是为了权重压过公共样式「.log-content .fixed-table-toolbar .columns」，不靠文件加载先后 */
+.procm-bwlist .fixed-table-toolbar .btn-group .btn {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.procm-bwlist .fixed-table-toolbar .columns.columns-right {
+    line-height: 46px;
+    margin: 0;
+}
+
+/* 常用颜色：蓝色数字、-- （策略中心的「---」就是正文色，不是浅灰） */
+.procm-bwlist .procm-blue {
+    color: #08a7ff;
+}
+.procm-bwlist .procm-gray {
+    color: #414656;
+}
+/* 应用范围列的「【 N 】」：颜色照策略中心 .ep_group_blue / .ep_terminal_blue（css/assetbehaotherstra.css），
+ * 这条本身不带 cursor:pointer：「终端【 M 】」不能点；能点的「组【 N 】」另加 .procm-scope-link（见下一条） */
+.procm-bwlist .procm-scope {
+    color: #08a7ff;
+}
+/* 「组【 N 】」10-23 起能点（弹出已应用组）：照 .ep_group_blue 带手型（整行也是手型，鼠标样子不变，这条为的是写明它是个链接） */
+.procm-bwlist .procm-scope-link {
+    cursor: pointer;
+}
+
+/* =====================================================================
+ * 二、折叠箭头、展开行按钮
+ *   从 css/assetbehaotherstra.css:2341-2474 复制（PL-01 F-9），作用域 .strategy_content / .strategy_content_main
+ *   换成 .procm-bwlist，策略中心的样式不动。只复制名单页用得到的（箭头、展开行、编辑 / 应用到组两个图标、红色删除按钮 .del 的颜色），
+ *   ul / li 清零那条原来作用于策略中心整页，这里收窄到展开行里，免得影响本页的下拉菜单。
+ *   「进程」「发布」两个按钮策略中心没有对应图标，用 demo 里的线条图标（颜色和策略中心图标一样 #08a7ff）。
+ *   「删除」是红色（需求「删除一律可点（红色）」、demo「红色图标和文字」）：文字和边框用策略中心 .del 的红色，
+ *   图标用 demo 的垃圾桶线条图标、描成同一个红色（策略中心的 delOwnPolicy.png 是蓝色，不能用）。
+ * ===================================================================== */
+.procm-bwlist .close_tr {
+    background: url("../img/strategy/arrow_down.png") no-repeat;
+}
+.procm-bwlist .open_tr {
+    background: url("../img/strategy/arrow_right.png") no-repeat;
+}
+.procm-bwlist .close_tr,
+.procm-bwlist .open_tr {
+    margin-left: 5px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-size: 20px 20px;
+    background-position: center;
+}
+/* 折叠箭头列（list.js 给这一列的单元格加了 procm-col-arrow）：
+ *   公共样式给表格单元格加了左 16px、右 8px 的内边距（index.css「.c-page-content .bootstrap-table .table>tbody>tr>td」，带 !important），
+ *   36px 宽的列放不下「16px + 5px 外边距 + 20px 箭头」，箭头右半边会伸出本列、被单元格裁掉，
+ *   还正好压着列宽拖拽手柄（colResizable 的 .JColResizer），点箭头中心点到的是手柄，展不开（PL-01 TK-3 返工 F1，101 实测）。
+ *   改法：①这一列不留左右内边距、箭头在列里居中，整个落在本列里；
+ *        ②这一列右边的拖拽手柄（.JCLRgrips 里的第一个 .JCLRgrip）不显示，箭头列本来就不用调宽；其他列的手柄不受影响。 */
+.procm-bwlist .bootstrap-table .table > thead > tr > th.procm-col-arrow,
+.procm-bwlist .bootstrap-table .table > tbody > tr > td.procm-col-arrow {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.procm-bwlist td.procm-col-arrow .open_tr,
+.procm-bwlist td.procm-col-arrow .close_tr {
+    margin: 0 auto;
+}
+.procm-bwlist .JCLRgrips > .JCLRgrip:first-child {
+    display: none;
+}
+.procm-bwlist .append_td {
+    height: 42px;
+    width: 32px;
+    background: #fff;
+}
+.procm-bwlist .append_td ul,
+.procm-bwlist .append_td li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.procm-bwlist .append_td ul {
+    padding-left: 32px;
+    margin-left: -4px;          /* 照策略中心「.strategy_content .append_tr ul」（10-25 补） */
+}
+/* 展开出来的按钮行高 40px：策略中心是 openLine.js 插入这一行时写的行内样式「height: 40px」（101 实测），
+ * 名单页的按钮行由 list.js 插入、带 procm-append-tr，这里用样式给同样的高度（10-25 补；原来只有公共样式给的 34px） */
+.procm-bwlist tr.procm-append-tr {
+    height: 40px;
+}
+.procm-bwlist .append_td ul li:hover {
+    background-color: #f5f9ff;
+    color: #08a7ff;
+}
+.procm-bwlist .append_td ul li {
+    float: left;
+    padding: 0 13px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border: 1px solid #dcdee0;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #414656;
+    cursor: pointer;
+    margin-right: 12px;
+    background-color: #fff;
+}
+.procm-bwlist .append_td ul li span {
+    padding-left: 20px;
+    position: relative;
+}
+/* 展开行按钮压在列宽拖拽手柄上面：手柄（.JCLRgrip，z-index 5）是整张表那么高的竖条，会盖住按钮上 10px 宽的一条，
+ * 点那一条点到的是手柄（和箭头被盖住同一个原因，PL-01 TK-3 返工 F1 的同类问题）。按钮之间的空隙照样能拖列宽 */
+.procm-bwlist .append_td ul li {
+    position: relative;
+    z-index: 6;
+}
+.procm-bwlist .append_td ul li span::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: 0;
+    top: 1px;
+}
+/* 编辑：同策略中心「编辑策略」 */
+.procm-bwlist .append_td ul .procm-op-edit span::after {
+    background: url("../img/strategy/line_edit.png");
+    background-size: 16px;
+}
+/* 进程：列表图标（demo 同款线条图标） */
+.procm-bwlist .append_td ul .procm-op-proc span::after {
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2308a7ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6h16M4 12h16M4 18h10'/%3E%3C/svg%3E") no-repeat;
+    background-size: 16px;
+}
+/* 应用到组：同策略中心「应用到组」 */
+.procm-bwlist .append_td ul .procm-op-group span::after {
+    background: url("../img/strategy/line_group.png");
+    background-size: 16px;
+}
+/* 发布：上传箭头（demo 同款线条图标） */
+.procm-bwlist .append_td ul .procm-op-publish span::after {
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2308a7ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 16V5M7 10l5-5 5 5M4 20h16'/%3E%3C/svg%3E") no-repeat;
+    background-size: 16px;
+}
+/* 删除：红色。文字、边框的颜色照策略中心 .del（assetbehaotherstra.css「.strategy_content_main .append_td ul .del」的
+ * color / border，只取颜色，不取它的 width:64px）；图标是 demo 的垃圾桶线条图标，描成同一个红色 rgb(237,84,82) */
+.procm-bwlist .append_td ul .procm-op-del {
+    color: rgba(237, 84, 82, 1);
+    border: 1px solid rgba(237, 84, 82, 1);
+}
+/* 悬停时仍是红字（本文件上面照策略中心复制的展开行按钮悬停规则会把字变蓝），底色用浅红 */
+.procm-bwlist .append_td ul li.procm-op-del:hover {
+    color: rgba(237, 84, 82, 1);
+    background-color: #fef2f2;
+}
+.procm-bwlist .append_td ul .procm-op-del span::after {
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ed5452' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6'/%3E%3C/svg%3E") no-repeat;
+    background-size: 16px;
+}
+/* 展开中的那一行：去掉下边线（策略中心 openLine.js 展开时给这一行单元格写 border-bottom:#fff，
+ * 这种只写颜色的简写实际效果是「没有边线」，101 实测量出 0px none）。
+ * 按钮行单元格自带的 1px 上边线（第一节「表格行样式」②）还在，所以两行中间仍有一条线，和策略中心一样（10-25；
+ * 原来写成白色实线，表格是合并边框，白线把这条线盖掉了） */
+.procm-bwlist tr.procm-row-open > td {
+    border-bottom-style: none;
+}
+
+/* =====================================================================
+ * 三、列内容
+ * ===================================================================== */
+
+/* 名称：蓝色，像链接，点了展开 / 收起；太长时省略。蓝色照策略中心链接色 #08a7ff（.ep_group_blue），策略中心链接悬停不变色 */
+.procm-bwlist .procm-name {
+    max-width: 260px;
+    color: #08a7ff;
+    text-decoration: none;
+    cursor: pointer;
+}
+.procm-bwlist .procm-name:hover {
+    color: #08a7ff;
+}
+
+/* 进程数：base 后面跟 +N（绿）、-M（红）；绿、红照策略中心 .gree / .red */
+.procm-bwlist .procm-num .procm-add,
+.procm-bwlist .procm-num .procm-del {
+    margin-left: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.procm-bwlist .procm-num .procm-add {
+    color: rgba(56, 186, 92, 1);
+}
+.procm-bwlist .procm-num .procm-del {
+    color: rgba(237, 84, 82, 1);
+}
+
+/* 发布状态：圆点 + 文字；-- 正文色、待发布 蓝、已发布 绿、有变更 橙（状态分色照 demo，颜色换成策略中心色板） */
+.procm-bwlist .procm-pub .procm-st {
+    cursor: help;
+}
+.procm-bwlist .procm-st0 {
+    color: #414656;
+}
+.procm-bwlist .procm-st1 {
+    color: #08a7ff;
+}
+.procm-bwlist .procm-st2 {
+    color: rgba(56, 186, 92, 1);
+}
+.procm-bwlist .procm-st3 {
+    color: #ff9900;
+}
+.procm-bwlist .procm-pub .procm-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    vertical-align: middle;
+}
+
+/* 描述：超长省略（单元格自带省略号样式），悬停看全文（title）；颜色同其他单元格（策略中心「描述」列也是正文色） */
+.procm-bwlist .procm-desc {
+    max-width: 300px;
+    color: #414656;
+}
+
+/* 「发布状态」表头的说明图标：灰色圆底白色 i，悬停变蓝（照 demo） */
+.procm-bwlist .procm-info {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-left: 5px;
+    vertical-align: middle;
+    cursor: help;
+    background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%23a0a8b5'/%3E%3Ccircle cx='8' cy='4.6' r='1.1' fill='%23ffffff'/%3E%3Crect x='7' y='6.8' width='2' height='5.2' rx='1' fill='%23ffffff'/%3E%3C/svg%3E") no-repeat;
+    background-size: 14px;
+}
+.procm-bwlist .procm-info:hover {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%2308a7ff'/%3E%3Ccircle cx='8' cy='4.6' r='1.1' fill='%23ffffff'/%3E%3Crect x='7' y='6.8' width='2' height='5.2' rx='1' fill='%23ffffff'/%3E%3C/svg%3E");
+}
+/* 列设置下拉里也会带上列标题，图标在那里不显示 */
+.procm-bwlist .dropdown-menu .procm-info {
+    display: none;
+}
+
+/* =====================================================================
+ * 四、高级查询区（其余样式沿用现有 .log-content 的公共样式）
+ * ===================================================================== */
+
+/* 「指定：」文字 */
+.procm-bwlist .procm-date .procm-date-label {
+    margin: 0 8px 0 16px;
+    color: #767b8b;
+}
+/* 「重置」：白底灰边（公共样式会把高级查询里的按钮都画成蓝底，这里单独改回来，照 demo） */
+.procm-bwlist .log-content .controls button.procm-btn-reset,
+.procm-bwlist .log-content .controls button.procm-btn-reset:hover,
+.procm-bwlist .log-content .controls button.procm-btn-reset:focus {
+    border-color: #dcdee0;
+    color: #414656;
+    background: #fff;
+}
+.procm-bwlist .log-content .controls button.procm-btn-reset:hover {
+    border-color: #08a7ff;
+    color: #08a7ff;
+}
+/* 已筛选出 X 个，共 Y 个 */
+.procm-bwlist .procm-filtered {
+    margin-left: 12px;
+    color: #767b8b;
+}
+.procm-bwlist .procm-filtered em {
+    font-style: normal;
+    color: #08a7ff;
+}
+
+/* =====================================================================
+ * 五、悬停说明框（发布状态的表头说明、单元格说明；list.js 负责显示和定位）
+ * ===================================================================== */
+.procm-bwlist .procm-tip {
+    display: none;
+    position: fixed;
+    z-index: 1060;
+    width: 360px;
+    padding: 10px 12px;
+    border-radius: 5px;
+    background: #414959da;      /* 底色、圆角照策略中心列表的悬停说明框 .strategy_tips（10-25） */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #fff;
+    text-align: left;
+    white-space: normal;
+    pointer-events: none;
+}
+/* 表头说明宽一些（里面有状态流转图） */
+.procm-bwlist .procm-tip.procm-tip-wide {
+    width: 470px;
+}
+.procm-bwlist .procm-tip .procm-tip-intro {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.procm-bwlist .procm-tip .procm-tip-key {
+    margin-bottom: 4px;
+}
+.procm-bwlist .procm-tip .procm-tip-line {
+    margin-bottom: 6px;
+}
+.procm-bwlist .procm-tip .procm-tip-next {
+    color: #c5ccd6;
+}
+.procm-bwlist .procm-tip .procm-tip-flow {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: #c5ccd6;
+}
+/* 说明框里四种状态的颜色（深底上用浅一号的颜色，照 demo） */
+.procm-bwlist .procm-tip .procm-tipc0 {
+    color: #c5ccd6;
+}
+.procm-bwlist .procm-tip .procm-tipc1 {
+    color: #90caf9;
+}
+.procm-bwlist .procm-tip .procm-tipc2 {
+    color: #a5d6a7;
+}
+.procm-bwlist .procm-tip .procm-tipc3 {
+    color: #ffcc80;
+}
+
+/* =====================================================================
+ * 六、展开行的灰色按钮（PL-01 TK-5：§五 规则表里「灰」的按钮——发布、应用到组）
+ *   样式照 demo「不能点的按钮：整体变灰，鼠标是禁止样式，悬停不变色」（.obtn.off）；原因写在按钮的 title 里（list.js opStates）。
+ *   图标是背景图（策略中心的 png、demo 的线条 svg），统一调灰调淡。点了不做事由 list.js 管。
+ * ===================================================================== */
+.procm-bwlist .append_td ul li.procm-op-off,
+.procm-bwlist .append_td ul li.procm-op-off:hover {
+    color: #b0b8c4;
+    border-color: #e3e6eb;
+    background-color: #fafbfc;
+    cursor: not-allowed;
+}
+.procm-bwlist .append_td ul li.procm-op-off span::after {
+    opacity: 0.45;
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+/* =====================================================================
+ * 七、发布 / 删除确认弹窗、应用到组弹窗（PL-01 TK-5）、已应用组弹窗（10-23）（弹窗在 list.html 里、放在 .procm-bwlist 下）
+ *   页面用的是 bootstrap 2.3.2 弹窗：已经在页面里的弹窗原地显示，不会被挪到 body 下（只有遮罩加在 body 上），
+ *   所以这里的样式都能限定在 .procm-bwlist 下；离开名单页后没有元素带 .procm-bwlist，这些样式不生效。
+ *   确认弹窗照策略中心 #delStrategy：它没有专门的样式，用的都是全局样式（index.css 的 .modal、.orderFlowIco、.modal-footer .closed、
+ *   .modal-footer .btn-sure），这里只补多行文案、红色确定按钮两处。
+ *   应用到组弹窗照策略中心 #setGroup：策略中心的样式写在 assetbehaotherstra.css 里，选择器是 #setGroup 或 .strategy_content 开头。
+ *   10-23 起弹窗外面套了 .strategy_content.policy-form，「.strategy_content …」那批直接生效；这里只抄绑在 #setGroup 编号上的几条
+ *   （编号换成 #procmSetGroup）并抵消外层自带的外边距和最小宽，见本节「应用到组弹窗」；策略中心的样式不动。
+ *   已应用组弹窗照策略中心 #seeGroup，同样外套 .strategy_content.policy-form，只抄绑在 #seeGroup 上的几条
+ *   并压回页面容器 .c-page-content 下公共表格样式带来的差异，见本节末「已应用组弹窗」。
+ * ===================================================================== */
+
+/* 确认弹窗：文案分行（第二句和第一句隔开一点）；删除的提醒句红字（照 demo 删除弹窗） */
+.procm-bwlist .procm-confirm-modal .orderFlowIco .procm-confirm-line {
+    margin-top: 6px;
+}
+.procm-bwlist .procm-confirm-modal .orderFlowIco .procm-confirm-warn {
+    color: rgba(237, 84, 82, 1);
+}
+/* 删除弹窗的「删除」按钮：红色（照 demo 删除弹窗的确定按钮；全局 .modal-footer .btn-sure 是蓝色，这里改成红色）。
+ * 红色用策略中心的 rgba(237,84,82)；策略中心没有红色按钮，悬停用同一红色调深一点（透明度 0.85 叠在白底上） */
+.procm-bwlist .modal-footer .btn.procm-btn-danger,
+.procm-bwlist .modal-footer .btn.procm-btn-danger[disabled]:hover {
+    border-color: rgba(237, 84, 82, 1);
+    color: #fff;
+    background: rgba(237, 84, 82, 1);
+}
+.procm-bwlist .modal-footer .btn.procm-btn-danger:hover,
+.procm-bwlist .modal-footer .btn.procm-btn-danger:focus,
+.procm-bwlist .modal-footer .btn.procm-btn-danger:active {
+    border-color: rgba(237, 84, 82, 0.85);
+    color: #fff;
+    background: rgba(237, 84, 82, 0.85);
+}
+
+/* 应用到组弹窗（10-23 改：不再手抄策略中心的树样式）
+ *   list.html 在弹窗外面套了一层 .strategy_content.policy-form，策略中心「.strategy_content …」「.policy-form input[type=checkbox]」
+ *   那些规则（树行高、组图标、展开箭头、悬停底色、「继承」勾选框图片样式等）直接对本弹窗生效，跟策略中心是同一份规则。
+ *   这里只补两类：
+ *   ① 外层 .strategy_content 自己带的外边距、最小宽 1000px、白底（策略中心整页用的），套在这里会撑出一块空白宽度，抵消掉；
+ *      字体 Microsoft YaHei 不抵消，策略中心的弹窗也继承这个字体。
+ *   ② 策略中心绑在弹窗编号 #setGroup 上的几条（assetbehaotherstra.css 2802-2847、2945-2948、2986-2994），本弹窗编号是
+ *      #procmSetGroup 用不上，原值照抄、选择器只把 #setGroup 换成 #procmSetGroup（权重和原来一样，才压得住
+ *      「.strategy_content .set_strategy 宽 880」「.strategy_content .modal_type_one 左偏 -420」）。 */
+.procm-bwlist .procm-set-group-scope {
+    margin: 0;
+    min-width: 0;
+    background: none;
+}
+/* 弹窗尺寸、内边距（照「.strategy_content #setGroup」「.strategy_content #setGroup .modal-body」） */
+.strategy_content #procmSetGroup {
+    width: 428px;
+    height: 532px;
+    margin-left: -214px;
+}
+.strategy_content #procmSetGroup .modal-body {
+    padding-top: 16px;
+    padding-bottom: 0;
+}
+/* 树区和上下两行文字（照「#setGroup .set_group_main .set_group_content」及其 h3、h4、.tree_main） */
+#procmSetGroup .set_group_main .set_group_content {
+    position: relative;
+    left: 50%;
+    margin-left: -174px;
+    width: 348px;
+}
+#procmSetGroup .set_group_main .set_group_content h3 {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    color: rgba(25, 23, 36, 1);
+    margin: 0;
+    padding-bottom: 8px;
+}
+#procmSetGroup .set_group_main .set_group_content h4 {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 18px;
+    margin: 0;
+    padding-top: 8px;
+    color: rgba(75, 76, 87, 1);
+}
+#procmSetGroup .set_group_main .set_group_content .tree_main {
+    height: 366px;
+    opacity: 1;
+    background: #f7f8fb;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding-left: 39px;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+/* 节点名：策略中心在 #setGroup 里把选中 / 悬停时的蓝字改回普通灰字（照「.strategy_content .tree_type_noe#setGroup …」） */
+.strategy_content .tree_type_noe#procmSetGroup .ztree li a.curSelectedNode .node_name,
+.strategy_content .tree_type_noe#procmSetGroup .ztree li a:hover .node_name {
+    color: #414656;
+    font-weight: normal;
+}
+
+/* 已应用组弹窗（10-23；list.html #procmSeeGroup，逻辑 bwlistUsedGroup.js）
+ *   外壳照策略中心 #seeGroup，外层同样套 .strategy_content.policy-form.procm-set-group-scope（抵消外边距和最小宽的规则在上面），
+ *   宽 880、左偏 -420、查询行、表格工具栏隐藏、单元格内边距等通用样式直接用策略中心「.strategy_content .modal_type_one …」那一套。
+ *   下面几条是策略中心绑在 #seeGroup / #see_group 编号上的（assetbehaotherstra.css 2958-2994、3002-3005、3079-3082），
+ *   原值照抄、选择器只换成名单页的编号，权重和原来一样。 */
+.strategy_content #procmSeeGroup {
+    height: 535px;
+}
+.strategy_content #procmSeeGroup .fixed-table-body {
+    width: 100%;
+    height: 360px;
+}
+.strategy_content #procmSeeGroup .strategy_content_header {
+    padding-bottom: 16px;
+    padding-left: 8px;
+}
+.strategy_content #procmSeeGroup .modal-body {
+    padding: 0px 24px;
+}
+.strategy_content #procmSeeGroup .pagination {
+    margin: 0;
+}
+.strategy_content #procmSeeGroupTable {
+    width: 100% !important;
+}
+#procmSeeGroup .fixed-table-container {
+    height: 40% !important;
+    padding-bottom: 0 !important;
+}
+/* 单元格内边距改回策略中心的「上下 0、左 12」（assetbehaotherstra.css「.strategy_content .bootstrap-table .table > tbody > tr > td」）。
+ *   策略中心的 #seeGroup 挂在公共布局的 #seeGroupBox 里、在页面内容容器 .c-page-content 外面；
+ *   名单页的弹窗在页面里面，公共表格样式 bootstrap-table.css 的「.c-page-content .bootstrap-table … td 左 16px !important」
+ *   权重一样、文件加载在后，会盖过策略中心那条（10-23 101 实测量出左 16）。这里多带一个 #procmSeeGroup 压回去。 */
+.strategy_content #procmSeeGroup .bootstrap-table .table > tbody > tr > td {
+    padding: 0px 0px 0px 12px !important;
+}
+/* 分页栏同理：bootstrap-table.css 的「.c-page-content .fixed-table-pagination 左右 15」「… div.pagination 上 8 下 4」
+ *   只在页面容器里生效，策略中心的弹窗不吃这两条（实测两者都是 0）；不抵消的话分页按钮比策略中心低 8px、往左 15px（10-23 101 实测） */
+.strategy_content #procmSeeGroup .fixed-table-pagination,
+.strategy_content #procmSeeGroup .fixed-table-pagination div.pagination {
+    padding: 0;
+}
+/* 已下发 > 0 绿、未下发 > 0 红（颜色照策略中心 .gree / .red）；名单页这两列不能点，所以不带手型 */
+.strategy_content #procmSeeGroup .procm-sg-yes {
+    color: rgba(56, 186, 92, 1);
+}
+.strategy_content #procmSeeGroup .procm-sg-no {
+    color: rgba(237, 84, 82, 1);
+}
+
+/* =====================================================================
+ * 八、名单进程视图（PL-04 §五；模板 view/processManage/bwlistProc.html，逻辑 bwlistProc.js）
+ *   放在名单页 .procm-bwlist 里的空容器 .procm-proc-pane 中，占满整页（列表那几块隐藏时显示）；
+ *   类名都以 procm-proc- 开头，不改上面已有的样式；尺寸照 demo「白名单进程列表.html」，
+ *   颜色 10-25 起换成策略中心色板（见文件头）。
+ *   面包屑里的链接、分隔符、「当前」沿用第一节的类名 .procm-crumb-link / .procm-crumb-sep / .procm-crumb-cur，
+ *   但第一节的规则限定在列表页的 .procm-crumb 下，这里在 .procm-proc-crumb 下照写一份同样的颜色。
+ * ===================================================================== */
+
+/* 视图容器：盖满整页 */
+.procm-bwlist .procm-proc-pane {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+}
+.procm-bwlist .procm-proc {
+    position: relative;
+    height: 100%;
+}
+
+/* 导航条：返回按钮 + 面包屑（高 44px，照 demo） */
+.procm-bwlist .procm-proc-crumb {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 16px 0 10px;
+    border-bottom: 1px solid #eee9e9;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #767b8b;
+}
+.procm-bwlist .procm-proc-crumb .procm-crumb-link {
+    color: #08a7ff;
+    text-decoration: none;
+}
+.procm-bwlist .procm-proc-crumb .procm-crumb-link:hover {
+    color: #08a7ff;
+    text-decoration: underline;
+}
+.procm-bwlist .procm-proc-crumb .procm-crumb-sep {
+    margin: 0 8px;
+}
+.procm-bwlist .procm-proc-crumb .procm-crumb-cur {
+    color: #414656;
+}
+/* 「返回」：白底灰边，左箭头；边框、圆角、悬停照策略中心展开行按钮（边 #dcdee0、圆角 2px、悬停蓝字蓝边） */
+.procm-bwlist .procm-proc-back {
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
+    margin-right: 12px;
+    padding: 0 12px 0 8px;
+    border: 1px solid #dcdee0;
+    border-radius: 2px;
+    background: #fff;
+    color: #414656;
+    font-size: 13px;
+    text-decoration: none;
+}
+.procm-bwlist .procm-proc-back:hover {
+    border-color: #08a7ff;
+    color: #08a7ff;
+    text-decoration: none;
+}
+.procm-bwlist .procm-proc-back svg {
+    margin-right: 4px;
+}
+/* 名单名：加粗；太长省略 */
+.procm-bwlist .procm-proc-pname {
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #414656;
+    font-weight: 700;
+}
+
+/* 信息条：高 48px，各项之间隔开；刷新靠右 */
+.procm-bwlist .procm-proc-info {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    font-size: 13px;
+    color: #767b8b;
+}
+.procm-bwlist .procm-proc-info-item {
+    margin-right: 36px;
+    white-space: nowrap;
+}
+.procm-bwlist .procm-proc-val {
+    color: #414656;
+}
+.procm-bwlist .procm-proc-st {
+    font-weight: 700;
+    cursor: help;
+}
+.procm-bwlist .procm-proc-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: currentColor;
+    vertical-align: middle;
+}
+/* +N / -M：可以点，按下（正在只看新增 / 待移除）时带边框和浅底 */
+.procm-bwlist .procm-proc-delta {
+    height: 22px;
+    margin-left: 6px;
+    padding: 0 6px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 20px;
+    cursor: pointer;
+}
+.procm-bwlist .procm-proc-delta-add {
+    color: rgba(56, 186, 92, 1);
+}
+.procm-bwlist .procm-proc-delta-del {
+    color: rgba(237, 84, 82, 1);
+}
+.procm-bwlist .procm-proc-delta-add:hover,
+.procm-bwlist .procm-proc-delta-add.procm-proc-delta-on {
+    border-color: rgba(56, 186, 92, 1);
+    background: #e8f5e9;
+}
+.procm-bwlist .procm-proc-delta-del:hover,
+.procm-bwlist .procm-proc-delta-del.procm-proc-delta-on {
+    border-color: rgba(237, 84, 82, 1);
+    background: #fdecea;
+}
+.procm-bwlist .procm-proc-refresh {
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    line-height: 34px;
+    text-align: center;
+    color: #767b8b;
+}
+.procm-bwlist .procm-proc-refresh:hover {
+    color: #08a7ff;
+}
+
+/* 主体：夹在导航条（44px）+ 信息条（48px）下面，到底；表格高度 = 它的高度（bwlistProc.js 取） */
+.procm-bwlist .procm-proc-main {
+    position: absolute;
+    top: 92px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: auto;
+}
+/* 工具栏左边留 8px，和表格对齐（公共样式 bootstrap-table.css 的「#custom-toolbar{padding-left:8px}」是按列表页的 id 写的，照抄一条） */
+.procm-bwlist #procmProcToolbar {
+    padding-left: 8px;
+}
+/* 高级查询表单不留下边距（公共样式 bootstrap-table.css 是按列表页的 #customSearchBox 写的，进程视图用的是 #procmProcSearchBox，照抄一条） */
+.procm-bwlist .log-content #procmProcSearchBox form {
+    margin-bottom: 0;
+}
+/* 指定日期报错：红字 */
+.procm-bwlist .procm-proc-err {
+    margin-left: 8px;
+    color: rgba(237, 84, 82, 1);
+}
+
+/* 表格：进程名称 + 新增 / 移除标签 */
+.procm-bwlist .procm-proc-name .procm-proc-nametext {
+    margin-right: 6px;
+}
+.procm-bwlist .procm-proc-tag {
+    display: inline-block;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 18px;
+    cursor: help;
+}
+.procm-bwlist .procm-proc-tag-new {
+    background: #e8f5e9;
+    color: rgba(56, 186, 92, 1);
+}
+.procm-bwlist .procm-proc-tag-del {
+    background: #fdecea;
+    color: rgba(237, 84, 82, 1);
+}
+/* 文件哈希：前面灰色算法小标签；哈希用等宽字体 */
+.procm-bwlist .procm-proc-algo {
+    display: inline-block;
+    height: 16px;
+    margin-right: 6px;
+    padding: 0 4px;
+    border: 1px solid #dcdee0;
+    border-radius: 2px;
+    color: #767b8b;
+    font-size: 11px;
+    line-height: 16px;
+}
+.procm-bwlist .procm-proc-mono {
+    font-family: Menlo, Consolas, monospace;
+    font-size: 12px;
+}
+/* 操作：移除红字、恢复蓝字 */
+.procm-bwlist .procm-proc-op {
+    color: #08a7ff;
+    text-decoration: none;
+}
+.procm-bwlist .procm-proc-op.procm-proc-op-del {
+    color: rgba(237, 84, 82, 1);
+}
+/* 待移除的行：浅红底、名称删除线、文字变灰（照 demo） */
+.procm-bwlist .bootstrap-table .table > tbody > tr.procm-proc-row-del > td {
+    background: #fff8f8;
+    color: #9aa3b0;
+}
+.procm-bwlist tr.procm-proc-row-del .procm-proc-nametext {
+    text-decoration: line-through;
+}
+
+/* 添加进程弹窗：比名单弹窗宽，放得下 64 位哈希（外壳照 #procmListModal） */
+.procm-bwlist .procm-proc-add {
+    width: 720px;
+    margin-left: -360px;
+}
+.procm-bwlist .procm-proc-add .content-box label {
+    display: inline-block;
+    width: 80px;
+}
+.procm-bwlist .procm-proc-add .big-input {
+    width: 560px;
+}
+/* 进程名、哈希算法：自动识别、只读的一格；没识别出灰字，识别出黑字，哈希认不出红字（照 demo） */
+.procm-bwlist .procm-proc-add .procm-proc-auto {
+    display: inline-block;
+    width: 560px;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #e3e6eb;
+    border-radius: 3px;
+    background: #f5f7fa;
+    box-sizing: border-box;
+    color: #a0a8b5;
+    line-height: 28px;
+    vertical-align: middle;
+}
+.procm-bwlist .procm-proc-add .procm-proc-auto.procm-proc-auto-on {
+    color: #414656;
+}
+.procm-bwlist .procm-proc-add .procm-proc-auto.procm-proc-auto-bad {
+    color: rgba(237, 84, 82, 1);
+}
+.procm-bwlist .procm-proc-add .procm-proc-adderr {
+    padding-left: 98px;
+    color: rgba(237, 84, 82, 1);
+    font-size: 13px;
+}
+.procm-bwlist .procm-proc-add .procm-proc-addnote {
+    margin-top: 6px;
+    padding-left: 98px;
+    color: #767b8b;
+    font-size: 12px;
+}

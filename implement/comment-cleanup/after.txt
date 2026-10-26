@@ -1,0 +1,10 @@
+== PL-03/tests/tk1.adapter.test.js rc=0 :: PASS PNAME 缺失时 kw 筛不报错 ALL PASS (19) 
+== PL-03/tests/tk2.mock.test.js rc=1 ::   diff: 'simple' } 
+== PL-04/tests/pl04.unit.test.js rc=0 :: PASS toProcList 不传 now 也能算（取当前时刻） ALL PASS (24) 
+== releaseWBList/tests/list-publish.test.js rc=1 ::  Node.js v24.16.0 
+== releaseWBList/tests/mock.test.js rc=1 ::   diff: 'simple' } 
+== PL-01/tests/TK-3/tk3.accept.js rc=1 ::  Node.js v24.16.0 
+== PL-01/tests/TK-3/es5check.js rc=1 ::  Node.js v24.16.0 
+== PL-01/tests/TK-5/bjtoday.test.js rc=1 ::  Node.js v24.16.0 
+== PL-01/tests/TK-5/copy-check.accept.js rc=0 ::  执行 77 条：绿 77，红 0 
+== PL-02/TK-1/executor/bwlistModal.selftest.js rc=1 ::  76/77 有红 
