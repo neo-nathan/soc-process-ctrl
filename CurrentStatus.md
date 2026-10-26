@@ -5,7 +5,7 @@
 ## 当前结论
 
 - **项目处于设计收尾、名单页前端编码阶段**：为 SOC 中心新增「终端进程管控」（通过进程策略和黑白名单控制终端进程运行），一期只做 Linux。本项目只写前端，后端由同事在 101 上开发（代码未进 svn）。
-- **名单页前端（PL-01～PL-04 及 10-22～10-23 的切接口、微调）已在 101 实现**：列表、发布、应用到组、「应用范围」列点开的已应用组弹窗都走真接口（mock 已于 10-26 删除）；创建 / 编辑用名单页自带弹窗（不再依赖同事的 `processManage.js`）；名单进程页除移除 / 恢复实测外完成。svn r72065（用户手动提交）已入库 8 个文件；删 mock 后的 `list.js` 待用户再提交。
+- **名单页前端（PL-01～PL-04 及 10-22～10-23 的切接口、微调）已在 101 实现**：列表、发布、应用到组、「应用范围」列点开的已应用组弹窗都走真接口（mock 已于 10-26 删除）；创建 / 编辑用名单页自带弹窗（不再依赖同事的 `processManage.js`）；名单进程页除移除 / 恢复实测外完成。名单页 8 个文件已入 svn（r72065 用户提交、r72066 删 mock）。
 - **应用到组后端写库后报错（P24 ⑯）**，修好前不算可用；名单进程「移除」实测待补跑。
 - **开发设计文档 v1.0**（2026-10-15）按 v0.9 审查修订完成，之后随 demo 和名单页实施多次补充（见其版本记录）；v1.0 本身未独立审查。
 - **核心设计结论**见设计文档第 0 节 K1～K14：沿用 PROCM 产品身份；进程策略复用策略中心；白 / 黑名单是 `POLICY` 里用名单专用产品号的记录，只挂组；名单明细打成 zip 由终端下载。101 后端现用 PROCM 产品号（P24 ⑱），与 K3 不同。
@@ -34,8 +34,8 @@
 | 名单已应用组弹窗 | PASS | 10-23 05:2x EDT：「应用范围」列点「组【 N 】」弹出已应用组（新文件 `bwlistUsedGroup.js`，接口 `Procmanager/showUsedGroup`），外壳照抄策略中心、已下发 / 未下发只显示不可点；101 白名单页实测通过、样式与策略中心逐项一致；黑名单无已应用名单未实测点击（[changelog](changelog/log-20261023-0523-名单已应用组弹窗.md)） |
 | 名单页样式对齐策略中心 | PASS | 10-25 21:4x EDT：字体、颜色（策略中心色板）、表格行悬停 / 边线 / 展开行 / 按钮行高、工具栏、6 个弹窗按标题拖动都照策略中心；101 两边逐项实测一致。策略中心没有对应物的状态色保留；22:2x 自检补测已应用组弹窗真实拖动、× 关闭通过（[changelog](changelog/log-20261025-2146-名单页样式对齐策略中心.md)） |
 | 名单页源码注释精简 | PASS | 10-25 23:1x EDT：9 个文件头部只写用途和约束，删掉日期、修改历史、计划编号、实测过程；去注释等价校验全部 SAME，测试除 `list-publish.test.js` 那条「旧地址只剩 1 句说明」的断言外与改前一致；规范写进 `CLAUDE.md`「SOC 源码注释规范」（[changelog](changelog/log-20261025-2316-名单页源码注释精简.md)） |
-| 名单页文件 101 指纹 | PASS | 2026-10-26 02:03 EDT 删 mock 后上传，实测本地 = 101（sha256 前缀，属主和权限未变）：`list.js` `a9a5fa53`、`list.html` `07105b5f`、`processManageList.css` `939137b9`、`bwlistUsedGroup.js` `52ad323e`、`bwlistAdapter.js` `2b018da3`、`bwlistProc.js` `21cda572`、`bwlistProc.html` `c2eae4e1`、`bwlistModal.js` `62e380cd`（`ESMCenterST/public/esm/` 下）；101 上 `bwlistMock.js` 已删（网页 404）；旧版备份在 101 `/tmp/procm-bak-20261026-0203/`；删 mock 后浏览器未实测（[changelog](changelog/log-20261026-0203-删除名单页mock.md)） |
-| 名单页前端 svn 提交 | IN_PROGRESS | 用户手动提交 r72065（`1.1.17.61`）：`list.js`、`list.html` 改，`bwlistAdapter.js`、`bwlistModal.js`、`bwlistProc.js`、`bwlistProc.html`、`bwlistUsedGroup.js`、`processManageList.css` 新增，提交前用户改了注释（代码与之前等价）。10-26 02:03 删 mock 后本地 `list.js` 是 M，待用户提交；`bwlistMock.js` 不再需要入 svn |
+| 名单页文件 101 指纹 | PASS | 2026-10-26 r72066 提交后复核本地 = 101（sha256 前缀）：`list.js` `a9a5fa53`、`list.html` `07105b5f`、`processManageList.css` `939137b9`、`bwlistUsedGroup.js` `52ad323e`、`bwlistAdapter.js` `2b018da3`、`bwlistProc.js` `21cda572`、`bwlistProc.html` `c2eae4e1`、`bwlistModal.js` `62e380cd`（`ESMCenterST/public/esm/` 下）；101 上 `bwlistMock.js` 已删；10-26 浏览器实测白 / 黑名单、进程视图、离开页面无报错（[changelog](changelog/log-20261026-0203-删除名单页mock.md)） |
+| 名单页前端 svn 提交 | PASS | r72065（用户提交，`1.1.17.61`，提交前用户删了头部注释）+ r72066（`1.1.17.62`，删 mock 引用，同步 `版本控制.txt`）；svn = 本地 = 101，`bwlistMock.js` 已不需要 |
 | 项目治理三机制 | PASS | 2026-10-21 建立，生成器和检查脚本均通过 |
 | 计划实施 skill（implement-plan） | READY | 2026-10-21 移植，已用于 PL-01、PL-02（[changelog](changelog/log-20261021-0430-移植implement-plan技能.md)）；经验见 `insights/` |
 
@@ -49,7 +49,6 @@
 - **101 进程管理页「选中加白 / 加黑」全行被拦（10-22 发现）**：后端 `Procmanager` 返回 `SYSTYPE` = `Linux`，同事的 `processMana.js` 按小写判断，任何行都弹「既有 Windows 又有 Linux/信创」。不是名单页改出来的，真实用户被挡。关闭条件：用户转告同事、前后端写法对齐。
 - **101 后端与设计 / 前端约定的差异（设计 01 12.1 P24 ①～㉑）**：含缺终端数和关键字查询、状态重算错、旧名单脏数据（PID 36～43）、名单用 PROCM 产品号且可重名、移除进程接口、发布实现与设计 7.4 不同、写 Redis 失败仍报成功、删除名单不清 zip、⑰ 不自动替换同组旧名单、⑲ 复用 `Policycenter/getUsedGroupId` 与 4.2 / ACL 冲突、⑳ 开继承会合并组上同为 PROCM 的关联、㉑ 没有名单的下发详情接口；审计日志页没登记 3303（PL-01 F-17）。不阻塞前端，阻塞联调。关闭条件：后端答复后回改设计 12.1。
 - **12.1 高优先级待对齐（P9、P2、P8、P19、P22）**：影响名单报文 `policytype`、库文件格式、上报格式与方式、各库种建库 / 升级脚本；不阻塞设计修订，阻塞编码定稿。关闭条件：客户端 / 产品 / 数据库脚本维护方 / 中心后端答复后回改设计。中、低优先级另 10 项见 12.1。
-- **svn 里的 `list.js` 仍加载已删除的 `bwlistMock.js`**：r72065 的 `list.js` 第 8 行 `require('processManage/bwlistMock')`，而 svn 里没有这个文件，按 svn 部署时名单页打不开（101 已是新版，不受影响）。影响：按 svn 部署的环境；不阻塞当前工作。关闭条件：用户把删 mock 后的 `list.js` 提交 svn。
 - **101 页面实测要用户在 Chrome 登录（常驻）**：Agent 不能输入密码；后端 `My.php:56-63` 对不带正确 `RSTOCKEN` 头的 POST 会销毁会话，确认会话只用 `RsCore.ajax`（insights「101 共享环境联调的坑」）。
 - **101 上留着测试名单的 6 个 zip**：用户 10-22 定先留着，等后端看 P24 ⑫（删除名单不清 zip）时当现场，不要删。关闭条件：后端看完后再清。
 - **概要设计 00 的领导反馈**：不知是否已交、是否认可。关闭条件：用户告知结果。
@@ -58,7 +57,7 @@
 
 1. 补跑 PL-04 S-6、S-7（§六）：101 `acl-login.php.conf` 10-23 北京 13:59 已查到 `delProcFromBW` 登记（ACL 缓存是否刷新未实测），跑通后把 PL-04 计划状态改为完成。
 2. 把 `docs/02-名单进程接口补改清单.md` 和设计 01 12.1 P24（最急 ⑯）一起转给后端同事；同时转 PL-01、PL-02 IMPL 报告第 9 节「给同事的清单」（SYSTYPE 大小写、部署覆盖、名单名称转义、后端按字节限长等）。
-3. 用户把删 mock 后的 `list.js` 提交 svn，并在 101 打开名单页看一眼控制台无报错；另决定 PL-01 计划是否标完成、是否外审。
+3. 用户决定 PL-01 计划是否标完成、是否外审。
 4. 跟进后端答复：⑯ 修好后在 101 重测应用到组和有应用范围的发布，⑰～⑳ 定了回改设计。
 5. 跟进 12.1 高优先级待对齐项答复（定了回改设计、demo、概要设计）；拿到领导对 00 的反馈后修改或移除 00。
 
@@ -79,10 +78,10 @@
 
 ## 仓库现场
 
-- 2026-10-26 02:14 EDT 核实：分支 `main`，HEAD `cf4f6a9`，与 `origin/main` 一致；状态页、设计 01、changelog 与索引、新 insight 与 insights 索引有未提交改动。SOC 源码 svn：r72065 已提交 8 个名单页文件，删 mock 后的 `list.js` 是 M（待用户提交）；`esmCenter/controllers/Index.php` 的 M 不是本项目改动。
+- 2026-10-26 02:22 EDT 核实：分支 `main`，HEAD 为提交「删除名单页 mock：…」（`36477eb`），与 `origin/main` 一致；状态页、changelog 与索引有未提交改动。SOC 源码 svn：名单页文件 r72066 后无改动；`esmCenter/controllers/Index.php` 的 M 不是本项目改动。101 上同事的 `processMana.html` / `processMana.js` 比 svn 新（10-26 北京 13:2x 改），不是本项目文件。
 - 开工仍须实时执行 `git status --short --branch`。
 
 ---
 
-最后更新：2026-10-26 02:14 EDT
+最后更新：2026-10-26 02:22 EDT
 最后精炼：2026-10-23 04:43 EDT
