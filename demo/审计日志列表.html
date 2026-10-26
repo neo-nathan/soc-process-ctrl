@@ -282,7 +282,7 @@ html,body{margin:0}
               <div class="tcell" style="width: 40px; display: flex; justify-content: center;"><input type="checkbox" aria-label="选择" checked="{{ r.checked }}" onChange="{{ r.toggleSel }}"></div>
               <!-- 时间：一行显示"日期 时分秒"，不折行；列宽固定 160px，刚好放下 YYYY-MM-DD HH:MM:SS -->
               <div class="tcell" style="flex: 0 0 160px; white-space: nowrap; color: #5a6475;">{{ r.date }} {{ r.time }}</div>
-              <!-- 进程信息：查不到包名、维护者的显示灰色 "--" -->
+              <!-- 进程信息：查不到包名、维护者的显示灰色 "---" -->
               <div class="tcell ell" title="{{ r.proc }}" style="flex: 105 1 0px; min-width: 0; font-weight: 600;">{{ r.proc }}</div>
               <div class="tcell ell" title="{{ r.md5 }}" style="flex: 136 1 0px; min-width: 0; color: #5a6475; font-family: Menlo, Consolas, monospace; font-size: 12px;">{{ r.md5 }}</div>
               <div class="tcell ell" title="{{ r.path }}" style="flex: 185 1 0px; min-width: 0; color: #5a6475;">{{ r.path }}</div>

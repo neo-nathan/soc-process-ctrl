@@ -1019,7 +1019,7 @@ class Component extends DCLogic {
     const ldSt = st.ld || null;
     const ldName = ldSt && ldSt.kind === 'b' ? '黑名单' : '白名单';
     const ldQ = String(st.ldQ || '').toLowerCase();
-    const ldAll = ldSt ? (ldSt.kind === 'b' ? blOf(ldSt) : wlOf(ldSt)).map((n) => ({ name: n, os: (LIST_META[n] || [])[0] || '--', created: (LIST_META[n] || [])[1] || '--' })) : [];
+    const ldAll = ldSt ? (ldSt.kind === 'b' ? blOf(ldSt) : wlOf(ldSt)).map((n) => ({ name: n, os: (LIST_META[n] || [])[0] || '---', created: (LIST_META[n] || [])[1] || '---' })) : [];
     const ldRows = ldAll.filter((x) => !ldQ || x.name.toLowerCase().indexOf(ldQ) >= 0);   // 名称模糊匹配
     const ldSearch = () => this.setState({ ldQ: String(st.ldKw || '').trim() });
     const ld = {
@@ -1060,7 +1060,7 @@ class Component extends DCLogic {
     const hdQ = st.hdQ || null;                        // 生效的搜索：{ field, text }
     const hdAll = hdSt ? allRows.filter((x) => x.path === hdSt.path && x.md5 === hdSt.md5)   // 路径和文件哈希都相同的终端
       .filter((x, i, a) => a.findIndex((y) => y.host === x.host) === i)   // 一台终端只列一次
-      .map((x) => ({ ...x, mac: MAC[x.host] || '--' })) : [];   // 不再单列「状态」，在线 / 离线只看终端名称前的图标颜色
+      .map((x) => ({ ...x, mac: MAC[x.host] || '---' })) : [];   // 不再单列「状态」，在线 / 离线只看终端名称前的图标颜色
     const hdRows = hdAll.filter((x) => !hdQ || !hdQ.text || String(x[hdQ.field] || '').toLowerCase().indexOf(hdQ.text.toLowerCase()) >= 0);
     const hdSearch = () => this.setState({ hdQ: { field: hdField, text: String(st.hdKw || '').trim() } });
     const hd = {

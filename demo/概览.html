@@ -266,7 +266,7 @@ html,body{margin:0}
               </div>
               <!-- 策略来源：中心下发，纯文字「所在组 / 分配」（概览只能查看，不能点） -->
               <div class="tcell ell" style="flex: 80 1 0px; min-width: 0; text-align: center; color: #333333;">{{ r.source }}</div>
-              <!-- 白名单/黑名单：中心下发的名单，图标 + 纯文字「类型-名称」，如「白名单-办公软件白名单」；没有显示灰色 --
+              <!-- 白名单/黑名单：中心下发的名单，图标 + 纯文字「类型-名称」，如「白名单-办公软件白名单」；没有显示灰色 ---
                    图标：白名单 = 绿色盾牌带对勾 / 黑名单 = 深灰禁止符号
                    鼠标悬停看来源（所在组 = 从分组名单继承 / 分配 = 单独分配给这台终端） -->
               <div class="tcell" title="{{ r.listTip }}" style="flex: 200 1 0px; min-width: 0; display: flex; align-items: center; gap: 6px; color: {{ r.listFg }};">
@@ -558,7 +558,7 @@ class Component extends DCLogic {
     //      source 策略来源 / wl 白名单来源 / bl 黑名单来源，三列取值相同：
     //        所在组 = 策略 / 名单是从终端所在分组的策略 / 名单继承来的
     //        分配   = 策略 / 名单是单独分配给这台终端的，不是继承来的
-    //        空     = 没有（只用于白名单 / 黑名单，显示灰色 --）
+    //        空     = 没有（只用于白名单 / 黑名单，显示灰色 ---）
     //      lists 中心下发的名单名称（一台终端最多 1 个）
     //   中心下发 ≠ 终端上报 是可能的：例如中心刚下发了白名单，终端还没应用（离线 / 未同步），仍在用黑名单
     //   演示数据里 OA-PC-203 就是这种情况：中心下发「办公软件白名单」，终端离线，上报的仍是「拦截·黑」
@@ -715,8 +715,8 @@ class Component extends DCLogic {
         osColor: t.on ? '#1e88e5' : '#b0b8c4',            // 在线蓝 / 离线灰
         mode: STATE[t.state].label,                                   // 策略模式标签文字，如「审计·白」
         modeBg: STATE[t.state].bg, modeFg: STATE[t.state].fg,         // 策略模式标签颜色
-        // 中心下发的名单：类型-名称；没有显示 --（灰）
-        listText: issued(t) ? LIST_TYPE[issued(t)].name + '-' + t.lists : '--',
+        // 中心下发的名单：类型-名称；没有显示 ---（灰）
+        listText: issued(t) ? LIST_TYPE[issued(t)].name + '-' + t.lists : '---',
         listFg: issued(t) ? '#333333' : GRAY,
         hasList: !!issued(t),
         listIco: issued(t) ? LIST_TYPE[issued(t)].ico : '', listIcoColor: issued(t) ? LIST_TYPE[issued(t)].fg : '',   // 名单类型图标
