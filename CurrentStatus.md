@@ -19,7 +19,7 @@
 |---|---|---|
 | 原始需求 | READY | `requirements/requirements-raw.md`；设计过程中已按产品答复同步改过几处（如第 39、122 行） |
 | 页面 demo | READY | `demo/` 下 7 个有效页面（作废页见 `CLAUDE.md`）；10-21 及以前的改动本地与云端已同步（[changelog](changelog/log-20261021-2159-精简进程管理查询与时间范围.md)） |
-| 开发设计文档 01 | IN_PROGRESS | v1.0 + 补充，已同步到 10-23 名单列表「应用范围」点开已应用组弹窗（版本记录、7.5、8.5、8.8 第 18 条、第 9 节、9.1.8、P24 ⑧㉑）；12.1 待对齐 16 项未定；v1.0 未审查 |
+| 开发设计文档 01 | IN_PROGRESS | v1.0 + 补充，已同步到 10-25 名单页样式对齐策略中心（版本记录）；12.1 待对齐 16 项未定；v1.0 未审查 |
 | 概要设计 00（给领导） | IN_PROGRESS | 已写完并自检，10-21 同步高级搜索改动；领导是否认可未知 |
 | v0.9 审查意见落实 | PASS | 已在 v1.0 中落实（[审查报告](review/RV-20261013-0833-PL-06-v0.9.md)） |
 | 编码实现（后端） | IN_PROGRESS | 不在本仓库；同事在 101 开发，未进 svn；与设计有分叉（设计版本记录 H1、P24） |
@@ -32,7 +32,8 @@
 | 名单列表页微调 | PASS | 10-23 03:5x EDT：系统类型下拉隐藏（固定传 `eptype=2`）、删「创建人」列与底部统计、整行手型；04:5x～05:0x「应用范围」列和名单进程页信息条改成策略中心格式 `组【 N 】终端【 M 】`（后端没有终端数，眼下只显示「组【 N 】」）；101 白 / 黑名单页实测通过（[changelog](changelog/log-20261023-0353-名单列表页微调.md)） |
 | 名单应用到组弹窗样式对齐策略中心 | PASS | 10-23 04:4x EDT：弹窗外套 `.strategy_content.policy-form` 直接用策略中心样式、删手抄树样式、提示文字清空；101 与策略中心逐项量样式一致（仅标题行高差 2px）（[changelog](changelog/log-20261023-0441-应用到组弹窗样式对齐策略中心.md)） |
 | 名单已应用组弹窗 | PASS | 10-23 05:2x EDT：「应用范围」列点「组【 N 】」弹出已应用组（新文件 `bwlistUsedGroup.js`，接口 `Procmanager/showUsedGroup`），外壳照抄策略中心、已下发 / 未下发只显示不可点；101 白名单页实测通过、样式与策略中心逐项一致；黑名单无已应用名单未实测点击（[changelog](changelog/log-20261023-0523-名单已应用组弹窗.md)） |
-| 名单页文件 101 指纹 | PASS | 2026-10-23 05:29 EDT 实测本地 = 101（sha256 前缀）：`list.js` `26788196`、`list.html` `c4173da4`、`processManageList.css` `de23dfe8`、`bwlistUsedGroup.js` `17f5ef21`、`bwlistAdapter.js` `3d2f6771`、`bwlistProc.js` `66280e47`、`bwlistProc.html` `d691b52c`、`bwlistMock.js` `192eabbe`、`bwlistModal.js` `5fd801ae`（`ESMCenterST/public/esm/` 下）；全部 svn 未提交 |
+| 名单页样式对齐策略中心 | PASS | 10-25 21:4x EDT：字体、颜色（策略中心色板）、表格行悬停 / 边线 / 展开行 / 按钮行高、工具栏、6 个弹窗按标题拖动都照策略中心；101 两边逐项实测一致。策略中心没有对应物的状态色保留；22:2x 自检补测已应用组弹窗真实拖动、× 关闭通过（[changelog](changelog/log-20261025-2146-名单页样式对齐策略中心.md)） |
+| 名单页文件 101 指纹 | PASS | 2026-10-25 22:20 EDT 实测本地 = 101（sha256 前缀）：`list.js` `871b2406`、`list.html` `03e90c0b`、`processManageList.css` `aea57256`、`bwlistUsedGroup.js` `17f5ef21`、`bwlistAdapter.js` `3d2f6771`、`bwlistProc.js` `0356f959`、`bwlistProc.html` `1dab3411`、`bwlistMock.js` `192eabbe`、`bwlistModal.js` `5fd801ae`（`ESMCenterST/public/esm/` 下）；全部 svn 未提交 |
 | 项目治理三机制 | PASS | 2026-10-21 建立，生成器和检查脚本均通过 |
 | 计划实施 skill（implement-plan） | READY | 2026-10-21 移植，已用于 PL-01、PL-02（[changelog](changelog/log-20261021-0430-移植implement-plan技能.md)）；经验见 `insights/` |
 
@@ -76,10 +77,10 @@
 
 ## 仓库现场
 
-- 2026-10-23 05:31 EDT 核实：分支 `main`，HEAD 为提交「名单已应用组弹窗与名单列表微调文档」，领先 `origin/main` 7 个提交（未推送）；`docs/01-api.md` 是用户自己的改动，未提交。SOC 源码 svn：名单页文件均未提交（含新文件 `bwlistUsedGroup.js`）。
+- 2026-10-25 22:26 EDT 核实：分支 `main`，HEAD 为提交「名单已应用组弹窗与名单列表微调文档」，领先 `origin/main` 7 个提交（未推送）；`docs/01-api.md` 是用户自己的改动，未提交；10-25 样式对齐的设计 01、changelog、新 insight 与两份索引、`implement/styleAlign/` 未提交。SOC 源码 svn：名单页文件均未提交（含新文件 `bwlistUsedGroup.js`）。
 - 开工仍须实时执行 `git status --short --branch`。
 
 ---
 
-最后更新：2026-10-23 05:31 EDT
+最后更新：2026-10-25 22:26 EDT
 最后精炼：2026-10-23 04:43 EDT
