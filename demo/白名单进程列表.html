@@ -166,19 +166,10 @@ html,body{margin:0}
         </div>
         <div>应用范围：<span style="color: #1e88e5;">{{ wl.groupCount }}</span> 个组　<span style="color: #1e88e5;">{{ wl.hostCount }}</span> 台终端</div>
         <div>创建时间：<span style="color: #333333;">{{ wl.created }}</span></div>
-        <!-- 右侧：刷新 / 列设置 -->
-        <div style="margin-left: auto; display: flex; align-items: center; gap: 18px; color: #4a5568;">
-          <button aria-label="刷新" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>
-          </button>
-          <button aria-label="列设置" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16M12 4v16M17 4v16"></path></svg>
-          </button>
-        </div>
       </div>
 
       <!-- 工具栏：左 = 添加进程（新增 / 移除不需要确认，回白名单列表点「发布」就一起下发）
-           右 = 高级搜索（点击展开 / 折叠下方的查询面板，和白名单列表页一样） -->
+           右 = 高级搜索（点击展开 / 折叠下方的查询面板，和白名单列表页一样）/ 刷新 / 列设置 -->
       <div style="display: flex; align-items: center; justify-content: space-between; height: 44px; flex-shrink: 0; padding: 0 10px;">
         <div style="display: flex; align-items: center; gap: 10px;">
           <!-- 添加进程：鼠标移上去提示"手动添加进程"，点击弹出"手动添加进程"弹窗 -->
@@ -191,6 +182,13 @@ html,body{margin:0}
           <!-- 高级搜索：展开时蓝字、箭头朝上 -->
           <button class="advbtn" onClick="{{ toggleAdv }}" aria-expanded="{{ advExpanded }}" style="display: flex; align-items: center; gap: 4px; border: 0; background: transparent; padding: 0; cursor: pointer; font-family: inherit; font-size: 14px; color: {{ advColor }};">高级搜索
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform: rotate({{ advDeg }}deg);"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <!-- 刷新 / 列设置：和高级搜索同一行（同白名单列表页）；刷新同时重取进程行和上面的信息条 -->
+          <button aria-label="刷新" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"></path></svg>
+          </button>
+          <button aria-label="列设置" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #4a5568;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 4v16M12 4v16M17 4v16"></path></svg>
           </button>
         </div>
       </div>
