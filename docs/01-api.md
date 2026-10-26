@@ -12,3 +12,12 @@ Procmanager/delWBList 删除黑白名单，参数：pid，policytype
 Procmanager/showWBList  黑白名单进程，pid，policytype
 
 Procmanager/addProcToWBList  添加进程到黑白名单里面，参数：pid， policytype，propath，filehash，algo
+
+Procmanager/showUsedGroup  获取分组下发状态     参：pid 名单PID（必传）、policytype 2 白名单 / 3 黑名单（可省）、
+*      groupName 分组名模糊查询、offset/limit 分页（默认 0/10）、sort ，order  
+
+Procmanager/releaseWBList  pid,policytype，发布白名单。
+
+Policycenter/getUsedGroupId   已应用组树形结构，只返回应用组ID  应用到组  返回哪些分组用了这个策略
+
+Procmanager/resProcFromBW   参数：id,  policytype，恢复白名单进程。
