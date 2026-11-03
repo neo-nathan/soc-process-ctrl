@@ -52,9 +52,7 @@ select{font-family:inherit;font-size:13px;color:#333333;background:#ffffff;borde
 /* 不能点的按钮：整体变灰，鼠标是禁止样式，悬停不变色 */
 .obtn.off,.obtn.off:hover{color:#b0b8c4;border-color:#e3e6eb;background:#fafbfc;cursor:not-allowed}
 .obtn.off svg{color:#c0c6cf}
-/* 删除按钮：红色图标和文字 */
-.obtn.danger svg{color:#e53935}
-.obtn.danger:hover{border-color:#e53935;color:#e53935}
+/* 删除按钮：和策略中心一样，跟其他按钮同样式（不标红） */
 /* 行首的展开 / 收起箭头：收起时朝右，展开时朝下（截图 16） */
 .chev{width:36px;height:40px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#8a94a6;cursor:pointer;background:transparent;border:0;padding:0}
 .chev:hover{color:#1e88e5}
@@ -380,7 +378,7 @@ html,body{margin:0}
                    能点的 = 正常按钮；不能点的 = 灰色按钮（鼠标移上去说明原因）
                      发布        待发布 / 有变更 能点；空黑名单、没有变更、发布后会变成 0 的灰色
                      应用到组/终端 只有"已发布"能点；选完 / 改完自动下发
-                     删除        随时能点（红色），点了先弹确认框 -->
+                     删除        随时能点，点了先弹确认框 -->
             <template data-sc="if" value="{{ r.open }}" hint-placeholder-val="{{ false }}">
               <div class="subrow" style="display: flex; align-items: center; gap: 10px; height: 52px; padding-left: 92px; box-sizing: border-box; background: #eef1f5; border-bottom: 1px solid #e3e6eb; box-shadow: inset 3px 0 0 #1e88e5;">
                 <!-- 编辑：铅笔 + 下划线 -->
@@ -433,7 +431,7 @@ html,body{margin:0}
                   </span>
                 </template>
                 <!-- 删除：垃圾桶。随时可以删；点了先弹确认框，已下发的名单会提示要向终端下发清除策略 -->
-                <a href="#" class="obtn danger" onClick="{{ r.askDel }}" title="{{ r.delTip }}">
+                <a href="#" class="obtn" onClick="{{ r.askDel }}" title="{{ r.delTip }}">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"></path></svg>
                   <span>删除</span>
                 </a>
@@ -521,15 +519,15 @@ html,body{margin:0}
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef6c00" stroke-width="2" style="flex-shrink: 0;"><path d="M12 9v4M12 17h.01M10.3 3.9L2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
         <div style="font-size: 14px; color: #333333; line-height: 22px;">
           <div>确定删除「{{ delName }}」吗？删除后不能恢复。</div>
-          <!-- 已下发到终端的名单：多一句提醒 -->
-          <template data-sc="if" value="{{ delApplied }}" hint-placeholder-val="{{ true }}">
-            <div style="margin-top: 6px; color: #e53935;">该名单已下发到 {{ delHosts }} 台终端，删除后中心会向这些终端下发清除策略，终端上的名单会一起清掉。</div>
+          <!-- 已应用到组的名单：多一句橙色提醒（名单只挂组，不写终端数） -->
+          <template data-sc="if" value="{{ delHasGc }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top: 6px; color: #fe962a;">该名单已应用到 {{ delGc }} 个组，删除后，分组所属终端的黑名单会被清理掉</div>
           </template>
         </div>
       </div>
       <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 22px 20px;">
         <button onClick="{{ closeDel }}" class="cbtn" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #ffffff; border: 1px solid #d5d9e0; border-radius: 3px; color: #333333; font-size: 14px; font-family: inherit; cursor: pointer;">取消</button>
-        <button onClick="{{ confirmDel }}" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #e53935; border: 1px solid #e53935; border-radius: 3px; color: #ffffff; font-size: 14px; font-family: inherit; cursor: pointer;">删除</button>
+        <button onClick="{{ confirmDel }}" style="display: flex; align-items: center; justify-content: center; height: 32px; padding: 0 22px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 3px; color: #ffffff; font-size: 14px; font-family: inherit; cursor: pointer;">确定</button>
       </div>
     </div>
   </div>
@@ -918,6 +916,8 @@ class Component extends DCLogic {
     const delName = delRow ? delRow.name : '';
     const delApplied = !!(delRow && delRow.applied);
     const delHosts = delRow ? delRow.hc : 0;
+    const delGc = delRow ? delRow.gc : 0;          // 应用到几个组（确认框提醒句用）
+    const delHasGc = delGc > 0;
     const closeDel = () => this.setState({ delAsk: '' });
     const confirmDel = () => { const d = st0.deleted || {}; this.setState({ deleted: { ...d, [delName]: true }, delAsk: '' });
       showToast(delApplied ? '已删除「' + delName + '」，已向 ' + delHosts + ' 台终端下发清除策略' : '已删除「' + delName + '」'); };
@@ -1067,7 +1067,7 @@ class Component extends DCLogic {
     // Windows → Windows；Linux/信创 → Linux/信创；没筛选时停在"请选择"
     const dlgOsDefault = os === '全部系统类型' ? '请选择系统类型' : (os === 'Windows' ? 'Windows' : 'Linux/信创');
     const dlgOsOpts = ['请选择系统类型', 'Windows', 'Linux/信创'].map((label) => ({ label, sel: label === dlgOsDefault }));
-    return { menus, delOpen, delName, delApplied, delHosts, closeDel, confirmDel, advOpen, toggleAdv, advExpanded, advColor, advDeg, osOpts, pickOs, deltaChips, pubChips, scopeChips, timeChips, fieldOpts, kwPlaceholder, draft, inKw, inFrom, inTo, inField, openPicker, pickedFrom, pickedTo, dateErr, hasDateErr, doQuery, doReset, allTotal, filtering, userRows, userEmpty, total, procTotal, dlgOpen, f, openCreate, closeDlg, createList, dlgOsOpts, toast, toastOn, toastOk, toastWarn };
+    return { menus, delOpen, delName, delApplied, delHosts, delGc, delHasGc, closeDel, confirmDel, advOpen, toggleAdv, advExpanded, advColor, advDeg, osOpts, pickOs, deltaChips, pubChips, scopeChips, timeChips, fieldOpts, kwPlaceholder, draft, inKw, inFrom, inTo, inField, openPicker, pickedFrom, pickedTo, dateErr, hasDateErr, doQuery, doReset, allTotal, filtering, userRows, userEmpty, total, procTotal, dlgOpen, f, openCreate, closeDlg, createList, dlgOsOpts, toast, toastOn, toastOk, toastWarn };
   }
 }
 
