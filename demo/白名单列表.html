@@ -518,11 +518,11 @@ html,body{margin:0}
       <div style="display: flex; gap: 12px; padding: 22px 24px 8px;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef6c00" stroke-width="2" style="flex-shrink: 0;"><path d="M12 9v4M12 17h.01M10.3 3.9L2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
         <div style="font-size: 14px; color: #333333; line-height: 22px;">
-          <div>确定删除「{{ delName }}」吗？删除后不能恢复。</div>
-          <!-- 已应用到组的名单：多一句橙色提醒（名单只挂组，不写终端数） -->
+          <!-- 已应用到组的名单：橙色提醒放第一行（名单只挂组，不写终端数），确认句在下面 -->
           <template data-sc="if" value="{{ delHasGc }}" hint-placeholder-val="{{ true }}">
-            <div style="margin-top: 6px; color: #fe962a;">该名单已应用到 {{ delGc }} 个组，删除后，组内终端的白名单会被清除。</div>
+            <div style="color: #fe962a; margin-bottom: 6px;">该名单已应用到 {{ delGc }} 个组，删除后，组内终端的白名单会被清除。</div>
           </template>
+          <div>确定删除「{{ delName }}」吗？删除后不能恢复。</div>
         </div>
       </div>
       <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 14px 22px 20px;">
