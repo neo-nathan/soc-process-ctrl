@@ -1,0 +1,5 @@
+2026-11-05 09:24:19<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793841859]
+2026-11-05 09:24:19<768731, 768744> [CFileDownload]: CheckFile[/opt/BDFZ/RAV/data/pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip]md5[61E13DDC432E85D17D41595BA24C85E2]
+2026-11-05 09:24:19<768731, 768744> [CFileDownload]: File[/opt/BDFZ/RAV/data/pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip]is exist and md5 is diff
+2026-11-05 09:24:19<768731, 768744> CFileDownload::ResponTask[{"id":"__procaudit_pwlib2_1793841859","result":"文件已存在,md5不同","savepath":"/opt/BDFZ/RAV/data/pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip","status":6}]
+2026-11-05 09:24:19<768731, 768826> [procaudit]: policy downlib, parse file failed -->6,/opt/BDFZ/RAV/data/pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip

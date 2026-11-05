@@ -1,0 +1,69 @@
+== 终端时间 2026-11-05 09:18:49
+== pwdata（md5 大小 修改时间 文件）
+82f0e68f35ec864955f212ca24566e73 641 2026-11-03 16:01:22.091463 pwdata/537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip
+aee20e1acbd2512ed239ca6912fd6bdd 385 2026-11-04 16:01:31.326776 pwdata/6B29E9E2CEDC09E8A669EEFE11C77D3F_aarch64.zip
+be50514d17e6142668d799789a801b7a 385 2026-11-04 15:56:30.282548 pwdata/916380A6C9BC20C162FD8FA3B7A62A51_aarch64.zip
+5ab74b92eb8d20784b4c63f051adb1e6 385 2026-11-04 14:03:52.627624 pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip
+2787292a967f227369f182b7a1350bd2 385 2026-11-04 15:10:52.016120 pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip
+693a232fc0ae5c7c28ee16b13b66d1ff 385 2026-11-04 14:08:52.671837 pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip
+fab1ce8674116848b74b4d6073d385cd 557 2026-11-04 15:21:28.089045 pwdata/F2FF19EE8F7865F929087AB5388BD0C7_aarch64.zip
+24b5b1b99c20416d72f9039d5c9ccacb 385 2026-11-04 16:28:27.497459 pwdata/FFB55977CD6E80EB319E19421B42DE08_aarch64.zip
+8cf18a7e2b901b58cf59b62c936799f7 414547 2026-11-04 15:43:40.103 pwdata/fs.lib
+d76943d8ed707371c8274b919e7e3da9 718 2026-11-04 16:39:19.542609 pwdata/logfs.lib
+8026c0b55c249481230372e5a09f6774 141448 2026-11-03 16:01:27.003 pwdata/pkg.lib
+23a708b5a92503b2f8037599d30d3a0a 1064 2026-11-03 16:01:22.07546 pwdata/procwls.cfg
+77d14291ffa7c304ab2fe045d7c69763 3937777 2026-11-03 16:01:24.93 pwdata/procwls.lib
+4583655f7eb9b2fa633b2517bc67e390 373 2026-11-04 16:39:20.662625 pwdata/procwlu.lib
+b4e95d7bf1ba584da359e84af766c843 860251 2026-11-03 16:01:24.759 pwdata/PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.zip
+== pwdata/procwlu.lib 原文
+{"__lib":{"name":"F2FF19EE8F7865F929087AB5388BD0C7","type":2,"level":2,"version":"17936901662502","arch":"aarch64"},"path":[{"package":"","hash":[{"algo":0,"md5":"0CDA20D07CF339BBB900A7B9AE99F965"},{"algo":0,"md5":"0F8491603FDF9CCE69576BBCE239FE8B"}]},{"package":"kernel-devel","hash":[{"algo":8,"md5":"0DB6E1F3E9EDE00534CF286EEFC20429FEF0D1096B241C361746F20CF9090567"}]}]}
+== ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3
+--- ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/4ADF36F8-F122-5341-BB6F-71BC9E44B9A7.rsdata aff745b6b00a9c68982ece5040e34cf3 2026-11-04 16:39:19
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <enable>1</enable>
+    <auditmode>2</auditmode>
+    <notify>1</notify>
+    <uptimer>70</uptimer>
+  </procaudit>
+</root>
+
+--- ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/EEBBB044-0F88-3343-AC5F-D920E68225E4.rsdata 839ca9ae52d9f83111ad435376e49832 2026-11-04 16:39:19
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <userlibs>
+      <type>2</type>
+      <dpath>ruc/libs/b/u</dpath>
+      <version>17936901662502</version>
+      <platform>linux</platform>
+      <name>F2FF19EE8F7865F929087AB5388BD0C7</name>
+      <lib>
+        <md5>FAB1CE8674116848B74B4D6073D385CD</md5>
+        <arch>aarch64</arch>
+      </lib>
+      <lib>
+        <md5>9FB5AD2B9ECC9721A833A749EEA89904</md5>
+        <arch>loongarch64</arch>
+      </lib>
+      <lib>
+        <md5>C8B0A8D4CB89AA2A20A4A606A4A19A7F</md5>
+        <arch>mips64</arch>
+      </lib>
+      <lib>
+        <md5>87FEEFDFE939558EA657615957397C02</md5>
+        <arch>x86_64</arch>
+      </lib>
+      <lib>
+        <md5>27286A6A735BCFD2C40CF1C9CF5CABF8</md5>
+        <arch>loongarch64_3c6000</arch>
+      </lib>
+      <lib>
+        <md5>ABC0B34CB474FF68DAE569336D790E18</md5>
+        <arch>sw_9916</arch>
+      </lib>
+    </userlibs>
+  </procaudit>
+</root>
+

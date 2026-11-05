@@ -1,0 +1,38 @@
+{
+  "params": {
+    "pname": [
+      "PL05测试-复现黑"
+    ],
+    "description": [
+      ""
+    ],
+    "policytype": [
+      "3"
+    ],
+    "systype": [
+      "2"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "创建成功。"
+    },
+    "data": {
+      "PID": 53,
+      "PGUID": "227FDE5750553CB2A45A8440A4EFDF09",
+      "POLICYVER": "h179384154926.57",
+      "PROC": {
+        "SOURCE": "none",
+        "FETCHED": 0,
+        "INSERTED": 0,
+        "SKIPPED": 0,
+        "FAILED": 0,
+        "INVALID": 0,
+        "TOTAL": 0,
+        "DETAIL": []
+      }
+    }
+  }
+}

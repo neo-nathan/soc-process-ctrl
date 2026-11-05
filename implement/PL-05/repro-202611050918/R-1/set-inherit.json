@@ -1,0 +1,33 @@
+{
+  "params": {
+    "id": [
+      "84156037"
+    ],
+    "name": [
+      "PL05测试组"
+    ],
+    "desp": [
+      ""
+    ],
+    "parent_id": [
+      "1"
+    ],
+    "inherit": [
+      "0"
+    ],
+    "oldname": [
+      "PL05测试组"
+    ],
+    "oldinherit": [
+      "1"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "修改组成功。"
+    },
+    "data": null
+  }
+}

@@ -1,0 +1,72 @@
+== 终端时间 2026-11-05 09:23:52
+== pwdata（md5 大小 修改时间 文件）
+82f0e68f35ec864955f212ca24566e73 641 2026-11-03 16:01:22.091463 pwdata/537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip
+aee20e1acbd2512ed239ca6912fd6bdd 385 2026-11-04 16:01:31.326776 pwdata/6B29E9E2CEDC09E8A669EEFE11C77D3F_aarch64.zip
+be50514d17e6142668d799789a801b7a 385 2026-11-04 15:56:30.282548 pwdata/916380A6C9BC20C162FD8FA3B7A62A51_aarch64.zip
+5ab74b92eb8d20784b4c63f051adb1e6 385 2026-11-04 14:03:52.627624 pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip
+2787292a967f227369f182b7a1350bd2 385 2026-11-04 15:10:52.016120 pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip
+61e13ddc432e85d17d41595ba24c85e2 385 2026-11-05 09:19:38.740939 pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip
+693a232fc0ae5c7c28ee16b13b66d1ff 385 2026-11-04 14:08:52.671837 pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip
+fab1ce8674116848b74b4d6073d385cd 557 2026-11-04 15:21:28.089045 pwdata/F2FF19EE8F7865F929087AB5388BD0C7_aarch64.zip
+24b5b1b99c20416d72f9039d5c9ccacb 385 2026-11-04 16:28:27.497459 pwdata/FFB55977CD6E80EB319E19421B42DE08_aarch64.zip
+e271e4105dec83af3d0f2f0b4aee186f 414830 2026-11-05 09:20:09.909 pwdata/fs.lib
+01e27890a13994a1d679b0e1d48032c7 836 2026-11-05 09:23:41.356333 pwdata/logfs.lib
+8026c0b55c249481230372e5a09f6774 141448 2026-11-03 16:01:27.003 pwdata/pkg.lib
+23a708b5a92503b2f8037599d30d3a0a 1064 2026-11-03 16:01:22.07546 pwdata/procwls.cfg
+77d14291ffa7c304ab2fe045d7c69763 3937777 2026-11-03 16:01:24.93 pwdata/procwls.lib
+3db2d0bcb792cdb255c4d1a896ec19fc 201 2026-11-05 09:19:38.900941 pwdata/procwlu.lib
+b4e95d7bf1ba584da359e84af766c843 860251 2026-11-03 16:01:24.759 pwdata/PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.zip
+== pwdata/procwlu.lib 原文
+{"__lib":{"name":"CDEB6541665CEC24CBAE1622D615135B","type":1,"level":2,"version":"17938415456001","arch":"aarch64"},"path":[{"package":"","hash":[{"algo":0,"md5":"f076494fa14845f1ef19bf647bed4432"}]}]}
+== ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3
+--- ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/4ADF36F8-F122-5341-BB6F-71BC9E44B9A7.rsdata aff745b6b00a9c68982ece5040e34cf3 2026-11-04 16:39:19
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <enable>1</enable>
+    <auditmode>2</auditmode>
+    <notify>1</notify>
+    <uptimer>70</uptimer>
+  </procaudit>
+</root>
+
+--- ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/EEBBB044-0F88-3343-AC5F-D920E68225E4.rsdata 542f7ae74a8b41d9fc4d7b67cdaf9c56 2026-11-05 09:19:37
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <userlibs>
+      <type>1</type>
+      <dpath>ruc/libs/w/u</dpath>
+      <version>17938415456001</version>
+      <platform>linux</platform>
+      <name>CDEB6541665CEC24CBAE1622D615135B</name>
+      <lib>
+        <md5>61E13DDC432E85D17D41595BA24C85E2</md5>
+        <arch>aarch64</arch>
+      </lib>
+      <lib>
+        <md5>811AB5AA290DC2B7B962FF53D98E190A</md5>
+        <arch>loongarch64</arch>
+      </lib>
+      <lib>
+        <md5>4C5F3C5C43E63CD0BE2E123575BCED58</md5>
+        <arch>mips64</arch>
+      </lib>
+      <lib>
+        <md5>15869198856BA31FA51730E1ED9AB136</md5>
+        <arch>x86_64</arch>
+      </lib>
+      <lib>
+        <md5>10A6CA242FE7136CBA219D56D11C929D</md5>
+        <arch>loongarch64_3c6000</arch>
+      </lib>
+      <lib>
+        <md5>F52FA8DB1D1388A675C3CA078639351F</md5>
+        <arch>sw_9916</arch>
+      </lib>
+    </userlibs>
+  </procaudit>
+</root>
+
+== pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip 解开后的 json
+（终端上没有这个 zip 或解不开）

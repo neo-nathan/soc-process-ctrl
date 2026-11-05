@@ -1,0 +1,17 @@
+[
+  {
+    "name": "终端 procwlu.lib 是复现白、含 rp-w-in 的 MD5",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "对照：名单外 rp-w-out 记「不在白名单」",
+    "status": "PASS",
+    "note": "1 条：2026-11-05 09:20:09 ACTIONREASON=2 PROCACTION=0 HASH=96A44B6417BA38666E6C317176342CD4；等 16 秒"
+  },
+  {
+    "name": "白名单里的 rp-w-in 不应出日志（问题 B）",
+    "status": "FAIL",
+    "note": "2 条：2026-11-05 09:20:07 ACTIONREASON=2 PROCACTION=0 HASH=F076494FA14845F1EF19BF647BED4432；2026-11-05 09:21:58 ACTIONREASON=2 PROCACTION=0 HASH=F076494FA14845F1EF19BF647BED4432"
+  }
+]

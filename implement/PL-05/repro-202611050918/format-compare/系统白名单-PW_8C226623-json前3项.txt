@@ -1,0 +1,57 @@
+来源：14.15 web/ruc/libs/w/sys/PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.zip（md5 b4e95d7b…，与 13.18 删前 pwdata 里同名文件 md5 一致），包内文件 PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.json
+顶层键数量 12038 （__lib + 每个程序路径一个键）
+{
+ "__lib": {
+  "name": "PW_8C226623-B7F5-558E-BE81-CA8F2BB41467",
+  "type": 1,
+  "level": 1,
+  "version": "1.0",
+  "arch": "aarch64",
+  "uptime": 1793245552,
+  "oss": [
+   "openEuler 24.03 (LTS-SP1)"
+  ]
+ },
+ "/bin/setserial": [
+  {
+   "algo": 8,
+   "lmd5": "EF0ACE92D52B07679B8DAEE9FD7D63F0E2DB2DBA9C6E398B77BC900995E69188",
+   "size": 68856,
+   "package": "setserial-2.17-53.oe2403sp1.aarch64"
+  },
+  {
+   "algo": 0,
+   "lmd5": "4313C0CE24DF24DDBCF0A3047147497D",
+   "size": 68856,
+   "package": "setserial-2.17-53.oe2403sp1.aarch64"
+  }
+ ],
+ "/boot/efi/EFI/BOOT/BOOTAA64.EFI": [
+  {
+   "algo": 8,
+   "lmd5": "683932FFF02EF4939FA5EB598AA2DA52950609ECC2503AC31F3758B789556B83",
+   "size": 977320,
+   "package": "shim-15.7-15.oe2403sp1.aarch64"
+  },
+  {
+   "algo": 0,
+   "lmd5": "25639AFBC32AC458059F3ECEE28CCA73",
+   "size": 977320,
+   "package": "shim-15.7-15.oe2403sp1.aarch64"
+  }
+ ],
+ "/boot/efi/EFI/BOOT/fbaa64.efi": [
+  {
+   "algo": 8,
+   "lmd5": "E7B706E9271C44C415637AC76A66AFE738E2BF78A9A02EB72FE9F6743539EB06",
+   "size": 92816,
+   "package": "shim-15.7-15.oe2403sp1.aarch64"
+  },
+  {
+   "algo": 0,
+   "lmd5": "DBB34C6B8B7B70E7FCAD9758A3B126C5",
+   "size": 92816,
+   "package": "shim-15.7-15.oe2403sp1.aarch64"
+  }
+ ]
+}

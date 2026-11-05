@@ -1,0 +1,57 @@
+[
+  {
+    "name": "13.18 生成测试程序",
+    "status": "PASS",
+    "note": "rp-w-in=F076494FA14845F1EF19BF647BED4432，rp-w-out=96A44B6417BA38666E6C317176342CD4，rp-a-new=31574EA984C3B1949157D3AF84100A82，rp-b-in=0B32EB729C730CCC0F6E3B0A03DE1012，rp-b-out=27B7B026F67FA81F0F307A13A9A2BCFC"
+  },
+  {
+    "name": "根管理组进程策略是审计模式",
+    "status": "PASS",
+    "note": "auditmode=2 uptimer=70"
+  },
+  {
+    "name": "PL05测试-复现白 进程行",
+    "status": "FAIL",
+    "note": "[[\"/tmp/pl05/rp-w-in\",\"f076494fa14845f1ef19bf647bed4432\",\"0\",\"1\"]]"
+  },
+  {
+    "name": "PL05测试-复现白 发布、中心 zip 一致",
+    "status": "PASS",
+    "note": "PID 52 PGUID CDEB6541665CEC24CBAE1622D615135B version 17938415456001；zip 内容 CDEB6541665CEC24CBAE1622D615135B.json {\"__lib\":{\"name\":\"CDEB6541665CEC24CBAE1622D615135B\",\"type\":1,\"level\":2,\"version\":\"17938415456001\",\"arch\":\"aarch64\"},\"path\":[{\"package\":\"\",\"hash\":[{\"algo\":0,\"md5\":\"f076494fa14845f1ef19bf647bed4432\"}]}]}"
+  },
+  {
+    "name": "PL05测试-复现黑 进程行",
+    "status": "FAIL",
+    "note": "[[\"/tmp/pl05/rp-b-in\",\"0b32eb729c730ccc0f6e3b0a03de1012\",\"0\",\"1\"]]"
+  },
+  {
+    "name": "PL05测试-复现黑 发布、中心 zip 一致",
+    "status": "PASS",
+    "note": "PID 53 PGUID 227FDE5750553CB2A45A8440A4EFDF09 version 17938415540808；zip 内容 227FDE5750553CB2A45A8440A4EFDF09.json {\"__lib\":{\"name\":\"227FDE5750553CB2A45A8440A4EFDF09\",\"type\":2,\"level\":2,\"version\":\"17938415540808\",\"arch\":\"aarch64\"},\"path\":[{\"package\":\"\",\"hash\":[{\"algo\":0,\"md5\":\"0b32eb729c730ccc0f6e3b0a03de1012\"}]}]}"
+  },
+  {
+    "name": "测试组",
+    "status": "PASS",
+    "note": "组号 84156037 ISINHERIT=0"
+  },
+  {
+    "name": "测试组挂上复现白",
+    "status": "PASS",
+    "note": "[[\"174\",\"3\",\"进程管理_默认策略\",\"NULL\"],[\"176\",\"52\",\"PL05测试-复现白\",\"2\"]]"
+  },
+  {
+    "name": "13.18 移入测试组",
+    "status": "PASS",
+    "note": "{\"group\":\"84156037\",\"pstamp\":\"h179384157008.52\",\"online\":\"1\"}"
+  },
+  {
+    "name": "终端收到策略并下载复现白",
+    "status": "PASS",
+    "note": "用时 17 秒；终端 zip {\"file\":\"pwdata/CDEB6541665CEC24CBAE1622D615135B_aarch64.zip\",\"md5\":\"61E13DDC432E85D17D41595BA24C85E2\",\"mtime\":1793841578} 中心 61E13DDC432E85D17D41595BA24C85E2"
+  },
+  {
+    "name": "护栏没有中止请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

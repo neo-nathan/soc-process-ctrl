@@ -1,0 +1,37 @@
+{
+  "resp": {
+    "params": {
+      "pid": [
+        "52"
+      ],
+      "policytype": [
+        "2"
+      ],
+      "aObjId": [
+        "[\"84156037\"]"
+      ]
+    },
+    "json": {
+      "r": {
+        "code": 0,
+        "action": 0,
+        "msg": "更新应用范围成功！"
+      },
+      "data": {
+        "ADDGROUP": 1,
+        "DELGROUP": 0,
+        "ADDEP": 0,
+        "DELEP": 0,
+        "TOTALGROUP": 1,
+        "TOTALEP": 0,
+        "SKIPGROUP": 0,
+        "SKIPEP": 0,
+        "COVERGROUP": 1,
+        "COVEREP": 0
+      }
+    }
+  },
+  "checked": [
+    "PL05测试组"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "params": {
+    "pid": [
+      "52"
+    ],
+    "policytype": [
+      "2"
+    ],
+    "propath": [
+      "/tmp/pl05/rp-w-in"
+    ],
+    "filehash": [
+      "f076494fa14845f1ef19bf647bed4432"
+    ],
+    "algo": [
+      "0"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "添加成功。"
+    },
+    "data": {
+      "ID": 390
+    }
+  }
+}

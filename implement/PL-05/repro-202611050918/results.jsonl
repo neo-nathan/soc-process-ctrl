@@ -1,0 +1,2 @@
+{"case":"R-1","status":"FAIL","note":"PL05测试-复现白 进程行：[[\"/tmp/pl05/rp-w-in\",\"f076494fa14845f1ef19bf647bed4432\",\"0\",\"1\"]]；PL05测试-复现黑 进程行：[[\"/tmp/pl05/rp-b-in\",\"0b32eb729c730ccc0f6e3b0a03de1012\",\"0\",\"1\"]]","at":"2026-11-05T01:19:46.564Z"}
+{"case":"R-2","status":"FAIL","note":"白名单里的 rp-w-in 不应出日志（问题 B）：2 条：2026-11-05 09:20:07 ACTIONREASON=2 PROCACTION=0 HASH=F076494FA14845F1EF19BF647BED4432；2026-11-05 09:21:58 ACTIONREASON=2 PROCACTION=0 HASH=F076494FA14845F1EF19BF647BED4432","at":"2026-11-05T01:23:42.477Z"}

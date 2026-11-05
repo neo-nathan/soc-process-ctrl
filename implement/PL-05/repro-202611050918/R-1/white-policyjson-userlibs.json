@@ -1,0 +1,33 @@
+{
+  "type": "1",
+  "dpath": "ruc/libs/w/u",
+  "version": "17938415456001",
+  "platform": "linux",
+  "name": "CDEB6541665CEC24CBAE1622D615135B",
+  "lib": [
+    {
+      "md5": "61E13DDC432E85D17D41595BA24C85E2",
+      "arch": "aarch64"
+    },
+    {
+      "md5": "811AB5AA290DC2B7B962FF53D98E190A",
+      "arch": "loongarch64"
+    },
+    {
+      "md5": "4C5F3C5C43E63CD0BE2E123575BCED58",
+      "arch": "mips64"
+    },
+    {
+      "md5": "15869198856BA31FA51730E1ED9AB136",
+      "arch": "x86_64"
+    },
+    {
+      "md5": "10A6CA242FE7136CBA219D56D11C929D",
+      "arch": "loongarch64_3c6000"
+    },
+    {
+      "md5": "F52FA8DB1D1388A675C3CA078639351F",
+      "arch": "sw_9916"
+    }
+  ]
+}

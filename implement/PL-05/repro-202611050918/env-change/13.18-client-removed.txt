@@ -1,0 +1,18 @@
+== 终端时间 2026-11-05 09:39:11
+== ls /opt/BDFZ
+总计 8
+drwxr-xr-x. 2 root root 4096 11月 5日 09:32 .
+drwxr-xr-x. 3 root root 4096  5月29日 10:01 ..
+== 正在运行的拷贝/安装进程
+root     1386928 1386927  1 09:38 ?        00:00:00 scp -v -r -t /root/RAV_CSSCTX-3.0.5.26-20260513.tar.gz
+== last
+root     pts/1        172.16.27.20     Thu Nov  5 09:36   still logged in
+root     pts/1        172.16.27.20     Thu Nov  5 09:27 - 09:36  (00:08)
+root     pts/0        172.16.26.68     Tue Nov  3 15:53   still logged in
+root     pts/0        172.16.27.20     Mon Oct 26 14:10 - 14:49  (00:38)
+root     pts/0        172.16.27.20     Mon Oct 26 14:09 - 14:10  (00:01)
+root     tty1                          Mon Oct 26 14:07   still logged in
+
+wtmp begins Mon Apr 27 14:17:54 2026
+== /root 下安装包
+-rw-r--r--   1 root root 198754304 2026-11-05 09:39:11.065325469 +0800 RAV_CSSCTX-3.0.5.26-20260513.tar.gz

@@ -1,0 +1,29 @@
+{
+  "params": {
+    "pid": [
+      "52"
+    ],
+    "policytype": [
+      "2"
+    ],
+    "propath": [
+      "/tmp/pl05/rp-a-new"
+    ],
+    "filehash": [
+      "31574ea984c3b1949157d3af84100a82"
+    ],
+    "algo": [
+      "0"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "添加成功。"
+    },
+    "data": {
+      "ID": 391
+    }
+  }
+}

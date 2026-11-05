@@ -1,0 +1,30 @@
+{
+  "params": {
+    "clients": [
+      "475C1D126323B3E79B980CFF93E09AF9"
+    ],
+    "group": [
+      "84156037"
+    ],
+    "objects[ep][0][guid]": [
+      "475C1D126323B3E79B980CFF93E09AF9"
+    ],
+    "objects[ep][0][name]": [
+      "王五"
+    ],
+    "objects[ep][0][gguid]": [
+      "1"
+    ],
+    "objects[ep][0][gname]": [
+      "根管理组"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "成功"
+    },
+    "data": null
+  }
+}

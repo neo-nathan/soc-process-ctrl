@@ -1,0 +1,27 @@
+{
+  "rp-w-in": {
+    "path": "/tmp/pl05/rp-w-in",
+    "md5": "f076494fa14845f1ef19bf647bed4432",
+    "sha256": "18353831c0166c6b10bd18fb044f940abd4bb5457a447a59cd4981bd6d3de71c"
+  },
+  "rp-w-out": {
+    "path": "/tmp/pl05/rp-w-out",
+    "md5": "96a44b6417ba38666e6c317176342cd4",
+    "sha256": "d6a708e9113263b48f624fc3d8cb8486a826a38daf729f714f9cbf1059d3c327"
+  },
+  "rp-a-new": {
+    "path": "/tmp/pl05/rp-a-new",
+    "md5": "31574ea984c3b1949157d3af84100a82",
+    "sha256": "8ca8b454ba780ee25e0c6671b76afd7ee89b9230a705dae5e7e07ee941f31fe9"
+  },
+  "rp-b-in": {
+    "path": "/tmp/pl05/rp-b-in",
+    "md5": "0b32eb729c730ccc0f6e3b0a03de1012",
+    "sha256": "3c08c2690786ca9eb952dda22a88c3c914f9ee83cbd77063381f9accf49c3353"
+  },
+  "rp-b-out": {
+    "path": "/tmp/pl05/rp-b-out",
+    "md5": "27b7b026f67fa81f0f307a13a9a2bcfc",
+    "sha256": "e9ef74438120e1c92fed681e9f104fead7a44e35ce8ec867b8794a9b6646f534"
+  }
+}
