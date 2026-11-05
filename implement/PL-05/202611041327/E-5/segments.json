@@ -1,0 +1,57 @@
+[
+  {
+    "name": "应用前测试组关联（只记录）",
+    "status": "RECORD",
+    "note": "29(PL05测试-进程策略)"
+  },
+  {
+    "name": "应用到组提交只含测试组",
+    "status": "PASS",
+    "note": "提交组号 77092728；树上勾选 PL05测试组；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"更新应用范围成功！\"},\"data\":{\"ADDGROUP\":1,\"DELGROUP\":0,\"ADDEP\":0,\"DELEP\":0,\"TOTALGROUP\":1,\"TOTAL"
+  },
+  {
+    "name": "测试组上的名单关联只剩它",
+    "status": "PASS",
+    "note": "29(PL05测试-进程策略,typeNULL)；30(PL05测试-白,type2)"
+  },
+  {
+    "name": "pgl 名单项指向它",
+    "status": "FAIL",
+    "note": "policytype=2 type=null dpath=null name=null aarch64=null 中心文件=5AB74B92EB8D20784B4C63F051ADB1E6"
+  },
+  {
+    "name": "pgl 里只有一个名单项",
+    "status": "PASS",
+    "note": "type1,type2"
+  },
+  {
+    "name": "终端下载 zip 且 md5 一致",
+    "status": "PASS",
+    "note": "pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip；用时 185 秒"
+  },
+  {
+    "name": "ptfile 与测试组 pgl 一致",
+    "status": "PASS",
+    "note": "want 5161c50e1420221fef0a724891d867fe,b98d80d533fb0feab21c6ce2bd70b417 / have 5161c50e1420221fef0a724891d867fe,b98d80d533fb0feab21c6ce2bd70b417"
+  },
+  {
+    "name": "终端日志有 type=\"2\" delete=\"0\"",
+    "status": "PASS",
+    "note": "9 行"
+  },
+  {
+    "name": "名单页应用范围显示组【 1 】",
+    "status": "PASS",
+    "note": "3 PL05测试-白 Linux/信创 1 组【 1 】 已发布 2026-11-04 13:57:32 ---"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

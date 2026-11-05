@@ -1,0 +1,12 @@
+{
+  "name": "pl05-e2e",
+  "private": true,
+  "description": "PL-05 进程管控全链路测试（14.15 + 终端）",
+  "scripts": {
+    "login": "node lib/browser.js start",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.60.0"
+  }
+}

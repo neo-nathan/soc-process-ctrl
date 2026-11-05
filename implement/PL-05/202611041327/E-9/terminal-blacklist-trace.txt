@@ -1,0 +1,24 @@
+总计 5268
+-rw-r--r-- 1 root root     641 16:01:22 537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip
+-rw-r--r-- 1 root root     385 14:03:52 C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip
+-rw-r--r-- 1 root root     385 15:10:52 C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip
+-rw-r--r-- 1 root root     385 14:08:52 EC0959518AACC123DE255F52AFB203EC_aarch64.zip
+-rw-r--r-- 1 root root  414547 15:11:16 fs.lib
+-rw-r--r-- 1 root root     718 15:10:51 logfs.lib
+-rw-r--r-- 1 root root  141448 16:01:27 pkg.lib
+-rw-r--r-- 1 root root    1064 16:01:22 procwls.cfg
+-rw-r--r-- 1 root root 3937777 16:01:24 procwls.lib
+-rw-r--r-- 1 root root     201 15:10:52 procwlu.lib
+-rw-r--r-- 1 root root  860251 16:01:24 PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.zip
+== pwdata/procwlu.lib
+{"__lib":{"name":"C4E2A1618D07D4F23E2E5B4F53EBC242","type":2,"level":2,"version":"17937762361591","arch":"aarch64"},"path":[{"package":"","hash":[{"algo":0,"md5":"2c33bb043d90775e4cb6436ca7a51c69"}]}]}
+== log
+2026-11-04 15:10:51<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+2026-11-04 15:10:51<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/b/u/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793776251]
+2026-11-04 15:10:51<768731, 768744> [CFileDownload]: will DownloadFile[https://193.168.14.15:10443/ruc/libs/b/u/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip.tmp]
+2026-11-04 15:10:52<768731, 768744> [CFileDownload]: DownloadFile[https://193.168.14.15:10443/ruc/libs/b/u/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip.tmp] success
+2026-11-04 15:10:52<768731, 768744> [CFileDownload]: CheckFile[/opt/BDFZ/RAV/data/pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip.tmp]md5[2787292A967F227369F182B7A1350BD2]
+2026-11-04 15:10:52<768731, 768744> CFileDownload::ResponTask[{"id":"__procaudit_pwlib2_1793776251","result":"下载成功","savepath":"/opt/BDFZ/RAV/data/pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip","status":0}]
+2026-11-04 15:10:52<768731, 768826> [procaudit]: log, procw monstate -->value=3,prev=2,state=1,mode=2,type=2,source=policy,what=libtype
+2026-11-04 15:11:16<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-black (/etc/ld.so.cache)
+2026-11-04 15:11:18<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-normal (/etc/ld.so.cache)

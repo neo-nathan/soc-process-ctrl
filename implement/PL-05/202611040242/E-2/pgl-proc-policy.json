@@ -1,0 +1,9 @@
+{
+  "ver": "h179377850687.41",
+  "md5": "b98d80d533fb0feab21c6ce2bd70b417",
+  "enable": "1",
+  "auditmode": "1",
+  "uptimer": "60",
+  "notify": "0",
+  "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <procaudit>\n    <enable>1</enable>\n    <auditmode>1</auditmode>\n    <notify>0</notify>\n    <uptimer>60</uptimer>\n  </procaudit>\n</root>\n"
+}

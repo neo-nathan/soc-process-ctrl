@@ -1,0 +1,141 @@
+[
+  {
+    "at": "2026-11-04T06:24:26.036Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:24:26.151Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T06:24:26.361Z",
+    "api": "Policycenter/getGroupPolicy",
+    "params": {
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "77092728"
+      ],
+      "groupname": [
+        "PL05测试组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T06:24:28.685Z",
+    "api": "Indexinfo/isToken",
+    "params": {
+      "isJilianUseSoc": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T06:24:28.812Z",
+    "api": "Policycenter/editPolicy",
+    "params": {
+      "pid": [
+        "29"
+      ],
+      "policyjson": [
+        "[{\"productid\":\"2DA19BD4-5E8D-4397-B233-D9F95CD29DB3\",\"policytype\":\"1\",\"policymaincontent\":\"eyJyb290Ijp7InByb2NhdWRpdCI6eyJlbmFibGUiOnsiQHZhbHVlIjoxfSwiYXVkaXRtb2RlIjp7IkB2YWx1ZSI6IjIifSwibm90aWZ5Ijp7IkB2YWx1ZSI6MH0sInVwdGltZXIiOnsiQHZhbHVlIjoiNjAifX19fQ==\"}]"
+      ],
+      "pname": [
+        "PL05测试-进程策略"
+      ],
+      "description": [
+        "暂无"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "77092728"
+      ],
+      "groupname": [
+        "PL05测试组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T06:24:56.318Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:25:56.319Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:26:56.325Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:27:56.326Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:28:56.329Z",
+    "api": "Sys/systemServideMonitor",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:28:56.336Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:29:56.320Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T06:30:14.229Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77092728\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"\",\"searchtype\":\"computername\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T06:30:14.385Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77092728\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"/tmp/pl05/pl05-unknown\",\"searchtype\":\"procpath\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T06:30:15.565Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77092728\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"/tmp/pl05/pl05-learn\",\"searchtype\":\"procpath\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  }
+]

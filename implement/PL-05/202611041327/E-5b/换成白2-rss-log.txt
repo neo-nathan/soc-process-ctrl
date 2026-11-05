@@ -1,0 +1,8 @@
+2026-11-04 14:18:52<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+2026-11-04 14:18:52<768731, 768743> [CFileDownload]: OnMscDwlTask begin
+2026-11-04 14:18:52<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793773132]
+2026-11-04 14:18:52<768731, 768744> [CFileDownload]: DownAndCheck
+2026-11-04 14:18:52<768731, 768744> [CFileDownload]: CheckFile[/opt/BDFZ/RAV/data/pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]md5[693A232FC0AE5C7C28EE16B13B66D1FF]
+2026-11-04 14:18:52<768731, 768744> [CFileDownload]: File[/opt/BDFZ/RAV/data/pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]is exist and md5 is right
+2026-11-04 14:18:52<768731, 768744> CFileDownload::ResponTask[{"id":"__procaudit_pwlib2_1793773132","result":"文件已存在","savepath":"/opt/BDFZ/RAV/data/pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip","status":0}]
+2026-11-04 14:18:52<768731, 768744> [CFileDownload]: DownloadFile is not need again

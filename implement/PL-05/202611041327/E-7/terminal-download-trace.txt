@@ -1,0 +1,8 @@
+2026-11-04 15:09:43
+2026-11-04 14:55:28<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+2026-11-04 14:55:28<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793775328]
+2026-11-04 14:55:28<768731, 768744> [CFileDownload]: CheckFile[/opt/BDFZ/RAV/data/pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]md5[5AB74B92EB8D20784B4C63F051ADB1E6]
+2026-11-04 14:55:28<768731, 768744> [CFileDownload]: File[/opt/BDFZ/RAV/data/pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]is exist and md5 is diff
+2026-11-04 14:55:28<768731, 768744> CFileDownload::ResponTask[{"id":"__procaudit_pwlib2_1793775328","result":"文件已存在,md5不同","savepath":"/opt/BDFZ/RAV/data/pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip","status":6}]
+2026-11-04 14:55:28<768731, 768826> [procaudit]: policy downlib, parse file failed -->6,/opt/BDFZ/RAV/data/pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip
+-rw-r--r-- 1 root root 201 14:23:52 pwdata/procwlu.lib

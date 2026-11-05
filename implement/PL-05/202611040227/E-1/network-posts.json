@@ -1,0 +1,405 @@
+[
+  {
+    "at": "2026-11-04T07:27:51.051Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:51.178Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:51.391Z",
+    "api": "Group/getSubGroupInfo",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "limit": [
+        "10"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:51.395Z",
+    "api": "Group/getGroupRules",
+    "params": {
+      "groupid": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:52.195Z",
+    "api": "Group/getSubGroupInfo",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "limit": [
+        "10"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:52.197Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:52.270Z",
+    "api": "Group/editGroup",
+    "params": {
+      "name": [
+        "PL05测试组"
+      ],
+      "desp": [
+        ""
+      ],
+      "parent_id": [
+        "1"
+      ],
+      "inherit": [
+        "1"
+      ],
+      "order": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:52.972Z",
+    "api": "Group/getSubGroupInfo",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "limit": [
+        "10"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:52.974Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:54.131Z",
+    "api": "Group/getSubGroupInfo",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "groupid": [
+        "77728718"
+      ],
+      "limit": [
+        "10"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:54.132Z",
+    "api": "Group/getGroupRules",
+    "params": {
+      "groupid": [
+        "77728718"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:54.454Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:54.766Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:55.139Z",
+    "api": "Group/getSubGroupInfo",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "groupid": [
+        "77728718"
+      ],
+      "limit": [
+        "10"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:55.141Z",
+    "api": "Group/getGroupRules",
+    "params": {
+      "groupid": [
+        "77728718"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:56.222Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:57.025Z",
+    "api": "Group/editGroup",
+    "params": {
+      "id": [
+        "77728718"
+      ],
+      "name": [
+        "PL05测试组"
+      ],
+      "desp": [
+        ""
+      ],
+      "parent_id": [
+        "1"
+      ],
+      "inherit": [
+        "0"
+      ],
+      "oldname": [
+        "PL05测试组"
+      ],
+      "oldinherit": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:57.342Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:59.358Z",
+    "api": "Assetsreg/getAssets",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:59.514Z",
+    "api": "Group/getgroupComputer",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "onlinestate": [
+        "-1"
+      ],
+      "inSubGroup": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:27:59.581Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:59.740Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:27:59.943Z",
+    "api": "Assetsreg/getAssets",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:28:00.026Z",
+    "api": "Group/getgroupComputer",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "onlinestate": [
+        "-1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:00.202Z",
+    "api": "Group/getGroupOnline",
+    "params": {
+      "groupid": [
+        "1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:00.907Z",
+    "api": "Group/getGroupTree",
+    "params": {
+      "uid": [
+        "2"
+      ],
+      "blackgroup": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:01.657Z",
+    "api": "Indexinfo/isToken",
+    "params": {
+      "isJilianUseSoc": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:01.789Z",
+    "api": "Group/moveComputer",
+    "params": {
+      "clients": [
+        "475C1D126323B3E79B980CFF93E09AF9"
+      ],
+      "group": [
+        "77728718"
+      ],
+      "objects[ep][0][guid]": [
+        "475C1D126323B3E79B980CFF93E09AF9"
+      ],
+      "objects[ep][0][name]": [
+        "svm_arm64"
+      ],
+      "objects[ep][0][gguid]": [
+        "1"
+      ],
+      "objects[ep][0][gname]": [
+        "根管理组"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:01.984Z",
+    "api": "Group/getgroupComputer",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "onlinestate": [
+        "-1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:01.986Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:28:03.746Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:04.104Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:28:04.240Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:04.474Z",
+    "api": "Procmanager/getClientsOverview",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "objId": [
+        "77728718"
+      ],
+      "onlinestate": [
+        "-1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:28:04.656Z",
+    "api": "Group/getGroupOnline",
+    "params": {
+      "groupid": [
+        "77728718"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  }
+]

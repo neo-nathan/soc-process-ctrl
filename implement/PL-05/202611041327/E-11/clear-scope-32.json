@@ -1,0 +1,35 @@
+{
+  "resp": {
+    "params": {
+      "pid": [
+        "32"
+      ],
+      "policytype": [
+        "3"
+      ],
+      "aObjId": [
+        "[]"
+      ]
+    },
+    "json": {
+      "r": {
+        "code": 0,
+        "action": 0,
+        "msg": "更新应用范围成功！"
+      },
+      "data": {
+        "ADDGROUP": 0,
+        "DELGROUP": 1,
+        "ADDEP": 0,
+        "DELEP": 0,
+        "TOTALGROUP": 0,
+        "TOTALEP": 0,
+        "SKIPGROUP": 0,
+        "SKIPEP": 0,
+        "COVERGROUP": 0,
+        "COVEREP": 0
+      }
+    }
+  },
+  "checked": []
+}

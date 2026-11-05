@@ -1,0 +1,52 @@
+{
+  "params": {
+    "policytype": [
+      "2"
+    ],
+    "systype": [
+      "2"
+    ],
+    "procsource": [
+      "list"
+    ],
+    "proclist.procpath": [
+      "/usr/sbin/route"
+    ],
+    "proclist.filehash": [
+      "7C6AF14743E021938676F96867135269E1FB6D0869C1A37D6078E86637983ABE"
+    ],
+    "proclist.algo": [
+      "-8"
+    ],
+    "bwlist.pid": [
+      "30"
+    ],
+    "bwlist.pname": [
+      "PL05测试-白"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "添加成功。"
+    },
+    "data": {
+      "INSERTED": 1,
+      "SKIPPED": 0,
+      "FAILED": 0,
+      "INVALID": 0,
+      "TOTAL": 1,
+      "DETAIL": [
+        {
+          "PID": 30,
+          "PNAME": "PL05测试-白",
+          "POLICYTYPE": 2,
+          "INSERTED": 1,
+          "SKIPPED": 0,
+          "FAILED": 0
+        }
+      ]
+    }
+  }
+}

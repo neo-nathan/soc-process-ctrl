@@ -1,0 +1,42 @@
+  [PASS] E-5b 进程管理页加进名单：进程行 STATUS=1 哈希=B454E238D532E6260285BEB62CD0E34A ALGO=0
+  [PASS] E-5b 名单里的哈希 = 13.18 上算的：B454E238D532E6260285BEB62CD0E34A
+  [PASS] E-5b 名单进程视图显示 pl05-learn：返回 进程管控 / 白名单 / PL05测试-白2 / 进程列表 待发布 系统类型：Linux/信创 进程数：0 个 +1 应用范围：--- 创建时间：2026-11-04 14:04:47 添加进程 进程名称 文件哈希1 进程路径 添加时间 操作 进程名称 文件哈希1 进程路径 添加时间 操作 pl05-learn新增 MD5b454e238d532e6260285beb62cd0e34a /t
+  [PASS] E-5b 发布后 POLICY.STATUS=4（已发布）：STATUS=4 POLICYVER=h179377229856.73；接口 {"r":{"code":0,"action":0,"msg":"发布成功。"},"data":{"PID":31,"PGUID":"EC0959518AACC123DE255F52AFB203EC","STATUS":4,"VERSION
+  [PASS] E-5b 发布后进程行 STATUS=0（已确认）：/tmp/pl05/pl05-learn STATUS=0
+  [PASS] E-5b 中心 6 个 zip 的 md5 = POLICYJSON：文件 6 个；version=17937722985366
+  [PASS] E-5b 换成白2：应用到组提交只含测试组：提交组号 77092728；树上勾选 PL05测试组；接口 {"r":{"code":0,"action":0,"msg":"更新应用范围成功！"},"data":{"ADDGROUP":1,"DELGROUP":0,"ADDEP":0,"DELEP":0,"TOTALGROUP":1,"TOTAL
+  [PASS] E-5b 换成白2：测试组上的名单关联只剩它：29(PL05测试-进程策略,typeNULL)；31(PL05测试-白2,type2)
+  [PASS] E-5b 换成白2：pgl 名单项指向它：policytype=2 type=1 dpath=ruc/libs/w/u name=EC0959518AACC123DE255F52AFB203EC aarch64=693A232FC0AE5C7C28EE16B13B66D1FF 中心文件=693A232FC0AE5C7C28EE16B13B66D1FF
+  [PASS] E-5b 换成白2：pgl 里只有一个名单项：type1,type2
+  [PASS] E-5b 换成白2：终端下载 zip 且 md5 一致：pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip；用时 246 秒
+  [PASS] E-5b 换成白2：ptfile 与测试组 pgl 一致：want a6588f9c41847e9fb9b1a138a3945979,b98d80d533fb0feab21c6ce2bd70b417 / have a6588f9c41847e9fb9b1a138a3945979,b98d80d533fb0feab21c6ce2bd70b417
+  [PASS] E-5b 换成白2：终端日志有 type="2" delete="0"：9 行
+  [PASS] E-5b 换成白2：两个名单的应用范围：白：3 PL05测试-白 Linux/信创 1 --- 已发布 2026-11-04 13:57:32 --- ｜ 白2：4 PL05测试-白2 Linux/信创 1 组【 1 】 已发布 2026-11-04 14:04:47 ---
+  [PASS] E-5b 换回白：应用到组提交只含测试组：提交组号 77092728；树上勾选 PL05测试组；接口 {"r":{"code":0,"action":0,"msg":"更新应用范围成功！"},"data":{"ADDGROUP":1,"DELGROUP":0,"ADDEP":0,"DELEP":0,"TOTALGROUP":1,"TOTAL
+  [PASS] E-5b 换回白：测试组上的名单关联只剩它：29(PL05测试-进程策略,typeNULL)；30(PL05测试-白,type2)
+  [PASS] E-5b 换回白：pgl 名单项指向它：policytype=2 type=1 dpath=ruc/libs/w/u name=C0AD936CA2471483C4A7F5D11E4CCE6F aarch64=5AB74B92EB8D20784B4C63F051ADB1E6 中心文件=5AB74B92EB8D20784B4C63F051ADB1E6
+  [PASS] E-5b 换回白：pgl 里只有一个名单项：type1,type2
+  [PASS] E-5b 换回白：终端下载 zip 且 md5 一致：pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip；用时 1 秒
+  [FAIL] E-5b 换回白：ptfile 与测试组 pgl 一致：want 5161c50e1420221fef0a724891d867fe,b98d80d533fb0feab21c6ce2bd70b417 / have a6588f9c41847e9fb9b1a138a3945979,b98d80d533fb0feab21c6ce2bd70b417
+  [FAIL] E-5b 换回白：终端日志有 type="2" delete="0"：0 行
+  [PASS] E-5b 换回白：两个名单的应用范围：白：3 PL05测试-白 Linux/信创 1 组【 1 】 已发布 2026-11-04 13:57:32 --- ｜ 白2：4 PL05测试-白2 Linux/信创 1 --- 已发布 2026-11-04 14:04:47 ---
+  [PASS] E-5b 同事数据没变
+  [PASS] E-5b 护栏没有中止任何请求：[]
+  ✘  1 specs/10-white.spec.js:532:1 › E-5b 白名单换白名单 (4.7m)
+  1) specs/10-white.spec.js:532:1 › E-5b 白名单换白名单 ───────────────────────────────────────────────────
+    Error: E-5b 结论
+    [2mexpect([22m[31mreceived[39m[2m).[22mnot[2m.[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    Expected: not [32m"FAIL"[39m
+      554 |     await s.close('E-5b');
+      555 |   }
+    > 556 |   expect(R.finish(), 'E-5b 结论').not.toBe('FAIL');
+          |                                     ^
+      557 | });
+      558 |
+      559 | /** 日志页返回的行里属于 13.18 的（按整行 JSON 里有没有 13.18 的 IP 判断，不依赖字段名） */
+        at /Users/nick/Workspace/soc-process-ctrl/e2e/specs/10-white.spec.js:556:37
+    Error Context: test-results/10-white-E-5b-白名单换白名单/error-context.md
+  1 failed
+    specs/10-white.spec.js:532:1 › E-5b 白名单换白名单 ────────────────────────────────────────────────────
+
+[exited with code 0]

@@ -1,0 +1,45 @@
+{
+  "params": {
+    "pid": [
+      "34"
+    ],
+    "policyjson": [
+      "[{\"productid\":\"2DA19BD4-5E8D-4397-B233-D9F95CD29DB3\",\"policytype\":\"1\",\"policymaincontent\":\"eyJyb290Ijp7InByb2NhdWRpdCI6eyJlbmFibGUiOnsiQHZhbHVlIjoxfSwiYXVkaXRtb2RlIjp7IkB2YWx1ZSI6IjIifSwibm90aWZ5Ijp7IkB2YWx1ZSI6MH0sInVwdGltZXIiOnsiQHZhbHVlIjoiNjAifX19fQ==\"}]"
+    ],
+    "pname": [
+      "PL05测试-进程策略"
+    ],
+    "description": [
+      "暂无"
+    ],
+    "productid": [
+      "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+    ],
+    "eptype": [
+      "2"
+    ],
+    "groupid": [
+      "77822232"
+    ],
+    "groupname": [
+      "PL05测试组"
+    ],
+    "sguid": [
+      ""
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "编辑策略完成"
+    },
+    "data": {
+      "pname": "PL05测试-进程策略",
+      "description": "暂无",
+      "updatetime": "2026-11-04 16:06:58",
+      "total": "1",
+      "yixiafa": 0
+    }
+  }
+}

@@ -1,0 +1,30 @@
+Running 1 test using 1 worker
+  [RECORD] E-5 应用前测试组关联（只记录）：29(PL05测试-进程策略)
+  [PASS] E-5 应用到组提交只含测试组：提交组号 77092728；树上勾选 PL05测试组；接口 {"r":{"code":0,"action":0,"msg":"更新应用范围成功！"},"data":{"ADDGROUP":1,"DELGROUP":0,"ADDEP":0,"DELEP":0,"TOTALGROUP":1,"TOTAL
+  [PASS] E-5 测试组上的名单关联只剩它：29(PL05测试-进程策略,typeNULL)；30(PL05测试-白,type2)
+  [FAIL] E-5 pgl 名单项指向它：policytype=2 type=null dpath=null name=null aarch64=null 中心文件=5AB74B92EB8D20784B4C63F051ADB1E6
+  [PASS] E-5 pgl 里只有一个名单项：type1,type2
+  [PASS] E-5 终端下载 zip 且 md5 一致：pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip；用时 185 秒
+  [PASS] E-5 ptfile 与测试组 pgl 一致：want 5161c50e1420221fef0a724891d867fe,b98d80d533fb0feab21c6ce2bd70b417 / have 5161c50e1420221fef0a724891d867fe,b98d80d533fb0feab21c6ce2bd70b417
+  [PASS] E-5 终端日志有 type="2" delete="0"：9 行
+  [PASS] E-5 名单页应用范围显示组【 1 】：3 PL05测试-白 Linux/信创 1 组【 1 】 已发布 2026-11-04 13:57:32 ---
+  [PASS] E-5 同事数据没变
+  [PASS] E-5 护栏没有中止任何请求：[]
+  ✘  1 specs/10-white.spec.js:497:1 › E-5 白名单下发 (3.3m)
+  1) specs/10-white.spec.js:497:1 › E-5 白名单下发 ──────────────────────────────────────────────────────
+    Error: E-5 结论
+    [2mexpect([22m[31mreceived[39m[2m).[22mnot[2m.[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+    Expected: not [32m"FAIL"[39m
+      513 |     await s.close('E-5');
+      514 |   }
+    > 515 |   expect(R.finish(), 'E-5 结论').not.toBe('FAIL');
+          |                                    ^
+      516 | });
+      517 |
+      518 | test('E-5b 白名单换白名单', async () => {
+        at /Users/nick/Workspace/soc-process-ctrl/e2e/specs/10-white.spec.js:515:36
+    Error Context: test-results/10-white-E-5-白名单下发/error-context.md
+  1 failed
+    specs/10-white.spec.js:497:1 › E-5 白名单下发 ───────────────────────────────────────────────────────
+
+[exited with code 0]

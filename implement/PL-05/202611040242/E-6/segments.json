@@ -1,0 +1,72 @@
+[
+  {
+    "name": "测试组当前关联（只记录）",
+    "status": "RECORD",
+    "note": "34(PL05测试-进程策略)；35(PL05测试-白)"
+  },
+  {
+    "name": "改审计（editPolicy 提交的是测试策略）",
+    "status": "PASS",
+    "note": "pid=34；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"编辑策略完成\"},\"data\":{\"pname\":\"PL05测试-进程策略\",\"description\":\"暂无\",\"updatetime\":\"2026-11-04 16:0"
+  },
+  {
+    "name": "pgl_<测试组> 进程策略 auditmode=2",
+    "status": "PASS",
+    "note": "auditmode=2 uptimer=60 notify=0 ver=h179377961809.19"
+  },
+  {
+    "name": "终端收到审计策略",
+    "status": "PASS",
+    "note": "用时 283 秒"
+  },
+  {
+    "name": "两个程序都能运行（审计不拦）",
+    "status": "PASS",
+    "note": "pl05-learn rc=0，pl05-unknown rc=0"
+  },
+  {
+    "name": "pl05-unknown 有日志：PROCACTION=0、ACTIONREASON=2",
+    "status": "PASS",
+    "note": "1 条，ACTIONREASON=2，PROCACTION=0；入库用时 0 秒"
+  },
+  {
+    "name": "日志哈希 = 13.18 上算的",
+    "status": "PASS",
+    "note": "F9BD48F6D65E061D1739246E565D8CF0 ALGO=0"
+  },
+  {
+    "name": "pl05-learn（在白名单）没有日志",
+    "status": "FAIL",
+    "note": "1 条"
+  },
+  {
+    "name": "日志页筛得到 pl05-unknown（13.18）",
+    "status": "PASS",
+    "note": "共 20 行，13.18 且路径相同的 2 行"
+  },
+  {
+    "name": "日志页筛不到 pl05-learn（13.18）",
+    "status": "FAIL",
+    "note": "页面 13.18 且路径相同的 1 行；库里全部 3 条、本轮 1 条"
+  },
+  {
+    "name": "EPSTATE procaudit（只记录，设计 5.7 期望审计+白名单=2）",
+    "status": "RECORD",
+    "note": "procdef=0@2026-11-04 16:01:42，procaudit=2@2026-11-04 16:11:41"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "params": {
+    "pid": [
+      "37"
+    ],
+    "policytype": [
+      "3"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "删除成功。"
+    },
+    "data": ""
+  }
+}

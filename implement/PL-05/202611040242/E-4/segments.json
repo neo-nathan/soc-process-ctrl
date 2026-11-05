@@ -1,0 +1,57 @@
+[
+  {
+    "name": "新建名单",
+    "status": "PASS",
+    "note": "PID 35，STATUS=1"
+  },
+  {
+    "name": "进程管理页加进名单",
+    "status": "PASS",
+    "note": "进程行 STATUS=1 哈希=B454E238D532E6260285BEB62CD0E34A ALGO=0"
+  },
+  {
+    "name": "名单里的哈希 = 13.18 上算的",
+    "status": "FAIL",
+    "note": "B454E238D532E6260285BEB62CD0E34A"
+  },
+  {
+    "name": "名单进程视图显示 pl05-learn",
+    "status": "PASS",
+    "note": "返回 进程管控 / 白名单 / PL05测试-白 / 进程列表 待发布 系统类型：Linux/信创 进程数：0 个 +1 应用范围：--- 创建时间：2026-11-04 15:55:44 添加进程 进程名称 文件哈希1 进程路径 添加时间 操作 进程名称 文件哈希1 进程路径 添加时间 操作 pl05-learn新增 MD5b454e238d532e6260285beb62cd0e34a /tm"
+  },
+  {
+    "name": "发布后 POLICY.STATUS=4（已发布）",
+    "status": "PASS",
+    "note": "STATUS=4 POLICYVER=h179377895485.6；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"发布成功。\"},\"data\":{\"PID\":35,\"PGUID\":\"916380A6C9BC20C162FD8FA3B7A62A51\",\"STATUS\":4,\"VERSION"
+  },
+  {
+    "name": "发布后进程行 STATUS=0（已确认）",
+    "status": "PASS",
+    "note": "/tmp/pl05/pl05-learn STATUS=0"
+  },
+  {
+    "name": "中心 6 个 zip 的 md5 = POLICYJSON",
+    "status": "PASS",
+    "note": "文件 6 个；version=17937789548269"
+  },
+  {
+    "name": "名单页显示已发布",
+    "status": "PASS",
+    "note": "3 PL05测试-白 Linux/信创 1 --- 已发布 2026-11-04 15:55:44 ---"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

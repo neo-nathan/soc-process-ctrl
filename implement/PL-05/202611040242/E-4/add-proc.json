@@ -1,0 +1,52 @@
+{
+  "params": {
+    "policytype": [
+      "2"
+    ],
+    "systype": [
+      "2"
+    ],
+    "procsource": [
+      "list"
+    ],
+    "proclist.procpath": [
+      "/tmp/pl05/pl05-learn"
+    ],
+    "proclist.filehash": [
+      "B454E238D532E6260285BEB62CD0E34A"
+    ],
+    "proclist.algo": [
+      "0"
+    ],
+    "bwlist.pid": [
+      "35"
+    ],
+    "bwlist.pname": [
+      "PL05测试-白"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "添加成功。"
+    },
+    "data": {
+      "INSERTED": 1,
+      "SKIPPED": 0,
+      "FAILED": 0,
+      "INVALID": 0,
+      "TOTAL": 1,
+      "DETAIL": [
+        {
+          "PID": 35,
+          "PNAME": "PL05测试-白",
+          "POLICYTYPE": 2,
+          "INSERTED": 1,
+          "SKIPPED": 0,
+          "FAILED": 0
+        }
+      ]
+    }
+  }
+}

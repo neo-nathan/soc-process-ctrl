@@ -1,0 +1,29 @@
+{
+  "params": {
+    "pid": [
+      "32"
+    ],
+    "policytype": [
+      "3"
+    ],
+    "propath": [
+      "/tmp/pl05/pl05-black"
+    ],
+    "filehash": [
+      "2c33bb043d90775e4cb6436ca7a51c69"
+    ],
+    "algo": [
+      "0"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "添加成功。"
+    },
+    "data": {
+      "ID": 4
+    }
+  }
+}

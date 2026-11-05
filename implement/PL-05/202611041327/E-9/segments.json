@@ -1,0 +1,57 @@
+[
+  {
+    "name": "测试组当前关联（只记录）",
+    "status": "RECORD",
+    "note": "29(PL05测试-进程策略)；32(PL05测试-黑)"
+  },
+  {
+    "name": "策略是审计",
+    "status": "PASS",
+    "note": "已是审计（E-6 改的）"
+  },
+  {
+    "name": "pgl_<测试组> 进程策略 auditmode=2",
+    "status": "PASS",
+    "note": "auditmode=2 uptimer=60"
+  },
+  {
+    "name": "终端策略和测试组一致（审计 + 黑名单）",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "两个程序都能运行（审计不拦）",
+    "status": "PASS",
+    "note": "pl05-black rc=0，pl05-normal rc=0"
+  },
+  {
+    "name": "pl05-black 有日志：PROCACTION=0、ACTIONREASON=1（在黑名单）",
+    "status": "TIMEOUT",
+    "note": "0 条，ACTIONREASON=，PROCACTION=；入库用时 240 秒"
+  },
+  {
+    "name": "pl05-normal 没有日志",
+    "status": "PASS",
+    "note": "0 条"
+  },
+  {
+    "name": "EPSTATE procaudit（只记录，设计 5.7 期望审计+黑名单=3）",
+    "status": "RECORD",
+    "note": "procdef=0@2026-11-03 16:01:28，procaudit=3@2026-11-04 15:11:03"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

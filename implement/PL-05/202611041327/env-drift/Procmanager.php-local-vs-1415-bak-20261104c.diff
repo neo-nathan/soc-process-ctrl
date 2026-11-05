@@ -1,0 +1,45 @@
+650c650
+< 						'type'    => strval($libType),
+---
+> 						'type'    => strval(self::normalizeLibType($libType)),
+1290c1290
+< 				'type'    => intval($libType),
+---
+> 				'type'    => self::normalizeLibType($libType),
+1320a1321,1322
+> 		// lib.type 只允许 1(白)/2(黑)：兜底归一化，避免把页面 policytype(2/3) 直接写进来下发 <type>3</type>
+> 		$libType = self::normalizeLibType($libType);
+1330c1332
+< 						'type'     => strval($libType),
+---
+> 						'type'     => strval(self::normalizeLibType($libType)),
+1353a1356,1384
+> 	 * 归一化黑白名单库类型（userlibs/lib 的 <type>，客户端只认 1/2）
+> 	 *
+> 	 * 两套编号不要混：
+> 	 *   页面/接口的 POLICY.POLICYTYPE：2 = 白名单，3 = 黑名单
+> 	 *   客户端读的 lib.type：1 = 白名单，2 = 黑名单
+> 	 * 本模块统一用 self::$aWBListLibType（2→1、3→2）换算；此处再兜一层，
+> 	 * 防止把页面 policytype（2/3）直接当 lib.type 传进来导致下发 <type>3</type>。
+> 	 *
+> 	 * @param mixed $libType
+> 	 * @return int 1 白名单 / 2 黑名单
+> 	 */
+> 	public static function normalizeLibType($libType)
+> 	{
+> 		$intType = intval($libType);
+> 		if ($intType === 1 || $intType === 2) {
+> 			return $intType;
+> 		}
+> 		if ($intType === 3) {
+> 			// 误传了页面 policytype 的 3（黑名单）→ 按黑名单 2 下发
+> 			error_log('[Procmanager] lib.type 收到页面 policytype=3，按黑名单(2)处理');
+> 
+> 			return 2;
+> 		}
+> 		error_log('[Procmanager] lib.type 非法值 ' . var_export($libType, true) . '，按白名单(1)处理');
+> 
+> 		return 1;
+> 	}
+> 
+> 	/**

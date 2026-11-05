@@ -1,0 +1,38 @@
+{
+  "policytype": "2",
+  "ver": "h179378087332.34",
+  "userlibs": {
+    "type": "2",
+    "dpath": "ruc/libs/b/u",
+    "version": "17937808681858",
+    "platform": "linux",
+    "name": "FFB55977CD6E80EB319E19421B42DE08",
+    "lib": [
+      {
+        "md5": "24B5B1B99C20416D72F9039D5C9CCACB",
+        "arch": "aarch64"
+      },
+      {
+        "md5": "266FE6B4B269F42D9518A1351CE3CA9A",
+        "arch": "loongarch64"
+      },
+      {
+        "md5": "146532F68E216FCF3D412BD0D309649F",
+        "arch": "mips64"
+      },
+      {
+        "md5": "E174D48BCB2AC34A19B9AB43506B109D",
+        "arch": "x86_64"
+      },
+      {
+        "md5": "25E97C84129889CBB823B3B767D9B2A7",
+        "arch": "loongarch64_3c6000"
+      },
+      {
+        "md5": "10DDDD26DC938E0ABD5E81491FE76009",
+        "arch": "sw_9916"
+      }
+    ]
+  },
+  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <procaudit>\n    <userlibs>\n      <type>2</type>\n      <dpath>ruc/libs/b/u</dpath>\n      <version>17937808681858</version>\n      <platform>linux</platform>\n      <name>FFB55977CD6E80EB319E19421B42DE08</name>\n      <lib>\n        <md5>24B5B1B99C20416D72F9039D5C9CCACB</md5>\n        <arch>aarch64</arch>\n      </lib>\n      <lib>\n        <md5>266FE6B4B269F42D9518A1351CE3CA9A</md5>\n        <arch>loongarch64</arch>\n      </lib>\n      <lib>\n        <md5>146532F68E216FCF3D412BD0D309649F</md5>\n        <arch>mips64</arch>\n      </lib>\n      <lib>\n        <md5>E174D48BCB2AC34A19B9AB43506B109D</md5>\n        <arch>x86_64</arch>\n      </lib>\n      <lib>\n        <md5>25E97C84129889CBB823B3B767D9B2A7</md5>\n        <arch>loongarch64_3c6000</arch>\n      </lib>\n      <lib>\n        <md5>10DDDD26DC938E0ABD5E81491FE76009</md5>\n        <arch>sw_9916</arch>\n      </lib>\n    </userlibs>\n  </procaudit>\n</root>\n"
+}

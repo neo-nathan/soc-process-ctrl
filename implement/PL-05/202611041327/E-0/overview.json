@@ -1,0 +1,47 @@
+{
+  "r": {
+    "code": 0,
+    "action": 0,
+    "msg": "成功。"
+  },
+  "data": {
+    "rows": [
+      {
+        "SGUID": "475C1D126323B3E79B980CFF93E09AF9",
+        "EID": "A1E8178084463805",
+        "GROUPID": "1",
+        "IP": "193.168.13.18",
+        "VERSION": "3.0.5.27",
+        "OS": " openEuler 24.03 (LTS-SP1)",
+        "COMPUTERNAME": "svm_arm64",
+        "USERNAME": "root",
+        "MEMO": null,
+        "GROUPNAME": "根管理组",
+        "UNSET": "0",
+        "MAC": "28-6E-D4-89-54-4D",
+        "SYSTYPE": "linux:lcserver",
+        "RIP": "193.168.13.18",
+        "EDATE": "2026-11-03 16:01:27",
+        "ISVM": "0",
+        "EPTYPE": "0",
+        "VLIBVER": "37.0922.0001",
+        "HDCODE": null,
+        "WHOST": null,
+        "HOSTTYPE": null,
+        "CPU_USAGE_V": null,
+        "MEMORY_USAGE_V": null,
+        "DISK_USAGE_V": null,
+        "STARTTIME": null,
+        "SCANSTATE": null,
+        "ONLINESTATE": 1,
+        "procaudit": "2",
+        "PSOURCE": "gp",
+        "GROUPPATH": "根管理组",
+        "WB": 2,
+        "BWLIST": "Test_b",
+        "PROCAUDIT": "2"
+      }
+    ],
+    "total": "1"
+  }
+}

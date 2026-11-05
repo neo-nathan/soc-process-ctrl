@@ -1,0 +1,62 @@
+[
+  {
+    "name": "策略改回审计",
+    "status": "PASS",
+    "note": "pid=33"
+  },
+  {
+    "name": "PL05测试-白 删除",
+    "status": "RECORD",
+    "note": "不存在，跳过"
+  },
+  {
+    "name": "PL05测试-白2 删除",
+    "status": "RECORD",
+    "note": "不存在，跳过"
+  },
+  {
+    "name": "PL05测试-黑 删除",
+    "status": "RECORD",
+    "note": "不存在，跳过"
+  },
+  {
+    "name": "pgl_<测试组> 名单项为空或已删",
+    "status": "PASS",
+    "note": "没有名单项"
+  },
+  {
+    "name": "终端收到名单清除",
+    "status": "PASS",
+    "note": "用时 236 秒"
+  },
+  {
+    "name": "终端日志（只记录）",
+    "status": "RECORD",
+    "note": "0 行 delete=\"1\"，共 1 行"
+  },
+  {
+    "name": "13.18 pwdata 里的名单库（只记录，不清理）",
+    "status": "RECORD",
+    "note": "537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip，C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip，C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip，EC0959518AACC123DE255F52AFB203EC_aarch64.zip，F2FF19EE8F7865F929087AB5388BD0C7_aarch64.zip"
+  },
+  {
+    "name": "名单页没有测试名单",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

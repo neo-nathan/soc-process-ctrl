@@ -1,0 +1,62 @@
+[
+  {
+    "name": "新增子组",
+    "status": "RECORD",
+    "note": "测试组已存在（重跑），组号 77092728"
+  },
+  {
+    "name": "照抄父组关联（PID 3、22）",
+    "status": "PASS",
+    "note": "关联 PID：3,22"
+  },
+  {
+    "name": "改不继承",
+    "status": "RECORD",
+    "note": "已是不继承（重跑）"
+  },
+  {
+    "name": "Redis pgl_<新组> 有进程管控项",
+    "status": "PASS",
+    "note": "type1 verh179368948074.6,type3 verh179375778672.49"
+  },
+  {
+    "name": "移终端",
+    "status": "PASS",
+    "note": "GROUPID=77092728"
+  },
+  {
+    "name": "PSTAMP 变化（只记录）",
+    "status": "RECORD",
+    "note": "h179375778672.49 → h179377097470.08"
+  },
+  {
+    "name": "Redis 终端缓存（只记录）",
+    "status": "RECORD",
+    "note": "{\"p_ver\":\"h179377097470.08\",\"g_info\":\"77092728\"}"
+  },
+  {
+    "name": "ptfile 与测试组一致",
+    "status": "PASS",
+    "note": "用时 1 秒（新组照抄父组，内容可能和移动前相同）"
+  },
+  {
+    "name": "终端日志里的策略变化（只记录）",
+    "status": "RECORD",
+    "note": "0 行"
+  },
+  {
+    "name": "概览显示 13.18 在测试组",
+    "status": "PASS",
+    "note": "测试组概览共 1 行"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

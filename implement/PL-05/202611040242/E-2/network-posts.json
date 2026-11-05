@@ -1,0 +1,303 @@
+[
+  {
+    "at": "2026-11-04T07:48:11.757Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:48:11.978Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:48:12.182Z",
+    "api": "Policycenter/getPolicyList",
+    "params": {
+      "sort": [
+        "CREATETIME"
+      ],
+      "order": [
+        "desc"
+      ],
+      "limit": [
+        "50"
+      ],
+      "offset": [
+        "0"
+      ],
+      "productid": [
+        ""
+      ],
+      "eptype": [
+        ""
+      ],
+      "policyname": [
+        ""
+      ],
+      "createuser": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:12.978Z",
+    "api": "Policycenter/isExistPolicyName",
+    "params": {
+      "policyName": [
+        "PL05测试-进程策略"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.032Z",
+    "api": "Policycenter/getPolicyForCopy",
+    "params": {
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.367Z",
+    "api": "Indexinfo/isToken",
+    "params": {
+      "isJilianUseSoc": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.490Z",
+    "api": "Policycenter/addPolicy",
+    "params": {
+      "policyname": [
+        "PL05测试-进程策略"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "description": [
+        ""
+      ],
+      "eptype": [
+        "2"
+      ],
+      "policyjson": [
+        "[{\"productid\":\"2DA19BD4-5E8D-4397-B233-D9F95CD29DB3\",\"policytype\":\"1\",\"policymaincontent\":\"eyJyb290Ijp7InByb2NhdWRpdCI6eyJlbmFibGUiOnsiQHZhbHVlIjoxfSwiYXVkaXRtb2RlIjp7IkB2YWx1ZSI6IjEifSwibm90aWZ5Ijp7IkB2YWx1ZSI6MH0sInVwdGltZXIiOnsiQHZhbHVlIjoiNjAifX19fQ==\"}]"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.649Z",
+    "api": "Policycenter/getPolicyList",
+    "params": {
+      "sort": [
+        "CREATETIME"
+      ],
+      "order": [
+        "desc"
+      ],
+      "limit": [
+        "50"
+      ],
+      "offset": [
+        "0"
+      ],
+      "productid": [
+        ""
+      ],
+      "eptype": [
+        ""
+      ],
+      "policyname": [
+        ""
+      ],
+      "createuser": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.651Z",
+    "api": "Group/getGroupTree",
+    "params": {
+      "uid": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.653Z",
+    "api": "Policycenter/showUsedEp",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "10"
+      ],
+      "offset": [
+        "0"
+      ],
+      "pid": [
+        "34"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:13.660Z",
+    "api": "Group/getGroupTree",
+    "params": {
+      "uid": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:17.176Z",
+    "api": "Policycenter/getUsedGroupId",
+    "params": {
+      "pid": [
+        "34"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:18.250Z",
+    "api": "Policycenter/editUsedObject",
+    "params": {
+      "pid": [
+        "34"
+      ],
+      "aObjId.groupid": [
+        "77822232"
+      ],
+      "aObjId.islock": [
+        "0"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "policyname": [
+        "PL05测试-进程策略"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:18.471Z",
+    "api": "Policycenter/getPolicyList",
+    "params": {
+      "sort": [
+        "CREATETIME"
+      ],
+      "order": [
+        "desc"
+      ],
+      "limit": [
+        "50"
+      ],
+      "offset": [
+        "0"
+      ],
+      "productid": [
+        ""
+      ],
+      "eptype": [
+        ""
+      ],
+      "policyname": [
+        ""
+      ],
+      "createuser": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:48:56.265Z",
+    "api": "Sys/systemServideMonitor",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:48:56.266Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:49:56.265Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:50:56.264Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:51:29.967Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:51:30.298Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:51:30.446Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:51:30.667Z",
+    "api": "Policycenter/getGroupPolicy",
+    "params": {
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "77822232"
+      ],
+      "groupname": [
+        "PL05测试组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:51:56.266Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  }
+]

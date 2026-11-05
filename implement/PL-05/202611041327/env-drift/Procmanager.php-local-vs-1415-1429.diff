@@ -1,0 +1,308 @@
+--- /Users/nick/Workspace/ESMCenterST/esmCenter/models/BaseDA/Procmanager.php	2026-11-03 21:42:47
++++ /private/tmp/claude-501/-Users-nick-Workspace-soc-process-ctrl/6347aac7-1bb4-46ba-a313-68add9bc6cc0/scratchpad/Procmanager-1415-clean.php	2026-11-04 01:53:48
+@@ -553,8 +553,57 @@
+ 	 * 进程管控产品GUID
+ 	 */
+ 	const PROC_PRODUCTID = '2DA19BD4-5E8D-4397-B233-D9F95CD29DB3';
++
++	/**
++	 * 进程管控"名单策略"在 Redis 策略体里的 policytype 固定值
++	 *
++	 * 客户端解析口径（与页面 POLICY.POLICYTYPE 不是一套编号，切勿混用）：
++	 *   policytype=1 → 进程管控审计策略（策略中心默认策略，内容为 root.procaudit 的 enable/auditmode 等）
++	 *   policytype=2 → 黑白名单策略，**白名单与黑名单都是 2**
++	 *                  白/黑由内容里的 <userlibs><type> 区分：1=白名单、2=黑名单
++	 */
++	const PROC_LIST_POLICYTYPE = 2;
+ 
+ 	/**
++	 * 判断一条 Redis 策略项是否"进程管控名单策略项"：只认 policytype=2
++	 * （policytype=1 是审计策略，不算名单项；其它产品项也不算）
++	 *
++	 * @param array $aPolicy 策略项
++	 * @return bool
++	 */
++	private static function isWBListPolicyItem($aPolicy)
++	{
++		if (!is_array($aPolicy) || !isset($aPolicy['policyproductid'], $aPolicy['policytype'])) {
++			return false;
++		}
++		if (strtoupper(strval($aPolicy['policyproductid'])) !== self::PROC_PRODUCTID) {
++			return false;
++		}
++
++		return intval($aPolicy['policytype']) === self::PROC_LIST_POLICYTYPE;
++	}
++
++	/**
++	 * 从策略内容（base64(XML)）里取名单类型：1 白名单 / 2 黑名单
++	 * 空报文（移除名单后下发的空 userlibs）没有 type 节点，返回 0
++	 *
++	 * @param string $strContent base64(XML)
++	 * @return int
++	 */
++	private static function getWBListLibTypeFromContent($strContent)
++	{
++		$strXml = base64_decode(strval($strContent), true);
++		if ($strXml === false || $strXml === '') {
++			return 0;
++		}
++		if (preg_match('/<userlibs>.*?<type>\s*(\d+)\s*<\/type>.*?<\/userlibs>/s', $strXml, $m)) {
++			return intval($m[1]);
++		}
++
++		return 0;
++	}
++
++	/**
+ 	 * 名单置空策略体（JSON）：<root><procaudit><userlibs/></procaudit></root>
+ 	 * 组/端从名单中移除时下发的"空特殊内容"，与正常名单报文同一外层结构，只是 userlibs 为空
+ 	 */
+@@ -647,7 +696,7 @@
+ 			'root' => [
+ 				'procaudit' => [
+ 					'lib' => [
+-						'type'    => strval($libType),
++						'type'    => strval(self::normalizeLibType($libType)),
+ 						'name'    => '',
+ 						'dpath'   => '',
+ 						'md5'     => '',
+@@ -1287,7 +1336,7 @@
+ 		$aJson = [
+ 			'__lib' => [
+ 				'name'    => strval($pgGuid),
+-				'type'    => intval($libType),
++				'type'    => self::normalizeLibType($libType),
+ 				'level'   => 2,
+ 				'version' => strval($version),
+ 				'arch'    => strval($arch),
+@@ -1318,6 +1367,8 @@
+ 	 */
+ 	public static function buildWBListUserLibsContent($libType, $dpath, $version, $platform, $pgGuid, $aArchMd5)
+ 	{
++		// lib.type 只允许 1(白)/2(黑)：兜底归一化，避免把页面 policytype(2/3) 直接写进来下发 <type>3</type>
++		$libType = self::normalizeLibType($libType);
+ 		$aLib = [];
+ 		foreach ((array)$aArchMd5 as $strArch => $strMd5) {
+ 			// MD5 节点字母强制大写（strtoupper 兜底，防止调用方传入小写 md5）
+@@ -1327,7 +1378,7 @@
+ 			'root' => [
+ 				'procaudit' => [
+ 					'userlibs' => [
+-						'type'     => strval($libType),
++						'type'     => strval(self::normalizeLibType($libType)),
+ 						'dpath'    => strval($dpath),
+ 						'version'  => strval($version),
+ 						'platform' => strval($platform),
+@@ -1351,6 +1402,35 @@
+ 	}
+ 
+ 	/**
++	 * 归一化黑白名单库类型（userlibs/lib 的 <type>，客户端只认 1/2）
++	 *
++	 * 两套编号不要混：
++	 *   页面/接口的 POLICY.POLICYTYPE：2 = 白名单，3 = 黑名单
++	 *   客户端读的 lib.type：1 = 白名单，2 = 黑名单
++	 * 本模块统一用 self::$aWBListLibType（2→1、3→2）换算；此处再兜一层，
++	 * 防止把页面 policytype（2/3）直接当 lib.type 传进来导致下发 <type>3</type>。
++	 *
++	 * @param mixed $libType
++	 * @return int 1 白名单 / 2 黑名单
++	 */
++	public static function normalizeLibType($libType)
++	{
++		$intType = intval($libType);
++		if ($intType === 1 || $intType === 2) {
++			return $intType;
++		}
++		if ($intType === 3) {
++			// 误传了页面 policytype 的 3（黑名单）→ 按黑名单 2 下发
++			error_log('[Procmanager] lib.type 收到页面 policytype=3，按黑名单(2)处理');
++
++			return 2;
++		}
++		error_log('[Procmanager] lib.type 非法值 ' . var_export($libType, true) . '，按白名单(1)处理');
++
++		return 1;
++	}
++
++	/**
+ 	 * 策略版本号统一成平台格式：h + microtime(true)*100（两位小数），例 "h179274734835.54"
+ 	 * 与 EsmCenter\library\Common::getMicroTime()（其它产品组策略/端策略 policyver 的写法）保持一致。
+ 	 * 传入的是 Lib\Util\Common::getMicroTime() 的 microtime*10000 浮点时自动换算成 *100。
+@@ -2430,7 +2510,9 @@
+ 		// Redis 只是"尽量同步"：库已经提交，此处任何异常都不该让接口 500，记录日志后照常返回
+ 		try {
+ 
+-		// 1、组：清已下发记录 + 替换（没有则追加）组 hash 中该 productid+policytype 的策略项
++		$intWantLibType = self::normalizeLibType(isset(self::$aWBListLibType[$policytype]) ? self::$aWBListLibType[$policytype] : 1);
++
++		// 1、组：清已下发记录 + 替换（没有则追加）组 hash 中"进程管控名单"策略项
+ 		foreach ($aGroups as $gid) {
+ 			Redis::DEL($delGroupKey . $eid . '_' . self::PROC_PRODUCTID . '_' . $gid);
+ 			$strPolicy  = Redis::hGet($orgKey, $groupKey . $gid);
+@@ -2440,35 +2522,44 @@
+ 				error_log('[resetWBListRedis] group policy cache empty, gid=' . $gid . ', eptype=' . $eptype);
+ 				continue;
+ 			}
+-			// 黑白名单互斥：本名单类型挂上来后，该组原有的"另一类型"名单（白↔黑）策略项要摘掉，
+-			// 否则客户端会同时收到两份类型不同的进程管控报文（type=1 白名单 / type=2 黑名单）
+-			if ($bDropOtherType) {
+-				$aAllPolicy = $this->filterWBListOtherType($aAllPolicy, $policytype, 'group', $gid);
+-			}
+-			$boolFound = false;
+-			foreach ($aAllPolicy as $k => $p) {
+-				if (isset($p['policyproductid']) && $p['policyproductid'] == self::PROC_PRODUCTID
+-					&& isset($p['policytype']) && intval($p['policytype']) === $policytype) {
+-					$aAllPolicy[$k]['policyver'] = $pVer;
+-					$aAllPolicy[$k]['policymaincontent'] = $strBody;
+-					$boolFound = true;
++			// 名单项统一用 policytype=2（白/黑由内容 <userlibs><type> 区分：1 白 / 2 黑）：
++			//   - 审计策略（policytype=1）及其它产品策略项原样保留；
++			//   - 互斥开关打开时摘掉"另一名单类型"的项（按内容里的 lib.type 判断）。
++			$aNewPolicy = [];
++			$boolFound  = false;
++			foreach ($aAllPolicy as $p) {
++				if (!self::isWBListPolicyItem($p)) {
++					$aNewPolicy[] = $p;
++					continue;
+ 				}
++				$intItemLibType = self::getWBListLibTypeFromContent(isset($p['policymaincontent']) ? $p['policymaincontent'] : '');
++				if ($bDropOtherType && $intItemLibType > 0 && $intItemLibType !== $intWantLibType) {
++					continue; // 另一类型名单：摘掉（黑白互斥）
++				}
++				if ($boolFound) {
++					continue; // 同类型重复项（历史脏数据）：只保留一条
++				}
++				$p['policytype']        = self::PROC_LIST_POLICYTYPE;
++				$p['policyver']         = $pVer;
++				$p['policymaincontent'] = $strBody;
++				$aNewPolicy[] = $p;
++				$boolFound    = true;
+ 			}
+ 			if (!$boolFound) {
+-				// 该组首次应用此名单类型：grouptype=1 组策略（与策略中心 updateRedisGroupVal 口径一致）
+-				$aAllPolicy[] = [
++				// 该组首次应用名单：grouptype=1 组策略（与策略中心 updateRedisGroupVal 口径一致）
++				$aNewPolicy[] = [
+ 					'policyproductid'   => self::PROC_PRODUCTID,
+ 					'grouptype'         => 1,
+-					'policytype'        => $policytype,
++					'policytype'        => self::PROC_LIST_POLICYTYPE,
+ 					'policyver'         => $pVer,
+ 					'policymaincontent' => $strBody,
+ 				];
+ 			}
+ 			Redis::hDel($orgKey, $groupKey . $gid);
+-			Redis::hSet($orgKey, $groupKey . $gid, json_encode($aAllPolicy));
++			Redis::hSet($orgKey, $groupKey . $gid, json_encode($aNewPolicy));
+ 		}
+ 
+-		// 2、端：清已下发记录 + 替换（没有则追加）p_info 中该 productid+policytype 的策略项 + 更新 p_ver/edate
++		// 2、端：清已下发记录 + 替换（没有则追加）p_info 中"进程管控名单"策略项 + 更新 p_ver/edate
+ 		foreach ($aSguids as $sguid) {
+ 			$key = CACHE_REDIS_EP_PRE . $eid . $sguid;
+ 			Redis::HDEL(CACHE_HASH_PC_PRE . $eid . '_' . self::PROC_PRODUCTID, $sguid);
+@@ -2477,31 +2568,39 @@
+ 			if (!is_array($aAllPolicy) || empty($aAllPolicy)) {
+ 				error_log('[resetWBListRedis] ep policy cache empty, sguid=' . $sguid);
+ 			} else {
+-				// 黑白名单互斥：同上，端上原挂的另一类型名单策略项一起摘掉
+-				if ($bDropOtherType) {
+-					$aAllPolicy = $this->filterWBListOtherType($aAllPolicy, $policytype, 'ep', $sguid);
+-				}
+-				$boolFound = false;
+-				foreach ($aAllPolicy as $k => $p) {
+-					if (isset($p['policyproductid']) && $p['policyproductid'] == self::PROC_PRODUCTID
+-						&& isset($p['policytype']) && intval($p['policytype']) === $policytype) {
+-						$aAllPolicy[$k]['policyver'] = $pVer;
+-						$aAllPolicy[$k]['policymaincontent'] = $strBody;
+-						$boolFound = true;
++				// 与组口径一致：名单项 policytype 统一为 2，白/黑看内容里的 lib.type
++				$aNewPolicy = [];
++				$boolFound  = false;
++				foreach ($aAllPolicy as $p) {
++					if (!self::isWBListPolicyItem($p)) {
++						$aNewPolicy[] = $p;
++						continue;
+ 					}
++					$intItemLibType = self::getWBListLibTypeFromContent(isset($p['policymaincontent']) ? $p['policymaincontent'] : '');
++					if ($bDropOtherType && $intItemLibType > 0 && $intItemLibType !== $intWantLibType) {
++						continue; // 另一类型名单：摘掉（黑白互斥）
++					}
++					if ($boolFound) {
++						continue; // 同类型重复项：只保留一条
++					}
++					$p['policytype']        = self::PROC_LIST_POLICYTYPE;
++					$p['policyver']         = $pVer;
++					$p['policymaincontent'] = $strBody;
++					$aNewPolicy[] = $p;
++					$boolFound    = true;
+ 				}
+ 				if (!$boolFound) {
+-					// 该端首次应用此名单类型：grouptype=2 端策略（与策略中心 addUsedEpAction 口径一致）
+-					$aAllPolicy[] = [
++					// 该端首次应用名单：grouptype=2 端策略（与策略中心 addUsedEpAction 口径一致）
++					$aNewPolicy[] = [
+ 						'policyproductid'   => self::PROC_PRODUCTID,
+ 						'grouptype'         => 2,
+-						'policytype'        => $policytype,
++						'policytype'        => self::PROC_LIST_POLICYTYPE,
+ 						'policyver'         => $pVer,
+ 						'policymaincontent' => $strBody,
+ 					];
+ 				}
+ 				Redis::hDel($key, 'p_info');
+-				Redis::hSet($key, 'p_info', json_encode($aAllPolicy));
++				Redis::hSet($key, 'p_info', json_encode($aNewPolicy));
+ 			}
+ 			Redis::hSet($key, 'p_ver', $pVer);
+ 			Redis::hSet($key, 'edate', time());
+@@ -2830,29 +2929,35 @@
+ 
+ 	/**
+ 	 * 从组/端的策略数组里剔除"同产品、另一名单类型（白↔黑）"的策略项
+-	 * 一个组（端）只允许挂一种进程管控名单：本名单挂上来后，另一类型的旧策略项必须摘掉，
+-	 * 否则客户端同时收到 type=1（白名单）与 type=2（黑名单）两份报文，策略体不同会互相覆盖。
+-	 * 其它产品的策略项原样保留。
++	 *
++	 * 说明（2026-11 调整）：进程管控名单项在 Redis 里的 policytype 已统一为 2，
++	 * 白/黑改由内容里的 <userlibs><type>（1 白 / 2 黑）区分，因此不能再按 policytype 判断
++	 * "另一类型"。保留本方法仅作历史兼容（如外部代码仍按老口径调用），
++	 * 实际下发/摘除逻辑见 resetWBListRedis（按 lib.type 判定）+ isWBListPolicyItem。
++	 *
+ 	 * @param array $aPolicy 组/端的策略数组（json_decode 后的结构）
+-	 * @param int $policytype 本次下发的名单类型 2 白 / 3 黑
++	 * @param int $policytype 本次下发的名单类型 2 白 / 3 黑（页面口径）
+ 	 * @param string $strKind 日志用：group / ep
+ 	 * @param string $objId 日志用：组ID或客户端SGUID
+ 	 * @return array 过滤后的策略数组
+ 	 */
+ 	private function filterWBListOtherType($aPolicy, $policytype, $strKind, $objId)
+ 	{
+-		$policytype = intval($policytype);
+-		$aResult    = [];
++		$intWantLibType = self::normalizeLibType(isset(self::$aWBListLibType[intval($policytype)])
++			? self::$aWBListLibType[intval($policytype)] : 1);
++		$aResult = [];
+ 		foreach ((array)$aPolicy as $p) {
+-			if (isset($p['policyproductid']) && $p['policyproductid'] == self::PROC_PRODUCTID
+-				&& isset($p['policytype']) && in_array(intval($p['policytype']), [2, 3], true)
+-				&& intval($p['policytype']) !== $policytype) {
+-				error_log('[resetWBListRedis] 黑白名单互斥,摘掉另一类型策略项: ' . $strKind . '=' . $objId
+-					. ', 摘掉policytype=' . intval($p['policytype']) . ', 本次policytype=' . $policytype);
+-				continue;
++			if (self::isWBListPolicyItem($p)) {
++				$intItemLibType = self::getWBListLibTypeFromContent(isset($p['policymaincontent']) ? $p['policymaincontent'] : '');
++				if ($intItemLibType > 0 && $intItemLibType !== $intWantLibType) {
++					error_log('[resetWBListRedis] 黑白名单互斥,摘掉另一类型策略项: ' . $strKind . '=' . $objId
++						. ', 摘掉lib.type=' . $intItemLibType . ', 本次lib.type=' . $intWantLibType);
++					continue;
++				}
+ 			}
+ 			$aResult[] = $p;
+ 		}
++
+ 		return $aResult;
+ 	}
+ 

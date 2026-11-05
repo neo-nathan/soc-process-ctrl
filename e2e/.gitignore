@@ -1,0 +1,5 @@
+# 依赖、登录会话、运行产物都不入库
+node_modules/
+.auth/
+test-results/
+playwright-report/

@@ -1,0 +1,192 @@
+[
+  {
+    "at": "2026-11-04T08:06:46.706Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:06:46.818Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:06:47.036Z",
+    "api": "Policycenter/getGroupPolicy",
+    "params": {
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "77822232"
+      ],
+      "groupname": [
+        "PL05测试组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:06:49.375Z",
+    "api": "Indexinfo/isToken",
+    "params": {
+      "isJilianUseSoc": [
+        "1"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:06:49.500Z",
+    "api": "Policycenter/editPolicy",
+    "params": {
+      "pid": [
+        "34"
+      ],
+      "policyjson": [
+        "[{\"productid\":\"2DA19BD4-5E8D-4397-B233-D9F95CD29DB3\",\"policytype\":\"1\",\"policymaincontent\":\"eyJyb290Ijp7InByb2NhdWRpdCI6eyJlbmFibGUiOnsiQHZhbHVlIjoxfSwiYXVkaXRtb2RlIjp7IkB2YWx1ZSI6IjIifSwibm90aWZ5Ijp7IkB2YWx1ZSI6MH0sInVwdGltZXIiOnsiQHZhbHVlIjoiNjAifX19fQ==\"}]"
+      ],
+      "pname": [
+        "PL05测试-进程策略"
+      ],
+      "description": [
+        "暂无"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "77822232"
+      ],
+      "groupname": [
+        "PL05测试组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:06:56.273Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:07:56.275Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:08:56.386Z",
+    "api": "Sys/systemServideMonitor",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:08:56.388Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:09:56.275Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:10:56.275Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:11:56.277Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:12:40.037Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"\",\"searchtype\":\"computername\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:40.179Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:12:40.320Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:40.575Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"\",\"searchtype\":\"computername\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:41.538Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"/tmp/pl05/pl05-unknown\",\"searchtype\":\"procpath\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:43.015Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:12:43.153Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:43.408Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"\",\"searchtype\":\"computername\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:44.255Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"/tmp/pl05/pl05-learn\",\"searchtype\":\"procpath\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:12:56.286Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  }
+]

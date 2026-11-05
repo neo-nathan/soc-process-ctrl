@@ -1,0 +1,31 @@
+Running 1 test using 1 worker
+  [RECORD] E-5b 新建名单：已存在（重跑），PID 31
+  [RECORD] E-5b 加进程：名单里已有（重跑）
+  [PASS] E-5b 名单进程视图显示 pl05-learn：返回 进程管控 / 白名单 / PL05测试-白2 / 进程列表 已发布 系统类型：Linux/信创 进程数：1 个 应用范围：--- 创建时间：2026-11-04 14:04:47 添加进程 进程名称 文件哈希1 进程路径 添加时间 操作 进程名称 文件哈希1 进程路径 添加时间 操作 pl05-learn MD5b454e238d532e6260285beb62cd0e34a /tmp/pl
+  [RECORD] E-5b 发布：已是已发布且无改动（重跑）
+  [PASS] E-5b 发布后进程行 STATUS=0（已确认）：/tmp/pl05/pl05-learn STATUS=0
+  [PASS] E-5b 中心 6 个 zip 的 md5 = POLICYJSON：文件 6 个；version=17937722985366
+  [PASS] E-5b 换成白2：应用到组提交只含测试组：提交组号 77092728；树上勾选 PL05测试组；接口 {"r":{"code":0,"action":0,"msg":"更新应用范围成功！"},"data":{"ADDGROUP":1,"DELGROUP":0,"ADDEP":0,"DELEP":0,"TOTALGROUP":1,"TOTAL
+  [PASS] E-5b 换成白2：测试组上的名单关联只剩它：29(PL05测试-进程策略,typeNULL)；31(PL05测试-白2,type2)
+  [PASS] E-5b 换成白2：pgl 名单项指向它：policytype=2 type=1 dpath=ruc/libs/w/u name=EC0959518AACC123DE255F52AFB203EC aarch64=693A232FC0AE5C7C28EE16B13B66D1FF 中心文件=693A232FC0AE5C7C28EE16B13B66D1FF
+  [PASS] E-5b 换成白2：pgl 里只有一个名单项：type1,type2
+  [PASS] E-5b 换成白2：ptfile 与测试组 pgl 一致（终端收到）：用时 269 秒
+  [PASS] E-5b 换成白2：终端有这个名单的 zip 且 md5 一致：pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip（终端原来就有，未重新下载；文件时间 2026-11-04T06:08:52.000Z）；收到后共用时 270 秒
+  [PASS] E-5b 换成白2：终端日志有 type="2" delete="0"：8 行
+  [PASS] E-5b 换成白2：两个名单的应用范围：白：3 PL05测试-白 Linux/信创 1 --- 已发布 2026-11-04 13:57:32 --- ｜ 白2：4 PL05测试-白2 Linux/信创 1 组【 1 】 已发布 2026-11-04 14:04:47 ---
+  [PASS] E-5b 换回白：应用到组提交只含测试组：提交组号 77092728；树上勾选 PL05测试组；接口 {"r":{"code":0,"action":0,"msg":"更新应用范围成功！"},"data":{"ADDGROUP":1,"DELGROUP":0,"ADDEP":0,"DELEP":0,"TOTALGROUP":1,"TOTAL
+  [PASS] E-5b 换回白：测试组上的名单关联只剩它：29(PL05测试-进程策略,typeNULL)；30(PL05测试-白,type2)
+  [PASS] E-5b 换回白：pgl 名单项指向它：policytype=2 type=1 dpath=ruc/libs/w/u name=C0AD936CA2471483C4A7F5D11E4CCE6F aarch64=5AB74B92EB8D20784B4C63F051ADB1E6 中心文件=5AB74B92EB8D20784B4C63F051ADB1E6
+  [PASS] E-5b 换回白：pgl 里只有一个名单项：type1,type2
+  [PASS] E-5b 换回白：ptfile 与测试组 pgl 一致（终端收到）：用时 300 秒
+  [PASS] E-5b 换回白：终端有这个名单的 zip 且 md5 一致：pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip（终端原来就有，未重新下载；文件时间 2026-11-04T06:03:52.000Z）；收到后共用时 301 秒
+  [PASS] E-5b 换回白：终端日志有 type="2" delete="0"：8 行
+  [PASS] E-5b 换回白：两个名单的应用范围：白：3 PL05测试-白 Linux/信创 1 组【 1 】 已发布 2026-11-04 13:57:32 --- ｜ 白2：4 PL05测试-白2 Linux/信创 1 --- 已发布 2026-11-04 14:04:47 ---
+  [PASS] E-5b 同事数据没变
+  [PASS] E-5b 护栏没有中止任何请求：[]
+  ✓  1 specs/10-white.spec.js:537:1 › E-5b 白名单换白名单 (9.9m)
+  Slow test file: specs/10-white.spec.js (9.9m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 passed (9.9m)
+
+[exited with code 0]

@@ -1,0 +1,29 @@
+{
+  "resp": {
+    "params": {
+      "pid": [
+        "29"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "policyname": [
+        "PL05测试-进程策略"
+      ]
+    },
+    "json": {
+      "r": {
+        "code": 0,
+        "action": 0,
+        "msg": "更新应用组成功！"
+      },
+      "data": ""
+    }
+  },
+  "before": [
+    "PL05测试组"
+  ]
+}

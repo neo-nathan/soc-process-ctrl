@@ -1,0 +1,27 @@
+Running 1 test using 1 worker
+  [RECORD] E-3 运行前采集记录（只记录）：0 行
+  [PASS] E-3 第一次运行后入库：rc=0；用时 0 秒
+  [PASS] E-3 哈希和 13.18 上算的一致：FILEHASH=B454E238D532E6260285BEB62CD0E34A ALGO=0
+[护栏] 中止 Sys/systemServideMonitor：未登记的写接口，已中止
+  [PASS] E-3 两次运行只有一行（有就更新）：rc=0；共 1 行；TIME 2026-11-04 13:48:51
+  [PASS] E-3 终端日志有 procw pl05-learn：2 行
+  ✘  1 specs/10-white.spec.js:282:1 › E-3 学习数据上报（有就更新） (3.5m)
+  1) specs/10-white.spec.js:282:1 › E-3 学习数据上报（有就更新） ───────────────────────────────────────────────
+    TimeoutError: locator.click: Timeout 10000ms exceeded.
+    Call log:
+    [2m  - waiting for getByText('高级搜索').first()[22m
+       at ../lib/ops.js:156
+      154 |   await page.locator('#tbClient tbody tr').first().waitFor({ timeout: 30000 });
+      155 |   const box = page.locator('#customSearchBox .js_procpath');
+    > 156 |   if (!(await box.isVisible())) await page.getByText('高级搜索', { exact: false }).first().click({ timeout: 10000 });
+          |                                                                                        ^
+      157 |   await box.fill(procPath);
+      158 |   const wait = P.waitApi(page, 'Procmanager/procManager');
+      159 |   await page.locator('#strategyListSearch').click();
+        at Object.searchProc (/Users/nick/Workspace/soc-process-ctrl/e2e/lib/ops.js:156:88)
+        at /Users/nick/Workspace/soc-process-ctrl/e2e/specs/10-white.spec.js:313:16
+    Error Context: test-results/10-white-E-3-学习数据上报（有就更新）/error-context.md
+  1 failed
+    specs/10-white.spec.js:282:1 › E-3 学习数据上报（有就更新） ────────────────────────────────────────────────
+
+[exited with code 0]

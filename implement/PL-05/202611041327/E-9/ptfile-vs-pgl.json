@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "want": "18daa83b7c2b52188435a5502a919b5a,eb0d3ff6503d27c17b9051fd89401bfb",
+  "have": "18daa83b7c2b52188435a5502a919b5a,eb0d3ff6503d27c17b9051fd89401bfb",
+  "files": [
+    {
+      "md5": "18daa83b7c2b52188435a5502a919b5a",
+      "mtime": 1793773732,
+      "file": "ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/4ADF36F8-F122-5341-BB6F-71BC9E44B9A7.rsdata"
+    },
+    {
+      "md5": "eb0d3ff6503d27c17b9051fd89401bfb",
+      "mtime": 1793776251,
+      "file": "ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/A9B76A40-28E8-744C-BD6B-0E166EAF0759.rsdata"
+    }
+  ],
+  "items": [
+    {
+      "policytype": "1",
+      "policyver": "h179377347739.3",
+      "md5": "18daa83b7c2b52188435a5502a919b5a"
+    },
+    {
+      "policytype": "2",
+      "policyver": "h179377624125.98",
+      "md5": "eb0d3ff6503d27c17b9051fd89401bfb"
+    }
+  ]
+}

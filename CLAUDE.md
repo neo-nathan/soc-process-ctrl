@@ -50,6 +50,7 @@
 | `implement/IMPL-{YYYYMMDD}-{HHmm}-{PL-NN}.md`、`implement/{PL-NN}/` | 计划实施（`implement-plan`）的 IMPL 报告与证据（实跑输出、浏览器用例文本结果、只读查库结果、测试脚本副本） |
 | `review/RV-{类型}-{YYYYMMDD}-{HHmm}-{受审对象}.md` | 审查报告；类型：req / design / impl / others。现有 3 份 `RV-20261013-0833-PL-06-v0.7/0.8/0.9.md` 是本规则建立前的历史命名（审查对象都是 `architecture/01`），不改名 |
 | `others/dbscript/rpw.sql`、`others/policy/policy.md` | 数据库脚本、客户端策略协议 |
+| `e2e/` | PL-05 全链路测试脚本（Playwright + SSH 探针，说明见 `e2e/README.md`）；`.auth/`、`node_modules/` 不入库 |
 | `.claude/skills/`、`.claude/scripts/` | 三机制的 skill 与生成 / 检查脚本、执行计划用的 `implement-plan`（入库）；`.claude/launch.json` 等本机配置不入库 |
 
 # 时间戳命名规则（changelog / insights / review 共用）

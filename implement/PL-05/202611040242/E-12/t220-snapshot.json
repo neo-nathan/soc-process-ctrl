@@ -1,0 +1,27 @@
+{
+  "same": true,
+  "matchesGroup": null,
+  "base": {
+    "pstamp": "h179375778672.49",
+    "ptfile": [
+      "839ca9ae52d9f83111ad435376e49832",
+      "aff745b6b00a9c68982ece5040e34cf3"
+    ]
+  },
+  "now": {
+    "group": "58659703",
+    "pstamp": "h179375778672.49",
+    "ptfile": [
+      {
+        "md5": "839ca9ae52d9f83111ad435376e49832",
+        "mtime": 1793773121,
+        "file": "ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/54AE2258-0F55-3041-B802-5FCB38B38901.rsdata"
+      },
+      {
+        "md5": "aff745b6b00a9c68982ece5040e34cf3",
+        "mtime": 1793773121,
+        "file": "ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/E5975DD1-29C3-024F-8060-532B9600F4F2.rsdata"
+      }
+    ]
+  }
+}

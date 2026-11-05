@@ -1,0 +1,144 @@
+## pgl_1 全部项数 20
+policytype=1 policyver=h179368948074.6 md5=aff745b6b00a9c68982ece5040e34cf3
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <enable>1</enable>
+    <auditmode>2</auditmode>
+    <notify>1</notify>
+    <uptimer>70</uptimer>
+  </procaudit>
+</root>
+policytype=3 policyver=h179375778672.49 md5=839ca9ae52d9f83111ad435376e49832
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <userlibs>
+      <type>2</type>
+      <dpath>ruc/libs/b/u</dpath>
+      <version>17936901662502</version>
+      <platform>linux</platform>
+      <name>F2FF19EE8F7865F929087AB5388BD0C7</name>
+      <lib>
+        <md5>FAB1CE8674116848B74B4D6073D385CD</md5>
+        <arch>aarch64</arch>
+      </lib>
+      <lib>
+        <md5>9FB5AD2B9ECC9721A833A749EEA89904</md5>
+        <arch>loongarch64</arch>
+      </lib>
+      <lib>
+        <md5>C8B0A8D4CB89AA2A20A4A606A4A19A7F</md5>
+        <arch>mips64</arch>
+      </lib>
+      <lib>
+        <md5>87FEEFDFE939558EA657615957397C02</md5>
+        <arch>x86_64</arch>
+      </lib>
+      <lib>
+        <md5>27286A6A735BCFD2C40CF1C9CF5CABF8</md5>
+        <arch>loongarch64_3c6000</arch>
+      </lib>
+      <lib>
+        <md5>ABC0B34CB474FF68DAE569336D790E18</md5>
+        <arch>sw_9916</arch>
+      </lib>
+    </userlibs>
+  </procaudit>
+</root>
+## pgl_3 全部项数 20
+policytype=1 policyver=h179368948074.6 md5=aff745b6b00a9c68982ece5040e34cf3
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <enable>1</enable>
+    <auditmode>2</auditmode>
+    <notify>1</notify>
+    <uptimer>70</uptimer>
+  </procaudit>
+</root>
+policytype=3 policyver=h179375778672.49 md5=839ca9ae52d9f83111ad435376e49832
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <userlibs>
+      <type>2</type>
+      <dpath>ruc/libs/b/u</dpath>
+      <version>17936901662502</version>
+      <platform>linux</platform>
+      <name>F2FF19EE8F7865F929087AB5388BD0C7</name>
+      <lib>
+        <md5>FAB1CE8674116848B74B4D6073D385CD</md5>
+        <arch>aarch64</arch>
+      </lib>
+      <lib>
+        <md5>9FB5AD2B9ECC9721A833A749EEA89904</md5>
+        <arch>loongarch64</arch>
+      </lib>
+      <lib>
+        <md5>C8B0A8D4CB89AA2A20A4A606A4A19A7F</md5>
+        <arch>mips64</arch>
+      </lib>
+      <lib>
+        <md5>87FEEFDFE939558EA657615957397C02</md5>
+        <arch>x86_64</arch>
+      </lib>
+      <lib>
+        <md5>27286A6A735BCFD2C40CF1C9CF5CABF8</md5>
+        <arch>loongarch64_3c6000</arch>
+      </lib>
+      <lib>
+        <md5>ABC0B34CB474FF68DAE569336D790E18</md5>
+        <arch>sw_9916</arch>
+      </lib>
+    </userlibs>
+  </procaudit>
+</root>
+## pgl_58659703 全部项数 20
+policytype=1 policyver=h179368948074.6 md5=aff745b6b00a9c68982ece5040e34cf3
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <enable>1</enable>
+    <auditmode>2</auditmode>
+    <notify>1</notify>
+    <uptimer>70</uptimer>
+  </procaudit>
+</root>
+policytype=3 policyver=h179375778672.49 md5=839ca9ae52d9f83111ad435376e49832
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <procaudit>
+    <userlibs>
+      <type>2</type>
+      <dpath>ruc/libs/b/u</dpath>
+      <version>17936901662502</version>
+      <platform>linux</platform>
+      <name>F2FF19EE8F7865F929087AB5388BD0C7</name>
+      <lib>
+        <md5>FAB1CE8674116848B74B4D6073D385CD</md5>
+        <arch>aarch64</arch>
+      </lib>
+      <lib>
+        <md5>9FB5AD2B9ECC9721A833A749EEA89904</md5>
+        <arch>loongarch64</arch>
+      </lib>
+      <lib>
+        <md5>C8B0A8D4CB89AA2A20A4A606A4A19A7F</md5>
+        <arch>mips64</arch>
+      </lib>
+      <lib>
+        <md5>87FEEFDFE939558EA657615957397C02</md5>
+        <arch>x86_64</arch>
+      </lib>
+      <lib>
+        <md5>27286A6A735BCFD2C40CF1C9CF5CABF8</md5>
+        <arch>loongarch64_3c6000</arch>
+      </lib>
+      <lib>
+        <md5>ABC0B34CB474FF68DAE569336D790E18</md5>
+        <arch>sw_9916</arch>
+      </lib>
+    </userlibs>
+  </procaudit>
+</root>

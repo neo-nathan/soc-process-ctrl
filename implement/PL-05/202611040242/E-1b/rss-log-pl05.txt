@@ -1,0 +1,2 @@
+2026-11-04 15:43:41<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-probe (/etc/ld.so.cache)
+2026-11-04 15:43:43<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-normal (/etc/ld.so.cache)

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "新建名单",
+    "status": "RECORD",
+    "note": "已存在（重跑），PID 30"
+  },
+  {
+    "name": "加进程",
+    "status": "RECORD",
+    "note": "名单里已有（重跑）"
+  },
+  {
+    "name": "名单进程视图显示 pl05-learn",
+    "status": "PASS",
+    "note": "返回 进程管控 / 白名单 / PL05测试-白 / 进程列表 已发布 系统类型：Linux/信创 进程数：1 个 应用范围：--- 创建时间：2026-11-04 13:57:32 添加进程 进程名称 文件哈希1 进程路径 添加时间 操作 进程名称 文件哈希1 进程路径 添加时间 操作 pl05-learn MD5b454e238d532e6260285beb62cd0e34a /tmp/pl0"
+  },
+  {
+    "name": "发布",
+    "status": "RECORD",
+    "note": "已是已发布且无改动（重跑）"
+  },
+  {
+    "name": "发布后进程行 STATUS=0（已确认）",
+    "status": "PASS",
+    "note": "/tmp/pl05/pl05-learn STATUS=0"
+  },
+  {
+    "name": "中心 6 个 zip 的 md5 = POLICYJSON",
+    "status": "PASS",
+    "note": "文件 6 个；version=17937719300179"
+  },
+  {
+    "name": "名单页显示已发布",
+    "status": "PASS",
+    "note": "3 PL05测试-白 Linux/信创 1 --- 已发布 2026-11-04 13:57:32 ---"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

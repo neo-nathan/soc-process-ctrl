@@ -1,0 +1,256 @@
+[
+  {
+    "at": "2026-11-04T08:13:11.648Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:13:11.753Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:12.044Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"\",\"searchtype\":\"computername\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:12.913Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"/tmp/pl05/pl05-unknown\",\"searchtype\":\"procpath\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:13.960Z",
+    "api": "Procmanager/getBWName",
+    "params": {
+      "systype": [
+        "2"
+      ],
+      "policytype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:14.211Z",
+    "api": "Procmanager/addProcToBW",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "systype": [
+        "2"
+      ],
+      "procsource": [
+        "list"
+      ],
+      "proclist.procpath": [
+        "/tmp/pl05/pl05-unknown"
+      ],
+      "proclist.filehash": [
+        "F9BD48F6D65E061D1739246E565D8CF0"
+      ],
+      "proclist.algo": [
+        "0"
+      ],
+      "bwlist.pid": [
+        "35"
+      ],
+      "bwlist.pname": [
+        "PL05测试-白"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:14.402Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"77822232\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"/tmp/pl05/pl05-unknown\",\"searchtype\":\"procpath\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:15.216Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:15.395Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:13:15.530Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:15.777Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:15.781Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:16.576Z",
+    "api": "Procmanager/releaseWBList",
+    "params": {
+      "pid": [
+        "35"
+      ],
+      "policytype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:16.792Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T08:13:56.280Z",
+    "api": "Sys/systemServideMonitor",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:13:56.283Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:14:56.277Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:15:56.284Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:16:56.289Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:17:56.282Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:18:56.278Z",
+    "api": "Sys/systemServideMonitor",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:18:56.281Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:19:56.277Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:20:56.279Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:21:56.278Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:22:56.280Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:23:56.281Z",
+    "api": "Sys/systemServideMonitor",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:23:56.284Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:24:56.283Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:25:56.279Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T08:26:56.282Z",
+    "api": "Serverinfo/getPerformance",
+    "params": {}
+  }
+]

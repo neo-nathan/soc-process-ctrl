@@ -1,0 +1,6 @@
+2026-11-04 15:51:29<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="EC6DDB1C-F782-1045-9323-9ECFBA2DD9BE" type="2" delete="1" /></Policychanged>][153]
+2026-11-04 15:51:29<768731, 768826> [epstorage]: [CEpStore::QueryPolicy] DB.QueryPolicy failed -->80004004,productGuid=2DA19BD4-5E8D-4397-B233-D9F95CD29DB3 nType=2
+2026-11-04 15:51:29<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DD97B27-9179-48AB-94E8-E5D4A4D2DF5B"><Policy id="C3AE8A92-AAFE-914F-99D4-FFEB30B8C343" type="1" delete="0" /></Policychanged>][153]
+2026-11-04 15:51:29<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DD97B27-9179-48AB-94E8-E5D4A4D2DF5B"><Policy id="0AE03C02-4842-4B4F-8130-50641855F8D9" type="2" delete="0" /></Policychanged>][153]
+2026-11-04 15:51:29<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="50BAC747-7D02-4969-AF79-45EE47365C81"><Policy id="33D0039D-0F38-D64C-95EA-0B9641B7E368" type="1" delete="0" /></Policychanged>][153]
+2026-11-04 15:51:29<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="4ADF36F8-F122-5341-BB6F-71BC9E44B9A7" type="1" delete="0" /></Policychanged>][153]

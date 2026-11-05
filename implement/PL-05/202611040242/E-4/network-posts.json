@@ -1,0 +1,489 @@
+[
+  {
+    "at": "2026-11-04T07:55:34.340Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:55:34.484Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:34.731Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:34.738Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:35.520Z",
+    "api": "Procmanager/createWBList",
+    "params": {
+      "pname": [
+        "PL05测试-白"
+      ],
+      "description": [
+        ""
+      ],
+      "policytype": [
+        "2"
+      ],
+      "systype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:35.853Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:36.749Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:37.005Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:55:37.090Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:37.363Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:37.365Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:38.359Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ],
+      "procpath": [
+        "/tmp/pl05/pl05-learn"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:39.420Z",
+    "api": "Procmanager/getBWName",
+    "params": {
+      "systype": [
+        "2"
+      ],
+      "policytype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:39.672Z",
+    "api": "Procmanager/addProcToBW",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "systype": [
+        "2"
+      ],
+      "procsource": [
+        "list"
+      ],
+      "proclist.procpath": [
+        "/tmp/pl05/pl05-learn"
+      ],
+      "proclist.filehash": [
+        "B454E238D532E6260285BEB62CD0E34A"
+      ],
+      "proclist.algo": [
+        "0"
+      ],
+      "bwlist.pid": [
+        "35"
+      ],
+      "bwlist.pname": [
+        "PL05测试-白"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:39.866Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ],
+      "procpath": [
+        "/tmp/pl05/pl05-learn"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:40.363Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:40.541Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:55:40.721Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:40.954Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:40.958Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:41.711Z",
+    "api": "Procmanager/showWBList",
+    "params": {
+      "pid": [
+        "35"
+      ],
+      "policytype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:41.711Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:44.851Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:45.063Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:55:45.209Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:45.455Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:45.459Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:46.234Z",
+    "api": "Procmanager/releaseWBList",
+    "params": {
+      "pid": [
+        "35"
+      ],
+      "policytype": [
+        "2"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:46.407Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:48.026Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:48.251Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T07:55:48.394Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:48.656Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T07:55:48.658Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  }
+]

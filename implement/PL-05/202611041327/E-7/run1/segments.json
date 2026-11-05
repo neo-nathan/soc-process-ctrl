@@ -1,0 +1,52 @@
+[
+  {
+    "name": "日志页加白",
+    "status": "FAIL",
+    "note": "{\"r\":{\"code\":0,\"action\":0,\"msg\":\"添加成功。\"},\"data\":{\"INSERTED\":1,\"SKIPPED\":0,\"FAILED\":0,\"INVALID\":0,\"TOTAL\":1,\"DETAIL\":[{\"PID\":30,\"PNAME\":\"PL05测试-白\",\"POLICYTYPE\":2,\"INSERTED\":1,\"SKIPPED\":0,\"FAILED\":0}]}}"
+  },
+  {
+    "name": "发布后名单 version 变化",
+    "status": "PASS",
+    "note": "17937719300179 → 17937741167655；STATUS=4"
+  },
+  {
+    "name": "新 zip 6 个，md5 = POLICYJSON",
+    "status": "PASS",
+    "note": "6 个"
+  },
+  {
+    "name": "aarch64 zip 换了（md5 变化）",
+    "status": "PASS",
+    "note": "5AB74B92EB8D20784B4C63F051ADB1E6 → 8A5AAC12B1CA50594AC8AAC7278DD71E"
+  },
+  {
+    "name": "pgl 名单项 version 跟着变",
+    "status": "PASS",
+    "note": "version=17937741167655"
+  },
+  {
+    "name": "终端下载新版本 zip",
+    "status": "TIMEOUT",
+    "note": "{\"file\":\"pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip\",\"md5\":\"5AB74B92EB8D20784B4C63F051ADB1E6\",\"mtime\":1793772232}"
+  },
+  {
+    "name": "加白后 pl05-unknown 不再出日志",
+    "status": "FAIL",
+    "note": "rc=0；等待 240 秒，新日志 1 条"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "name": "日志页加白",
+    "status": "PASS",
+    "note": "STATUS=1 哈希=F9BD48F6D65E061D1739246E565D8CF0"
+  },
+  {
+    "name": "加白的哈希 = 13.18 上算的",
+    "status": "PASS",
+    "note": "F9BD48F6D65E061D1739246E565D8CF0"
+  },
+  {
+    "name": "发布后名单 version 变化",
+    "status": "PASS",
+    "note": "17937789548269 → 17937800051561；STATUS=4"
+  },
+  {
+    "name": "新 zip 6 个，md5 = POLICYJSON",
+    "status": "PASS",
+    "note": "6 个"
+  },
+  {
+    "name": "aarch64 zip 换了（md5 变化）",
+    "status": "PASS",
+    "note": "BE50514D17E6142668D799789A801B7A → C190C98E6721F751909A0D71A977D6AB"
+  },
+  {
+    "name": "pgl 名单项 version 跟着变",
+    "status": "PASS",
+    "note": "version=17937800051561"
+  },
+  {
+    "name": "终端下载新版本 zip",
+    "status": "TIMEOUT",
+    "note": "{\"file\":\"pwdata/916380A6C9BC20C162FD8FA3B7A62A51_aarch64.zip\",\"md5\":\"BE50514D17E6142668D799789A801B7A\",\"mtime\":1793778990}"
+  },
+  {
+    "name": "加白后 pl05-unknown 不再出日志",
+    "status": "FAIL",
+    "note": "rc=0；等待 240 秒，新日志 1 条"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

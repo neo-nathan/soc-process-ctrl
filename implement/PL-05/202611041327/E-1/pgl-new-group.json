@@ -1,0 +1,14 @@
+[
+  {
+    "policytype": "1",
+    "policyver": "h179368948074.6",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <procaudit>\n    <enable>1</enable>\n    <auditmode>2</auditmode>\n    <notify>1</notify>\n    <uptimer>70</uptimer>\n  </procaudit>\n</root>\n",
+    "md5": "aff745b6b00a9c68982ece5040e34cf3"
+  },
+  {
+    "policytype": "3",
+    "policyver": "h179375778672.49",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <procaudit>\n    <userlibs>\n      <type>2</type>\n      <dpath>ruc/libs/b/u</dpath>\n      <version>17936901662502</version>\n      <platform>linux</platform>\n      <name>F2FF19EE8F7865F929087AB5388BD0C7</name>\n      <lib>\n        <md5>FAB1CE8674116848B74B4D6073D385CD</md5>\n        <arch>aarch64</arch>\n      </lib>\n      <lib>\n        <md5>9FB5AD2B9ECC9721A833A749EEA89904</md5>\n        <arch>loongarch64</arch>\n      </lib>\n      <lib>\n        <md5>C8B0A8D4CB89AA2A20A4A606A4A19A7F</md5>\n        <arch>mips64</arch>\n      </lib>\n      <lib>\n        <md5>87FEEFDFE939558EA657615957397C02</md5>\n        <arch>x86_64</arch>\n      </lib>\n      <lib>\n        <md5>27286A6A735BCFD2C40CF1C9CF5CABF8</md5>\n        <arch>loongarch64_3c6000</arch>\n      </lib>\n      <lib>\n        <md5>ABC0B34CB474FF68DAE569336D790E18</md5>\n        <arch>sw_9916</arch>\n      </lib>\n    </userlibs>\n  </procaudit>\n</root>\n",
+    "md5": "839ca9ae52d9f83111ad435376e49832"
+  }
+]

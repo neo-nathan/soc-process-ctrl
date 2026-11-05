@@ -1,0 +1,62 @@
+[
+  {
+    "md5": "82f0e68f35ec864955f212ca24566e73",
+    "mtime": 1793692882,
+    "file": "pwdata/537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip"
+  },
+  {
+    "md5": "5ab74b92eb8d20784b4c63f051adb1e6",
+    "mtime": 1793772232,
+    "file": "pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip"
+  },
+  {
+    "md5": "2787292a967f227369f182b7a1350bd2",
+    "mtime": 1793776252,
+    "file": "pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip"
+  },
+  {
+    "md5": "693a232fc0ae5c7c28ee16b13b66d1ff",
+    "mtime": 1793772532,
+    "file": "pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip"
+  },
+  {
+    "md5": "fab1ce8674116848b74b4d6073d385cd",
+    "mtime": 1793776888,
+    "file": "pwdata/F2FF19EE8F7865F929087AB5388BD0C7_aarch64.zip"
+  },
+  {
+    "md5": "20656e38a0f962e1f0cfd60fd9fec43d",
+    "mtime": 1793776276,
+    "file": "pwdata/fs.lib"
+  },
+  {
+    "md5": "1190b9acaa75af7ae2c4d505bdeb3c57",
+    "mtime": 1793776887,
+    "file": "pwdata/logfs.lib"
+  },
+  {
+    "md5": "8026c0b55c249481230372e5a09f6774",
+    "mtime": 1793692887,
+    "file": "pwdata/pkg.lib"
+  },
+  {
+    "md5": "23a708b5a92503b2f8037599d30d3a0a",
+    "mtime": 1793692882,
+    "file": "pwdata/procwls.cfg"
+  },
+  {
+    "md5": "77d14291ffa7c304ab2fe045d7c69763",
+    "mtime": 1793692884,
+    "file": "pwdata/procwls.lib"
+  },
+  {
+    "md5": "4583655f7eb9b2fa633b2517bc67e390",
+    "mtime": 1793776888,
+    "file": "pwdata/procwlu.lib"
+  },
+  {
+    "md5": "b4e95d7bf1ba584da359e84af766c843",
+    "mtime": 1793692884,
+    "file": "pwdata/PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.zip"
+  }
+]

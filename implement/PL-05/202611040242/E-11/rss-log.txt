@@ -1,0 +1,1 @@
+2026-11-04 16:38:27<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="EEBBB044-0F88-3343-AC5F-D920E68225E4" type="2" delete="0" /></Policychanged>][153]

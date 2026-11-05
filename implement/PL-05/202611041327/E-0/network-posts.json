@@ -1,0 +1,257 @@
+[
+  {
+    "at": "2026-11-04T05:37:07.825Z",
+    "api": "mycenter/myinfo",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T05:37:07.931Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:08.226Z",
+    "api": "Procmanager/getClientsOverview",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "objId": [
+        "1"
+      ],
+      "onlinestate": [
+        "-1"
+      ],
+      "inSubGroup": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:08.417Z",
+    "api": "Group/getGroupOnline",
+    "params": {
+      "groupid": [
+        "1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:11.202Z",
+    "api": "Procmanager/getProcLogList",
+    "params": {
+      "{\"viewtype\":\"detail\",\"objtype\":\"1\",\"objid\":\"A1E8178084463805\",\"queryconditions\":{\"timeRange\":1,\"searchkey\":\"\",\"searchtype\":\"computername\",\"procaction\":\"\",\"actionreason\":\"\",\"systype\":\"\",\"inSubGroup\":\"0\"},\"paging\":{\"sort\":\"time\",\"order\":1,\"offset\":0,\"limit\":20}}": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:13.202Z",
+    "api": "Policycenter/getGroupPolicy",
+    "params": {
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "groupname": [
+        "根管理组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:15.235Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:17.309Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "2"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:19.316Z",
+    "api": "Procmanager/getWBList",
+    "params": {
+      "policytype": [
+        "3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "timeRange": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:21.358Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T05:37:23.385Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:23.614Z",
+    "api": "Policycenter/getGroupPolicy",
+    "params": {
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "groupid": [
+        "1"
+      ],
+      "groupname": [
+        "根管理组"
+      ],
+      "sguid": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:25.418Z",
+    "api": "Group/getTreeAll",
+    "params": {}
+  },
+  {
+    "at": "2026-11-04T05:37:27.455Z",
+    "api": "Group/getTreeAll",
+    "params": {
+      "productIds": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:27.661Z",
+    "api": "Procmanager/getClientsOverview",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "objId": [
+        "1"
+      ],
+      "onlinestate": [
+        "-1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:27.837Z",
+    "api": "Group/getGroupOnline",
+    "params": {
+      "groupid": [
+        "1"
+      ],
+      "inSubGroup": [
+        "0"
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:27.907Z",
+    "api": "Procmanager/procManager",
+    "params": {
+      "order": [
+        "asc"
+      ],
+      "limit": [
+        "20"
+      ],
+      "offset": [
+        "0"
+      ],
+      "systype": [
+        "2"
+      ],
+      "searchtype": [
+        "computername"
+      ],
+      "searchkey": [
+        ""
+      ]
+    }
+  },
+  {
+    "at": "2026-11-04T05:37:28.252Z",
+    "api": "Procmanager/getBWName",
+    "params": {
+      "systype": [
+        "2"
+      ],
+      "policytype": [
+        "2"
+      ]
+    }
+  }
+]

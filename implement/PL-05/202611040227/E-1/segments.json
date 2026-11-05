@@ -1,0 +1,72 @@
+[
+  {
+    "name": "新增子组",
+    "status": "PASS",
+    "note": "组号 77728718，父组 1，ISINHERIT=1"
+  },
+  {
+    "name": "照抄父组关联（PID 3、22）",
+    "status": "PASS",
+    "note": "关联 PID：3,22"
+  },
+  {
+    "name": "改不继承",
+    "status": "PASS",
+    "note": "ISINHERIT=0；请求参数 inherit=0"
+  },
+  {
+    "name": "改不继承不动已有关联",
+    "status": "PASS",
+    "note": "前 2 条，后 2 条"
+  },
+  {
+    "name": "Redis pgl_<新组> 有进程管控项",
+    "status": "PASS",
+    "note": "type1 verh179368948074.6,type2 verh179375778672.49"
+  },
+  {
+    "name": "移终端",
+    "status": "PASS",
+    "note": "GROUPID=77728718"
+  },
+  {
+    "name": "PSTAMP 变化（只记录）",
+    "status": "RECORD",
+    "note": "h179377689246.96 → h179377729045.41"
+  },
+  {
+    "name": "Redis 终端缓存（只记录）",
+    "status": "RECORD",
+    "note": "{\"p_ver\":\"h179377729045.41\",\"g_info\":\"77728718\"}"
+  },
+  {
+    "name": "ptfile 与测试组一致",
+    "status": "PASS",
+    "note": "用时 1 秒（新组照抄父组，内容可能和移动前相同）"
+  },
+  {
+    "name": "终端日志里的策略变化（只记录）",
+    "status": "RECORD",
+    "note": "0 行"
+  },
+  {
+    "name": "概览显示 13.18 在测试组",
+    "status": "PASS",
+    "note": "测试组概览共 1 行"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

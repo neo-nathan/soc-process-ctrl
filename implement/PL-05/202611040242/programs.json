@@ -1,0 +1,27 @@
+{
+  "pl05-learn": {
+    "path": "/tmp/pl05/pl05-learn",
+    "md5": "6ac5b627616fb9020c0d649c20e01b78",
+    "sha256": "196c9293b74e055c8e03e21206f4afe781b4183347936be1a44251d393522e67"
+  },
+  "pl05-probe": {
+    "path": "/tmp/pl05/pl05-probe",
+    "md5": "3c5b6164837a16f0fdee61dcb4ecd743",
+    "sha256": "01a9b21f96f03dc5ba34287b762736a713eb4543acd24696e215c9e57939238f"
+  },
+  "pl05-unknown": {
+    "path": "/tmp/pl05/pl05-unknown",
+    "md5": "f9bd48f6d65e061d1739246e565d8cf0",
+    "sha256": "a1aac5cefdf301af0312bb81e4993c02c9dda132a10d78009486b4b4e4ee50b4"
+  },
+  "pl05-black": {
+    "path": "/tmp/pl05/pl05-black",
+    "md5": "b58f442cd746c948e7f0d923ffb027df",
+    "sha256": "207a69f4c1c71ce932f1c69ecad3f0eeaa6044a6d39578d16040d6701c08cf84"
+  },
+  "pl05-normal": {
+    "path": "/tmp/pl05/pl05-normal",
+    "md5": "5fd27d6b2c57fe73958733ba7eed1e72",
+    "sha256": "876edd6fee0c10a46ea58db8d8c8b8768ce2c5d42922252a860c950369132050"
+  }
+}

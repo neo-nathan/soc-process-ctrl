@@ -1,0 +1,62 @@
+{
+  "add": {
+    "params": {
+      "policyname": [
+        "PL05测试-进程策略"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "description": [
+        ""
+      ],
+      "eptype": [
+        "2"
+      ],
+      "policyjson": [
+        "[{\"productid\":\"2DA19BD4-5E8D-4397-B233-D9F95CD29DB3\",\"policytype\":\"1\",\"policymaincontent\":\"eyJyb290Ijp7InByb2NhdWRpdCI6eyJlbmFibGUiOnsiQHZhbHVlIjoxfSwiYXVkaXRtb2RlIjp7IkB2YWx1ZSI6IjEifSwibm90aWZ5Ijp7IkB2YWx1ZSI6MH0sInVwdGltZXIiOnsiQHZhbHVlIjoiNjAifX19fQ==\"}]"
+      ]
+    },
+    "json": {
+      "r": {
+        "code": 0,
+        "action": 0,
+        "msg": "策略添加完成"
+      },
+      "data": 29
+    }
+  },
+  "range": {
+    "params": {
+      "pid": [
+        "29"
+      ],
+      "aObjId.groupid": [
+        "77092728"
+      ],
+      "aObjId.islock": [
+        "0"
+      ],
+      "productid": [
+        "2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"
+      ],
+      "eptype": [
+        "2"
+      ],
+      "policyname": [
+        "PL05测试-进程策略"
+      ]
+    },
+    "json": {
+      "r": {
+        "code": 0,
+        "action": 0,
+        "msg": "更新应用组成功！"
+      },
+      "data": ""
+    }
+  },
+  "checked": [
+    "PL05测试组"
+  ]
+}

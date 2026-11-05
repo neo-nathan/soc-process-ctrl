@@ -1,0 +1,67 @@
+[
+  {
+    "name": "策略改回审计",
+    "status": "RECORD",
+    "note": "不需要：auditmode=2"
+  },
+  {
+    "name": "PL05测试-白 删除：POLICY、名单进程行、关联都没了",
+    "status": "PASS",
+    "note": "POLICY 已删；RPW_WPROC 0 行；关联 0 条；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"删除成功。\"},\"data\":\"\"}"
+  },
+  {
+    "name": "PL05测试-白2 删除：POLICY、名单进程行、关联都没了",
+    "status": "PASS",
+    "note": "POLICY 已删；RPW_WPROC 0 行；关联 0 条；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"删除成功。\"},\"data\":\"\"}"
+  },
+  {
+    "name": "PL05测试-黑 清空应用范围",
+    "status": "PASS",
+    "note": "提交组号 []；关联 1 → 0；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"更新应用范围成功！\"},\"data\":{\"ADDGROUP\":0,\"DELGROUP\":1,\"ADDEP\":0,\"DELEP\":0,\"TOTALGROUP\":0,\"TOTAL"
+  },
+  {
+    "name": "PL05测试-黑 删除：POLICY、名单进程行、关联都没了",
+    "status": "PASS",
+    "note": "POLICY 已删；RPW_BPROC 0 行；关联 0 条；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"删除成功。\"},\"data\":\"\"}"
+  },
+  {
+    "name": "pgl_<测试组> 名单项为空或已删",
+    "status": "PASS",
+    "note": "policytype=2 name=null"
+  },
+  {
+    "name": "终端收到名单清除",
+    "status": "PASS",
+    "note": "用时 239 秒"
+  },
+  {
+    "name": "终端日志（只记录）",
+    "status": "RECORD",
+    "note": "0 行 delete=\"1\"，共 1 行"
+  },
+  {
+    "name": "13.18 pwdata 里的名单库（只记录，不清理）",
+    "status": "RECORD",
+    "note": "537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip，6B29E9E2CEDC09E8A669EEFE11C77D3F_aarch64.zip，916380A6C9BC20C162FD8FA3B7A62A51_aarch64.zip，C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip，C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip，EC0959518AACC123DE255F52AFB203EC_aarch64.zip，F2FF19EE8F7865F929087AB5388BD0C7_aarch64.zip，FFB55977CD6E80EB319E19421B42DE08_aarch64.zip"
+  },
+  {
+    "name": "名单页没有测试名单",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

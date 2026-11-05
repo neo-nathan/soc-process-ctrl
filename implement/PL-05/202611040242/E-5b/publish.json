@@ -1,0 +1,62 @@
+{
+  "params": {
+    "pid": [
+      "36"
+    ],
+    "policytype": [
+      "2"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "发布成功。"
+    },
+    "data": {
+      "PID": 36,
+      "PGUID": "6B29E9E2CEDC09E8A669EEFE11C77D3F",
+      "STATUS": 4,
+      "VERSION": "17937790194123",
+      "DPATH": "ruc/libs/w/u",
+      "PLATFORM": "linux",
+      "LIBDIR": "/opt/BDFZ/ESM/data/web/ruc/libs/w/u",
+      "PROCCOUNT": 1,
+      "CONFIRMED": 1,
+      "REMOVED": 0,
+      "OBJCOUNT": 0,
+      "ARCHIVES": {
+        "aarch64": {
+          "file": "6B29E9E2CEDC09E8A669EEFE11C77D3F_aarch64.zip",
+          "md5": "AEE20E1ACBD2512ED239CA6912FD6BDD",
+          "size": 385
+        },
+        "loongarch64": {
+          "file": "6B29E9E2CEDC09E8A669EEFE11C77D3F_loongarch64.zip",
+          "md5": "CF5CF59F0E5734B55B158BBFA942CADA",
+          "size": 389
+        },
+        "mips64": {
+          "file": "6B29E9E2CEDC09E8A669EEFE11C77D3F_mips64.zip",
+          "md5": "E403BD7C98C96255C907CA1DBBF2942B",
+          "size": 384
+        },
+        "x86_64": {
+          "file": "6B29E9E2CEDC09E8A669EEFE11C77D3F_x86_64.zip",
+          "md5": "D94F787DFC2736127E628B7B8FD4161A",
+          "size": 384
+        },
+        "loongarch64_3c6000": {
+          "file": "6B29E9E2CEDC09E8A669EEFE11C77D3F_loongarch64_3c6000.zip",
+          "md5": "E30327EAF60B56AA38BA108C97F6F0B5",
+          "size": 396
+        },
+        "sw_9916": {
+          "file": "6B29E9E2CEDC09E8A669EEFE11C77D3F_sw_9916.zip",
+          "md5": "D7CE61961861A322145CC87E20E5774F",
+          "size": 385
+        }
+      }
+    }
+  }
+}

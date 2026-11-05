@@ -1,0 +1,30 @@
+{
+  "params": {
+    "clients": [
+      "475C1D126323B3E79B980CFF93E09AF9"
+    ],
+    "group": [
+      "1"
+    ],
+    "objects[ep][0][guid]": [
+      "475C1D126323B3E79B980CFF93E09AF9"
+    ],
+    "objects[ep][0][name]": [
+      "svm_arm64"
+    ],
+    "objects[ep][0][gguid]": [
+      "77728718"
+    ],
+    "objects[ep][0][gname]": [
+      "PL05测试组"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "成功"
+    },
+    "data": null
+  }
+}

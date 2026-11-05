@@ -1,0 +1,38 @@
+{
+  "params": {
+    "pname": [
+      "PL05测试-白"
+    ],
+    "description": [
+      ""
+    ],
+    "policytype": [
+      "2"
+    ],
+    "systype": [
+      "2"
+    ]
+  },
+  "json": {
+    "r": {
+      "code": 0,
+      "action": 0,
+      "msg": "创建成功。"
+    },
+    "data": {
+      "PID": 35,
+      "PGUID": "916380A6C9BC20C162FD8FA3B7A62A51",
+      "POLICYVER": "h179377894413.5",
+      "PROC": {
+        "SOURCE": "none",
+        "FETCHED": 0,
+        "INSERTED": 0,
+        "SKIPPED": 0,
+        "FAILED": 0,
+        "INVALID": 0,
+        "TOTAL": 0,
+        "DETAIL": []
+      }
+    }
+  }
+}

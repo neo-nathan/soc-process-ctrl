@@ -1,0 +1,68 @@
+{
+  "before": {
+    "type": "1",
+    "dpath": "ruc/libs/w/u",
+    "version": "17937789548269",
+    "platform": "linux",
+    "name": "916380A6C9BC20C162FD8FA3B7A62A51",
+    "lib": [
+      {
+        "md5": "BE50514D17E6142668D799789A801B7A",
+        "arch": "aarch64"
+      },
+      {
+        "md5": "DB59443A8322BC6120736611EF6E94CA",
+        "arch": "loongarch64"
+      },
+      {
+        "md5": "8909AABAF69924A275FA76BC7531AAF3",
+        "arch": "mips64"
+      },
+      {
+        "md5": "87D93B7F7037318D26C48619A67F2577",
+        "arch": "x86_64"
+      },
+      {
+        "md5": "5DD2D5B2F107B261334495BEC903E91C",
+        "arch": "loongarch64_3c6000"
+      },
+      {
+        "md5": "7D7CA580CDBE6F9F38ED20C94DDE779E",
+        "arch": "sw_9916"
+      }
+    ]
+  },
+  "after": {
+    "type": "1",
+    "dpath": "ruc/libs/w/u",
+    "version": "17937800051561",
+    "platform": "linux",
+    "name": "916380A6C9BC20C162FD8FA3B7A62A51",
+    "lib": [
+      {
+        "md5": "C190C98E6721F751909A0D71A977D6AB",
+        "arch": "aarch64"
+      },
+      {
+        "md5": "B039808C5FE44A188303C0DF76D6C94B",
+        "arch": "loongarch64"
+      },
+      {
+        "md5": "B9CE30CFE8A769842787D230E61CEF63",
+        "arch": "mips64"
+      },
+      {
+        "md5": "374F5CDF4EB60152C0EF87831182BFE1",
+        "arch": "x86_64"
+      },
+      {
+        "md5": "F110FFEA055E85E795CC835DF46C2B0B",
+        "arch": "loongarch64_3c6000"
+      },
+      {
+        "md5": "476C6E9AB1B5771464D53AFEF163B24D",
+        "arch": "sw_9916"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "want": "18daa83b7c2b52188435a5502a919b5a",
+  "have": "18daa83b7c2b52188435a5502a919b5a",
+  "files": [
+    {
+      "md5": "18daa83b7c2b52188435a5502a919b5a",
+      "mtime": 1793777788,
+      "file": "ptfile/2DA19BD4-5E8D-4397-B233-D9F95CD29DB3/4ADF36F8-F122-5341-BB6F-71BC9E44B9A7.rsdata"
+    }
+  ],
+  "items": [
+    {
+      "policytype": "1",
+      "policyver": "h179377756958.64",
+      "md5": "18daa83b7c2b52188435a5502a919b5a"
+    }
+  ]
+}

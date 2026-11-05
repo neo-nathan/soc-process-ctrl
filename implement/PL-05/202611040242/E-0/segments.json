@@ -1,0 +1,90 @@
+[
+  {
+    "name": "13.18 在线（EPINFO）",
+    "status": "PASS",
+    "note": "[\"193.168.13.18\",\"1\",\"1\"]"
+  },
+  {
+    "name": "Redis pgl_1 能解码",
+    "status": "PASS",
+    "note": "1,2"
+  },
+  {
+    "name": "t18 SSH 可用、日志可读",
+    "status": "PASS",
+    "note": "日志行数 12341"
+  },
+  {
+    "name": "t220 SSH 可用、日志可读",
+    "status": "PASS",
+    "note": "日志行数 630"
+  },
+  {
+    "name": "页面 概览",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 日志",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 策略",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 进程管理",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 白名单",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 黑名单",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 策略中心",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "页面 JS 异常",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "策略页不带 ?g= 打开（只记录）",
+    "status": "RECORD",
+    "note": "无异常"
+  },
+  {
+    "name": "策略中心产品列表有进程管控",
+    "status": "PASS",
+    "note": "isBM=0；sys,virus,protection,rls,assetManagement,behaviorAudit,rsr,processManage"
+  },
+  {
+    "name": "概览 13.18",
+    "status": "PASS",
+    "note": "ONLINESTATE=1"
+  },
+  {
+    "name": "勾选首行",
+    "status": "PASS"
+  },
+  {
+    "name": "加白弹窗能打开",
+    "status": "PASS"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

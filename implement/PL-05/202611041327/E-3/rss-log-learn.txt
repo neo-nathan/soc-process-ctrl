@@ -1,0 +1,2 @@
+2026-11-04 13:53:52<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-learn (/etc/ld.so.cache)
+2026-11-04 13:55:05<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-learn (/etc/ld.so.cache)

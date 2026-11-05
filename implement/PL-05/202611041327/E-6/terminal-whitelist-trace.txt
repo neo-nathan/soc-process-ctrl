@@ -1,0 +1,28 @@
+39522:2026-11-04 14:03:51<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+39524:2026-11-04 14:03:51<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793772231]
+39526:2026-11-04 14:03:52<768731, 768744> [CFileDownload]: will DownloadFile[https://193.168.14.15:10443/ruc/libs/w/u/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip.tmp]
+39527:2026-11-04 14:03:52<768731, 768744> [CFileDownload]: DownloadFile[https://193.168.14.15:10443/ruc/libs/w/u/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip.tmp] success
+41331:2026-11-04 14:08:51<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+41333:2026-11-04 14:08:52<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793772532]
+41335:2026-11-04 14:08:52<768731, 768744> [CFileDownload]: will DownloadFile[https://193.168.14.15:10443/ruc/libs/w/u/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip.tmp]
+41336:2026-11-04 14:08:52<768731, 768744> [CFileDownload]: DownloadFile[https://193.168.14.15:10443/ruc/libs/w/u/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip.tmp] success
+43086:2026-11-04 14:13:52<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+43088:2026-11-04 14:13:52<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793772832]
+45781:2026-11-04 14:18:52<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+45783:2026-11-04 14:18:52<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/EC0959518AACC123DE255F52AFB203EC_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793773132]
+47527:2026-11-04 14:23:52<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="A9B76A40-28E8-744C-BD6B-0E166EAF0759" type="2" delete="0" /></Policychanged>][153]
+47529:2026-11-04 14:23:52<768731, 768743> [CFileDownload]: ParseContent[https://193.168.14.15:10443/ruc/libs/w/u/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip]to[/opt/BDFZ/RAV/data/pwdata] id[__procaudit_pwlib2_1793773432]
+49048:2026-11-04 14:28:52<768731, 768865> CUsbMonPlugin::[OnMscPolicyChange]: [<Policychanged productid="2DA19BD4-5E8D-4397-B233-D9F95CD29DB3"><Policy id="4ADF36F8-F122-5341-BB6F-71BC9E44B9A7" type="1" delete="0" /></Policychanged>][153]
+49049:2026-11-04 14:28:52<768731, 768826> [procaudit]: log, procw monstate -->value=2,prev=1,state=1,mode=2,type=1,source=policy,what=mode
+49238:2026-11-04 14:28:58<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-learn (/etc/ld.so.cache)
+49284:2026-11-04 14:29:00<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-unknown (/etc/ld.so.cache)
+49871:2026-11-04 14:32:28<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-learn (/etc/ld.so.cache)
+49958:2026-11-04 14:32:30<768731, 768843> [procaudit]: procw, path0=/tmp/pl05/pl05-unknown (/etc/ld.so.cache)
+== unzip
+Archive:  C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+      201  11-04-2026 05:58   C0AD936CA2471483C4A7F5D11E4CCE6F.json
+---------                     -------
+      201                     1 file
+   skipping: C0AD936CA2471483C4A7F5D11E4CCE6F.json  unable to get password

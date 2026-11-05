@@ -1,0 +1,102 @@
+[
+  {
+    "name": "14.15 后端名单代码指纹（只记录）",
+    "status": "RECORD",
+    "note": "2e22b6cf574a97b7e889bb84b80962e5 models/BaseDA/Procmanager.php 97a2035c58223c0056722202524b1618 controllers/Procmanager.php -rwxr-xr-x. 1 root root 146568 2026-11-04_14:29:54 models/BaseDA/Procmanager"
+  },
+  {
+    "name": "应用前测试组关联（只记录）",
+    "status": "RECORD",
+    "note": "34(PL05测试-进程策略,typeNULL)；35(PL05测试-白,type2)"
+  },
+  {
+    "name": "新建名单",
+    "status": "PASS",
+    "note": "PID 37，STATUS=1"
+  },
+  {
+    "name": "名单进程视图手工添加",
+    "status": "PASS",
+    "note": "进程行 STATUS=1 哈希=b58f442cd746c948e7f0d923ffb027df ALGO=0"
+  },
+  {
+    "name": "名单里的哈希 = 13.18 上算的",
+    "status": "PASS",
+    "note": "b58f442cd746c948e7f0d923ffb027df"
+  },
+  {
+    "name": "名单进程视图显示 pl05-black",
+    "status": "PASS",
+    "note": "返回 进程管控 / 黑名单 / PL05测试-黑 / 进程列表 待发布 系统类型：Linux/信创 进程数：0 个 +1 应用范围：--- 创建时间：2026-11-04 16:27:38 添加进程 进程名称 文件哈希1 进程路径 添加时间 操作 进程名称 文件哈希1 进程路径 添加时间 操作 pl05-black新增 MD5b58f442cd746c948e7f0d923ffb027df /tm"
+  },
+  {
+    "name": "发布后 POLICY.STATUS=4（已发布）",
+    "status": "PASS",
+    "note": "STATUS=4 POLICYVER=h179378086821.69；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"发布成功。\"},\"data\":{\"PID\":37,\"PGUID\":\"FFB55977CD6E80EB319E19421B42DE08\",\"STATUS\":4,\"VERSION"
+  },
+  {
+    "name": "发布后进程行 STATUS=0（已确认）",
+    "status": "PASS",
+    "note": "/tmp/pl05/pl05-black STATUS=0"
+  },
+  {
+    "name": "中心 6 个 zip 的 md5 = POLICYJSON",
+    "status": "PASS",
+    "note": "文件 6 个；version=17937808681858"
+  },
+  {
+    "name": "应用到组提交只含测试组",
+    "status": "PASS",
+    "note": "提交组号 77822232；树上勾选 PL05测试组；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"更新应用范围成功！\"},\"data\":{\"ADDGROUP\":1,\"DELGROUP\":0,\"ADDEP\":0,\"DELEP\":0,\"TOTALGROUP\":1,\"TOTAL"
+  },
+  {
+    "name": "测试组上的名单关联只剩它",
+    "status": "PASS",
+    "note": "34(PL05测试-进程策略,typeNULL)；37(PL05测试-黑,type3)"
+  },
+  {
+    "name": "pgl 名单项指向它",
+    "status": "PASS",
+    "note": "policytype=2 type=2 dpath=ruc/libs/b/u name=FFB55977CD6E80EB319E19421B42DE08 aarch64=24B5B1B99C20416D72F9039D5C9CCACB 中心文件=24B5B1B99C20416D72F9039D5C9CCACB"
+  },
+  {
+    "name": "pgl 里只有一个名单项",
+    "status": "PASS",
+    "note": "type1,type2"
+  },
+  {
+    "name": "ptfile 与测试组 pgl 一致（终端收到）",
+    "status": "PASS",
+    "note": "用时 48 秒"
+  },
+  {
+    "name": "终端有这个名单的 zip 且 md5 一致",
+    "status": "PASS",
+    "note": "pwdata/FFB55977CD6E80EB319E19421B42DE08_aarch64.zip（本次下载）；收到后共用时 49 秒"
+  },
+  {
+    "name": "终端日志有 type=\"2\" delete=\"0\"",
+    "status": "PASS",
+    "note": "9 行"
+  },
+  {
+    "name": "名单页应用范围：黑名单组【 1 】、白名单 ---",
+    "status": "PASS",
+    "note": "黑：2 PL05测试-黑 Linux/信创 1 组【 1 】 已发布 2026-11-04 16:27:38 --- ｜ 白：3 PL05测试-白 Linux/信创 2 --- 已发布 2026-11-04 15:55:44 ---"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

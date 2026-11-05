@@ -1,0 +1,6 @@
+{
+  "policytype": "2",
+  "ver": "h179377205570.01",
+  "userlibs": null,
+  "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <procaudit>\n    <userlibs>\n      <type>1</type>\n      <dpath>ruc/libs/w/u</dpath>\n      <version>17937719300179</version>\n      <platform>linux</platform>\n      <name>C0AD936CA2471483C4A7F5D11E4CCE6F</name>\n      <lib>\n        <md5>5AB74B92EB8D20784B4C63F051ADB1E6</md5>\n        <arch>aarch64</arch>\n      </lib>\n      <lib>\n        <md5>3B4BD380679FB2027A0D1A6C4A693D0A</md5>\n        <arch>loongarch64</arch>\n      </lib>\n      <lib>\n        <md5>EAFC6F05E4B038BA6BAA4CC31B37984A</md5>\n        <arch>mips64</arch>\n      </lib>\n      <lib>\n        <md5>A1521AA015F8EDC84E8C96593E4D43BC</md5>\n        <arch>x86_64</arch>\n      </lib>\n      <lib>\n        <md5>3FA671A1A89CA8C22AEE421637C0B7CC</md5>\n        <arch>loongarch64_3c6000</arch>\n      </lib>\n      <lib>\n        <md5>F92ADFE408BB478C46A93652A75CC321</md5>\n        <arch>sw_9916</arch>\n      </lib>\n    </userlibs>\n  </procaudit>\n</root>\n"
+}

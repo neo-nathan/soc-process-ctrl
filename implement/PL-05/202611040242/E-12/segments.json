@@ -1,0 +1,67 @@
+[
+  {
+    "name": "13.18 移回根管理组",
+    "status": "PASS",
+    "note": "组 77822232 → 1；提交 {\"clients\":[\"475C1D126323B3E79B980CFF93E09AF9\"],\"group\":[\"1\"],\"objects[ep][0][guid]\":[\"475C1D126323B3E79B980CFF93E09AF9\""
+  },
+  {
+    "name": "测试策略应用范围清空",
+    "status": "PASS",
+    "note": "取消前勾选 PL05测试组；关联 1 → 0；接口 {\"r\":{\"code\":0,\"action\":0,\"msg\":\"更新应用组成功！\"},\"data\":\"\"}"
+  },
+  {
+    "name": "删除测试策略",
+    "status": "PASS",
+    "note": "{\"r\":{\"code\":0,\"action\":0,\"msg\":\"删除策略成功!\"},\"data\":\"\"}"
+  },
+  {
+    "name": "删除测试组",
+    "status": "PASS",
+    "note": "{\"r\":{\"code\":0,\"action\":0,\"msg\":0},\"data\":\"删除成功\"}"
+  },
+  {
+    "name": "删组后没有指向测试组的关联残留",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "Redis pgl_<测试组>（只记录）",
+    "status": "RECORD",
+    "note": "没有了"
+  },
+  {
+    "name": "13.18 ptfile 恢复成根管理组的下发",
+    "status": "PASS",
+    "note": "用时 16 秒；type1,type2"
+  },
+  {
+    "name": "EPSTATE（只记录）",
+    "status": "RECORD",
+    "note": "procdef=0@2026-11-04 16:01:42，procaudit=3@2026-11-04 16:39:31"
+  },
+  {
+    "name": "删掉 13.18 的 /tmp/pl05/",
+    "status": "PASS",
+    "note": "目录已不存在"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏预期拦截（只记录）",
+    "status": "RECORD",
+    "note": "[{\"api\":\"Group/changeOrder\",\"why\":\"删组后页面自动给其他组重排（会改同事组的 ORDERVAL），按用户决定不放行，只记录\",\"params\":{\"strGroup\":[\"[{\\\"groupid\\\":\\\"3\\\",\\\"order\\\":1},{\\\"groupid\\\":\\\"58659703\\\",\\\"order\\\":2}]\"]}}]"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "运行前采集记录（只记录）",
+    "status": "RECORD",
+    "note": "1 行"
+  },
+  {
+    "name": "第一次运行后入库",
+    "status": "RECORD",
+    "note": "重跑：运行前已有 1 行，首次入库见 run1-console.txt；rc=0；用时 0 秒"
+  },
+  {
+    "name": "哈希和 13.18 上算的一致",
+    "status": "FAIL",
+    "note": "FILEHASH=B454E238D532E6260285BEB62CD0E34A ALGO=0"
+  },
+  {
+    "name": "两次运行只有一行（有就更新）",
+    "status": "PASS",
+    "note": "rc=0；共 1 行；TIME 2026-11-04 13:48:51"
+  },
+  {
+    "name": "终端日志有 procw pl05-learn",
+    "status": "PASS",
+    "note": "2 行"
+  },
+  {
+    "name": "进程管理页搜得到",
+    "status": "PASS",
+    "note": "1 行"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]

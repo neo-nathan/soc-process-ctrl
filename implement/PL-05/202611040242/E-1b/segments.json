@@ -1,0 +1,52 @@
+[
+  {
+    "name": "测试组当前策略（只记录）",
+    "status": "RECORD",
+    "note": "type1 auditmode=2，type2"
+  },
+  {
+    "name": "pwdata 文件（只记录）",
+    "status": "RECORD",
+    "note": "pwdata/537DC5EDD0F9B16A61D06CCDDE621B83_aarch64.zip pwdata/C0AD936CA2471483C4A7F5D11E4CCE6F_aarch64.zip pwdata/C4E2A1618D07D4F23E2E5B4F53EBC242_aarch64.zip pwdata/EC0959518AACC123DE255F52AFB203EC_aarch64.zip pwdata/F2FF19EE8F7865F929087AB5388BD0C7_aarch64.zip pwdata/fs.lib pwdata/logfs.lib pwdata/pkg.lib pwdata/procwls.cfg pwdata/procwls.lib pwdata/procwlu.lib pwdata/PW_8C226623-B7F5-558E-BE81-CA8F2BB41467.zip"
+  },
+  {
+    "name": "两个程序能正常运行",
+    "status": "PASS",
+    "note": "pl05-probe rc=0，pl05-normal rc=0"
+  },
+  {
+    "name": "pl05-probe 审计日志（只记录）",
+    "status": "RECORD",
+    "note": "无"
+  },
+  {
+    "name": "pl05-normal 审计日志（只记录）",
+    "status": "RECORD",
+    "note": "无；等待 256 秒（上限 uptimer 70 + 180）"
+  },
+  {
+    "name": "rss.def.log 里 pl05 相关行（只记录）",
+    "status": "RECORD",
+    "note": "2 行"
+  },
+  {
+    "name": "EPSTATE（只记录）",
+    "status": "RECORD",
+    "note": "procdef=0，procaudit=3"
+  },
+  {
+    "name": "同期 sshd-session 审计日志（只记录）",
+    "status": "RECORD",
+    "note": "0 / NULL / NULL"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  }
+]

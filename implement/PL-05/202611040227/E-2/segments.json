@@ -1,0 +1,62 @@
+[
+  {
+    "name": "新建策略",
+    "status": "PASS",
+    "note": "PID 33；接口返回 data=33"
+  },
+  {
+    "name": "应用范围提交只含测试组",
+    "status": "PASS",
+    "note": "提交组号 77728718；树上勾选 PL05测试组"
+  },
+  {
+    "name": "测试组进程策略关联换成新 PID",
+    "status": "PASS",
+    "note": "前 3,22 → 后 33"
+  },
+  {
+    "name": "pgl_<测试组> 进程策略 auditmode=1、uptimer=60",
+    "status": "PASS",
+    "note": "enable=1 auditmode=1 uptimer=60 notify=0 ver=h179377730395.89"
+  },
+  {
+    "name": "终端版本号（只记录）",
+    "status": "RECORD",
+    "note": "{\"p_ver\":\"h179377730395.89\",\"g_info\":\"77728718\"}；EPINFO.PSTAMP=h179377730395.89"
+  },
+  {
+    "name": "ptfile 内容 = 中心下发内容",
+    "status": "PASS",
+    "note": "用时 205 秒"
+  },
+  {
+    "name": "终端日志有策略变化",
+    "status": "PASS",
+    "note": "6 行"
+  },
+  {
+    "name": "策略页显示新策略",
+    "status": "PASS",
+    "note": "显示「PL05测试-进程策略」"
+  },
+  {
+    "name": "EPSTATE procaudit（只记录，设计 5.7 期望学习=1）",
+    "status": "RECORD",
+    "note": "procdef=0@2026-11-03 16:01:28，procaudit=1@2026-11-04 15:31:39"
+  },
+  {
+    "name": "同事数据没变",
+    "status": "PASS",
+    "note": ""
+  },
+  {
+    "name": "13.220 ptfile、PSTAMP 和基线一致",
+    "status": "PASS",
+    "note": "PSTAMP=h179375778672.49"
+  },
+  {
+    "name": "护栏没有中止任何请求",
+    "status": "PASS",
+    "note": "[]"
+  }
+]
