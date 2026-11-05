@@ -902,11 +902,11 @@ class Component extends DCLogic {
         delTip: applied ? '删除名单，并向 ' + hc + ' 台终端下发清除策略' : '删除名单',
         // ---- 演示用的点击动作 ----
         setGroup: (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'group' } });
-          showToast(applied ? '（演示）已修改应用的分组，已按新范围自动下发' : '（演示）已应用到 1 个组 20 台终端，名单已自动下发'); },
+          showToast('应用成功'); },   // 应用到组成功只弹这一句
         setHost:  (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'host' } });
           showToast(applied ? '（演示）已修改应用的终端，已按新范围自动下发' : '（演示）已应用到 5 台终端，名单已自动下发'); },
         publish:  (e) => { prevent(e); this.setState({ published: { ...published, [r.name]: true } });
-          showToast(applied ? '已发布并下发到 ' + hc + ' 台终端（' + chg + '）' : '已标记为已发布，设置应用范围后会自动下发'); },
+          showToast('发布成功'); },   // 发布成功只弹这一句，不分有没有应用范围
         askDel:   (e) => { prevent(e); this.setState({ delAsk: r.name }); },   // 打开删除确认弹窗
       };
     });

@@ -26,8 +26,9 @@
 | 编码实现（后端） | IN_PROGRESS | 不在本仓库；同事在 101 开发，未进 svn；与设计有分叉（设计版本记录 H1、P24） |
 | 名单页前端（白 / 黑名单，PL-01～PL-04 及后续切接口、微调） | PASS（PL-04 移除 / 恢复实测待补跑） | 列表、发布、应用到组、已应用组弹窗、创建 / 编辑弹窗、名单进程页都走真接口（mock 已删），样式、空值 `---`、高级搜索、确认框都已对齐策略中心，101 实测通过。仍有效的边界：有应用范围的发布只单测未实测；应用到组后端提交必报「服务异常」（P24 ⑯）；弹窗「继承」框未点框实测（P24 ⑳）；黑名单页没有已应用到组的名单，已应用组弹窗、删除橙字只在白名单页点过；PL-04 S-6 BLOCKED、S-7 未做（ACL）；PL-01 计划是否标完成、是否外审待用户决定；101 `processManage.js` 已还给同事。报告 [IMPL-PL-01](implement/IMPL-20261022-0449-PL-01.md)、[IMPL-PL-02](implement/IMPL-20261022-1012-PL-02.md)，过程见 `changelog/INDEX.md` |
 | 名单页删除确认两行对调 | PASS（svn r72252） | 11-05 00:3x EST：已应用到组时橙字提醒在上、黑字确认句在下，没应用只有黑字；设计 01（补充五）、两个 demo 已同步；已传 101，白名单页两种情况实测通过；已提交 svn r72252，git 未提交（[changelog](changelog/log-20261105-0028-名单页删除确认两行对调.md)） |
-| 名单页文件 101 指纹 | PASS | 11-05 00:3x EST 复核（sha256 前缀）：`list.js` `125ee40f` = 本地 = svn r72252（上传前 101 = r72251，备份 101 `/root/procm-bak/20261105-0032/`）；`list.html` `47d73383` = svn r72251；`processManageList.css` `9cef03c4`、`bwlistProc.js` `e463872c`、`bwlistProc.html` `0e592862`、`bwlistUsedGroup.js` `52ad323e`、`bwlistAdapter.js` `0f842517`、`bwlistModal.js` `e6e68321`（`ESMCenterST/public/esm/` 下，10-26～11-03 核过、之后未改） |
-| 名单页前端 svn 提交 | PASS | r72065（用户提交）、r72066、r72067、r72068、r72069、r72207、r72247、r72251、r72252（`public/` 版本号 `1.1.17.61`～`1.1.17.89`），每次提交后核过本地 = svn = 101、提交信息中文无乱码 |
+| 名单页发布确认与成功提示简化 | PASS（svn r72263） | 11-05：发布确认只留「确定发布白名单/黑名单「X」吗？」，发布、应用到组成功只提示「发布成功」「应用成功」；设计 01（补充六）、两个 demo 已同步；已传 101，白名单页实测通过（成功提示靠拦截写接口验证，没改库），黑名单页没有可发布的名单未点；发布按钮悬停说明未改。详见 [changelog](changelog/log-20261105-0138-名单页发布确认与成功提示简化.md) |
+| 名单页文件 101 指纹 | PASS | 11-05 02:1x EST 复核（sha256 前缀）：`list.js` `7ff9f61d` = 本地 = svn r72263（上传前 101 = r72252，备份 101 `/root/procm-bak/20261105-0151/`）；`list.html` `47d73383` = svn r72251；`processManageList.css` `9cef03c4`、`bwlistProc.js` `e463872c`、`bwlistProc.html` `0e592862`、`bwlistUsedGroup.js` `52ad323e`、`bwlistAdapter.js` `0f842517`、`bwlistModal.js` `e6e68321`（`ESMCenterST/public/esm/` 下，10-26～11-03 核过、之后未改） |
+| 名单页前端 svn 提交 | PASS | r72065（用户提交）、r72066、r72067、r72068、r72069、r72207、r72247、r72251、r72252、r72263（`public/` 版本号 `1.1.17.61`～`1.1.17.90`；同事的 r72254、r72261 与本项目 r72251、r72252 版本号重复，未处理），每次提交后核过本地 = svn = 101、提交信息中文无乱码 |
 | 14.15 全链路测试（PL-05） | FAIL | 11-04 执行完，还原后与基线一致；产品链路未通过（问题 A、B、C 高，E-6、E-7、E-9 不通过，E-10 拦截 BLOCKED）；内审意见已改完，用户决定不再审，计划标「已执行」。报告 [IMPL-PL-05](implement/IMPL-20261104-0345-PL-05.md)、证据 `implement/PL-05/`、测试脚本 `e2e/`（[changelog](changelog/log-20261104-0016-实施PL-05.md)） |
 | 项目治理三机制 | PASS | 2026-10-21 建立，生成器和检查脚本均通过 |
 | 计划实施 skill（implement-plan） | READY | 2026-10-21 移植，已用于 PL-01、PL-02（[changelog](changelog/log-20261021-0430-移植implement-plan技能.md)）；经验见 `insights/` |
@@ -72,10 +73,10 @@
 
 ## 仓库现场
 
-- 2026-11-05 00:39 EST：`main` 上删除确认两行对调（设计 01、两个 demo、changelog）与状态页精炼已提交，比 `origin/main` 超前 6 个提交、未推送。未跟踪且不是本会话产生的：`changelog/log-20261105-0026-…`、`research/07-…`（页面提示文案清单；`changelog/INDEX.md` 已收录 0026 那条，文件提交前该链接在 git 里是断的）；`demo/Index.php`（10-29 出现，来源未核实，不要提交）。SOC 源码 svn：删除确认两行对调已提交 r72252，`public/` 无未提交改动；`esmCenter/controllers/Index.php` 有本地改动，来源未核实，不要动。
+- 2026-11-05 00:39 EST：`main` 上删除确认两行对调（设计 01、两个 demo、changelog）与状态页精炼已提交，比 `origin/main` 超前 6 个提交、未推送。未跟踪且不是本会话产生的：`changelog/log-20261105-0026-…`、`research/07-…`（页面提示文案清单；`changelog/INDEX.md` 已收录 0026 那条，文件提交前该链接在 git 里是断的）；`demo/Index.php`（10-29 出现，来源未核实，不要提交）。SOC 源码 svn：发布确认与成功提示简化已提交 r72263，`public/` 无未提交改动（git 侧：本次设计 01、demo、changelog、状态页改动未提交）；`esmCenter/controllers/Index.php` 有本地改动，来源未核实，不要动。
 - 开工仍须实时执行 `git status --short --branch`。
 
 ---
 
-最后更新：2026-11-05 00:39 EST
+最后更新：2026-11-05 02:13 EST
 最后精炼：2026-11-05 00:35 EST
