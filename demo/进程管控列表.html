@@ -155,8 +155,8 @@ html,body{margin:0}
           <!-- 分隔竖线 -->
           <span style="width: 1px; height: 18px; background: #dde1e7; margin: 0 4px;"></span>
           <!-- 选中加白 / 选中加黑：把列表里勾选的进程（可跨页勾选）加入名单；点了先弹出「选择白名单 / 选择黑名单」弹窗 -->
-          <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.white }}">选中加白</button>
-          <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.black }}">选中加黑</button>
+          <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.white }}" title="把选中的进程加入白名单">选中加白</button>
+          <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.black }}" title="把选中的进程加入黑名单">选中加黑</button>
           <span style="width: 1px; height: 18px; background: #dde1e7; margin: 0 4px;"></span>
           <!-- 按搜索条件加白：不用勾选，把按当前查询条件查出来的全部进程（所有分页）加入白名单；同样先弹出选择白名单的弹窗 -->
           <button class="cbtn" style="display: flex; align-items: center; height: 30px; padding: 0 14px; background: #ffffff; border: 1px solid #1e88e5; border-radius: 3px; color: #1e88e5; font-size: 14px; font-family: inherit; cursor: pointer; white-space: nowrap;" onClick="{{ act.allWhite }}" title="{{ act.allTitleW }}">按搜索条件加白</button>
@@ -933,7 +933,7 @@ class Component extends DCLogic {
     const catsOf = (list) => list.map((r) => r.os).filter((v, i, a) => a.indexOf(v) === i);   // 这些进程涉及几种系统类型
     const openPick = (kind, scope) => {
       const kindName = kind === 'w' ? '白名单' : '黑名单';
-      if (scope === 'sel' && !selCount) return showToast('请先勾选要加入' + kindName + '的进程', true);
+      if (scope === 'sel' && !selCount) return showToast('请先勾选要加入的进程', true);   // 与源码 processMana.js 一致，不带名单类型
       if (scope === 'all' && !fullList.length) return showToast('没有可加入' + kindName + '的进程', true);
       // 列表已按左上角系统类型筛选，正常不会混在一起；这里再兜底检查一次
       if (catsOf(scope === 'all' ? fullList : checkedList).length > 1) return showToast('所选进程里既有 Windows 又有 Linux/信创，' + kindName + '按系统类型区分，请分开加入', true);
@@ -943,7 +943,7 @@ class Component extends DCLogic {
       white: () => openPick('w', 'sel'),
       black: () => openPick('b', 'sel'),
       allWhite: () => openPick('w', 'all'),
-      allTitleW: '把查询出的全部 ' + fullList.length + ' 个进程（所有分页）加入白名单',
+      allTitleW: '把按当前搜索条件搜出的全部进程加入白名单',   // 「按搜索条件加白」按钮的悬停说明，与源码 processMana.html 一致
     };
     const pkKind = pkSt ? pkSt.kind : 'w';
     const pkName = pkKind === 'w' ? '白名单' : '黑名单';

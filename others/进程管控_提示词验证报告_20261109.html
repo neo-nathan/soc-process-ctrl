@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进程管控模块 · 全部提示词清单</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f5f7fa; color: #333; font: 14px/1.7 "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif; }
+  .page { max-width: 1240px; margin: 0 auto; background: #fff; padding: 34px 46px 64px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  h1 { font-size: 23px; font-weight: 600; color: #1f2329; margin: 0 0 10px; }
+  .meta { font-size: 13px; color: #7d8694; background: #fbfbfc; border-left: 3px solid #d9001b; padding: 8px 12px; margin: 0 0 20px; }
+  .meta b { color: #d9001b; font-weight: 600; }
+  .meta .sep { color: #d6dbe2; margin: 0 6px; }
+  h2 { font-size: 18px; font-weight: 600; color: #1f2329; margin: 34px 0 12px; padding-left: 10px; border-left: 4px solid #3370ff; }
+  h3 { font-size: 15px; font-weight: 600; color: #2b3a4b; margin: 22px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; }
+  p { margin: 8px 0 12px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 20px; font-size: 13px; }
+  th, td { border: 1px solid #e3e8ee; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #f2f5fa; font-weight: 600; color: #1f2329; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #fafbfc; }
+  tbody tr:hover { background: #f0f6ff; }
+  td:first-child { color: #7d8694; white-space: nowrap; }
+  code { background: #f4f5f7; border-radius: 3px; padding: 1px 5px; color: #b02a37; font-family: Consolas, Monaco, "Courier New", monospace; font-size: 12.5px; white-space: nowrap; }
+  blockquote { margin: 12px 0; padding: 10px 16px; background: #fafbfc; border-left: 3px solid #c9d3e0; color: #4a5560; }
+  ul { margin: 8px 0 14px; padding-left: 22px; }
+  li { margin: 3px 0; }
+  hr { border: 0; border-top: 1px solid #eceff3; margin: 26px 0; }
+  i.opt { color: #8a919c; font-style: normal; }
+  .toc { background: #fafbfc; border: 1px solid #e3e8ee; border-radius: 6px; padding: 12px 18px; margin: 6px 0 10px; font-size: 13px; }
+  .toc-t { font-weight: 600; color: #1f2329; margin-bottom: 4px; }
+  .toc ol { margin: 0; padding-left: 18px; columns: 2; column-gap: 32px; }
+  .toc li { margin: 2px 0; break-inside: avoid; }
+  .toc li.lv3 { margin-left: 14px; list-style: circle; }
+  .toc a { color: #3370ff; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; padding: 0; max-width: none; }
+    .toc { break-inside: avoid; }
+    table { break-inside: auto; }
+    tr { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<h1>进程管控模块 · 全部提示词清单</h1>
+<div class="meta">代码基线 SVN <b>r72256</b><span class="sep">｜</span>2026-11-05 13:55<span class="sep">｜</span>共 <b>178</b> 条<span class="sep">｜</span>导出时间 2026-11-09 15:03<span class="sep">｜</span>红色 = 生效口径（<b>心跳</b> / <b>N 分钟内</b>）</div>
+<nav class="toc"><div class="toc-t">目录</div><ol>
+<li class="lv2"><a href="#sec0">一、严重：功能口径缺失（1 条）</a></li>
+<li class="lv2"><a href="#sec1">二、中等：与已定口径不一致（6 条）</a></li>
+<li class="lv2"><a href="#sec2">三、轻微：一致性 / 标点（5 条）</a></li>
+<li class="lv2"><a href="#sec3">四、待你确认（1 条）</a></li>
+<li class="lv2"><a href="#sec4">五、附：代码卫生（1 条，不影响文案）</a></li>
+<li class="lv2"><a href="#sec5">六、这次改对了的（只做抽样说明，不逐条列）</a></li>
+</ol></nav>
+<h1>进程管控模块 · 提示词改动验证报告</h1>
+<ul><li><strong>验证对象</strong>：SVN <strong>r72299</strong>（本地 2026-11-09 14:55 更新），对比基线 r72256。</li><li><strong>验证范围</strong>：<code>public/esm/view/processManage/</code> 全部 16 个文件，原清单 178 条提示词逐条复核。</li><li><strong>验证方式</strong>：① 全量重扫当前代码里的中文字符串（含 HTML 静态文案、占位、title、空态、校验红字）；② 对照《提示词清单》建议列逐条比对；③ 代码级核对（函数传参、模板占位、元素 id、样式依赖、语法）。</li><li><strong>结论</strong>：<strong>164 条合格</strong>（含 125 条原本就无需改的），<strong>14 处仍不适合</strong>（下表）。合格项按要求不列出。</li></ul>
+<hr>
+<h2 id="sec0">一、严重：功能口径缺失（1 条）</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>1</td><td><code>list.js:72</code> <code>TXT_PUBLISH_OK</code>、<code>list.js:936</code></td><td>发布成功只弹一句「发布成功」，未应用与已应用同一个口径</td><td>上一轮已确认的需求「发布后要提示用户去应用」在这次改动里被删掉了：确认弹窗第二句（「发布后才能应用到组」）也一并删掉，用户从发布到结束全程不知道还要去点「应用到组」，会以为发布完就生效了</td><td>提示条按状态分两句：已应用→「发布成功」；未应用→「发布成功，请点这一行的「应用到组」」。要更主动就恢复引导弹窗（「稍后 / 去应用」）</td></tr></tbody></table>
+<hr>
+<h2 id="sec1">二、中等：与已定口径不一致（6 条）</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>2</td><td><code>list.js:1394</code>、<code>bwlistProc.js:90</code></td><td>「发布后进程数会变成 0，不能发布；要<strong>清掉</strong>这条白名单请直接删除。」</td><td>「清掉」是口语，建议列第 41、112 条明确要求统一成「删除」，这两处漏改（其它地方已改）</td><td>改「要删除这条白名单请直接删除」</td></tr><tr><td>3</td><td><code>processMana.js:386</code></td><td>「请先选择要添加的数据！」</td><td>日志页同一功能已改成「请先勾选要加入的日志」，这里没跟；且「数据」指代不清</td><td>与日志页统一：「请先勾选要加入的进程」</td></tr><tr><td>4</td><td><code>processMana.js:414</code>、<code>processMana.html:97</code></td><td>「暂时还没有可选择的<strong>白/黑名单</strong>，请<strong>点击</strong>右上角 新建<strong>白/黑名单</strong> 按钮创建<strong>~</strong>」</td><td>日志页已改成「暂时还没有可选的白/黑名单，请点右上角「新建白/黑名单」创建」；这里仍带「点击」、半角空格、波浪号，两页说法不一</td><td>照日志页改：去「点击」→「请点」、去半角空格、去「~」、按钮名加「」</td></tr><tr><td>5</td><td><code>log.html:4-5</code>、<code>processMana.html:9-11</code></td><td>「加白 / 加黑 / 选中加白 / 选中加黑 / 按搜索条件<strong>加白</strong>」</td><td>「加白/加黑」是内部简称，建议列第 142、157 条要求改「加入白名单 / 加入黑名单」，未落地</td><td>按钮宽度放不下就保留短文案，但给 <code>title</code> 补全称：<code>title="加入白名单"</code></td></tr><tr><td>6</td><td><code>processMana.html:108</code></td><td>弹窗主按钮「<strong>确认</strong>」</td><td>日志页同款弹窗已改「确定」，两页不一致；全站确认类按钮以「确定」为主</td><td>改「确定」</td></tr><tr><td>7</td><td><code>list.html:354</code></td><td>新增发布 loading：「发布中请稍等<strong>...</strong>」</td><td>三个半角句点；全角场合应为省略号</td><td>改「发布中，请稍候…」或「发布中，请稍等」</td></tr></tbody></table>
+<hr>
+<h2 id="sec2">三、轻微：一致性 / 标点（5 条）</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>8</td><td><code>list.js:255</code></td><td>「<strong>空白名单</strong>不能发布，请先添加进程」（<code>'空' + name</code> 直接拼）</td><td>同一份代码里 <code>emptyName</code> 用的是「空（白名单）」，到这里拼成「空白名单」，既不一致又有歧义（读成「空白的名单」）</td><td>改「空（白名单）不能发布」，或直接「还没有进程，不能发布」</td></tr><tr><td>9</td><td><code>list.js:251</code>、<code>list.js:232</code></td><td>①「发布并自动下发到已应用的 3 个组<strong>。</strong>」&lt;br&gt;②「已应用到 3 个组<strong>␣</strong>120 台终端」</td><td>①悬停说明只有这句带句号，其余都不带；②两段并列缺顿号，读起来连成一串</td><td>①去掉句号；②改「3 个组、120 台终端」</td></tr><tr><td>10</td><td><code>list.html:114-122</code></td><td>表头说明仍写「加了进程（<strong>0 +N</strong>），还没发布过」</td><td>行说明（<code>list.js:1386</code>）已经改成「加了 N 个进程」；表头还是内部记法「（0 +N）」，同一张说明框两套写法</td><td>表头四句按行说明的口径重写，去掉「（0 +N）」</td></tr><tr><td>11</td><td><code>log.js:457</code>、<code>processMana.js:434</code></td><td>「请先选择要加入的<strong>黑/白名单</strong>！」</td><td>全站其它地方都写「白/黑名单」（表头、空态、弹窗标题），这里顺序相反</td><td>统一「白/黑名单」，或都改成「白名单或黑名单」</td></tr><tr><td>12</td><td><code>js/plugin/policy_common.js:164</code>、<code>:201</code></td><td>描述为空显示「暂无」；解析失败提示「策略内容获取失败」</td><td>建议列第 126、140 条（空值统一「---」、失败提示补「请刷新重试」）未落地。注意这是<strong>公共模块</strong>，改动会影响另外 6 个策略页</td><td>要与不要需产品定；要改就一次性改公共模块，别只改进程管控</td></tr></tbody></table>
+<hr>
+<h2 id="sec3">四、待你确认（1 条）</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>13</td><td><code>list.html:186</code>、<code>list.html:204</code></td><td>发布 / 删除确认弹窗主按钮仍是「<strong>确定</strong>」</td><td>建议列第 48、54 条建议改「发布 / 删除」并给删除按钮红色，本次未采纳；<code>processManageList.css</code> 里对应的红色按钮样式 <code>.procm-btn-danger</code> 也已不存在</td><td>两条路选一：①改按钮文字（动词与标题一致）；②明确作废该建议，全站确认类统一「确定」，我把清单里第 48、54 条标成「已作废」</td></tr></tbody></table>
+<hr>
+<h2 id="sec4">五、附：代码卫生（1 条，不影响文案）</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>14</td><td><code>list.js:65-66</code></td><td>注释「生效口径：中心不推送…」下面留了一行 <code>//var TXT_HEARTBEAT = '';</code></td><td>变量已删，注释和空变量留着是死代码，后来人容易误以为还有这个口径</td><td>连同上面那行注释一起删掉</td></tr></tbody></table>
+<hr>
+<h2 id="sec5">六、这次改对了的（只做抽样说明，不逐条列）</h2>
+<ul><li><strong>红字样样清零</strong>：全模块提示词里已无「心跳」「N 分钟内」（仅剩 2 处代码注释）。</li><li>错字全修：「请选<strong>选</strong>择」「已经选中 N 个<strong>组织</strong>」。</li><li>术语统一：「分组」→「组」（按钮悬停、覆盖确认句、模板标题）。</li><li>空值/空态、按钮「确定」、加名单成功提示、「回列表」→「返回列表」等建议均已落地。</li><li>动态化做得比较完整：<code>opStates(row, name)</code>、<code>publishConfirmHtml(row, name)</code>、<code>delConfirmHtml(row, name)</code>、<code>checkAdd(..., listName)</code> 的调用处都正确传了 <code>op.cfg.name</code>，<code>list.html</code> 的 <code>{{name}}</code> / <code>{{createText}}</code> / <code>{{emptyName}}</code> 也都由 <code>op.cfg</code> 渲染，未出现 <code>undefined</code>、未替换的占位。</li></ul>
+</div>
+</body>
+</html>

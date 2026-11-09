@@ -278,7 +278,7 @@ html,body{margin:0}
                 <span style="display: block; color: #c5ccd6;">---</span>
                 <span style="display: block; margin-bottom: 6px;">还没有任何进程，不能发布；先到「进程」页添加</span>
                 <span style="display: block; color: #90caf9;">待发布</span>
-                <span style="display: block; margin-bottom: 6px;">加了进程（0 +N），还没发布过；点「发布」定稿，之后才能设置应用范围</span>
+                <span style="display: block; margin-bottom: 6px;">加了进程，还没发布过；点「发布」定稿，之后才能设置应用范围</span>
                 <span style="display: block; color: #a5d6a7;">已发布</span>
                 <span style="display: block; margin-bottom: 6px;">内容定稿了，没有待发布的增减。应用范围是 --- 的还没下发到终端，选了应用范围就自动下发；改应用范围也自动下发，不用再发布</span>
                 <span style="display: block; color: #ffcc80;">有变更</span>
@@ -850,7 +850,7 @@ class Component extends DCLogic {
       // ---- 发布：待发布 / 有变更 能点；空白名单、没有变更、发布后会变成 0 的不能点 ----
       const toZero = everPub && changed && total === 0;
       const canPub = (status === '待发布' || status === '有变更') && !toZero;
-      const pubOffTip = none ? '空白名单不能发布，请先添加进程'
+      const pubOffTip = none ? '还没有进程，不能发布，请先添加进程'
         : (toZero ? '发布后进程数为 0，至少保留 1 个进程；要删除这条白名单请直接删除它'
         : '没有待发布的变更');
       const pubTip = applied ? '发布并下发到 ' + hc + ' 台终端' : '标记为已发布，设置应用范围后自动下发';
@@ -878,7 +878,7 @@ class Component extends DCLogic {
         stTipColor: { '---': '#c5ccd6', '待发布': '#90caf9', '已发布': '#a5d6a7', '有变更': '#ffcc80' }[status],
         // 为什么是这个状态
         pubWhy: (() => {
-          const where = (gc ? gc + ' 个组 ' : '') + hc + ' 台终端';
+          const where = (gc ? gc + ' 个组、' : '') + hc + ' 台终端';
           if (status === '---') return '还没有任何进程，不能发布。';
           if (status === '待发布') return '加了 ' + add + ' 个进程，还没发布过，终端上没有这条白名单。';
           if (status === '已发布') return applied ? '内容已定稿并下发到 ' + where + '，终端上就是当前的 ' + base + ' 个进程。' : '内容已定稿（' + base + ' 个进程），还没设置应用范围，终端上没有它。';
@@ -889,7 +889,7 @@ class Component extends DCLogic {
           if (status === '---') return '下一步：到「进程」页添加进程，然后点「发布」。';
           if (status === '待发布') return '下一步：点「发布」把内容定稿，再设置应用范围（自动下发）。';
           if (status === '已发布') return applied ? '终端已是最新，不需要操作。改应用范围会自动下发。' : '下一步：点「应用到组」或「应用到终端」，选完自动下发。';
-          if (toZero) return '发布后进程数会变成 0，不能发布；要清掉这条白名单请直接删除。';
+          if (toZero) return '发布后进程数会变成 0，不能发布；要删除这条白名单请直接删除它。';
           return '下一步：点「发布」' + (applied ? '，会自动下发到终端。有变更时不能改应用范围。' : '把变更定稿，再设置应用范围。');
         })(),
         // 操作按钮的提示文字
@@ -899,14 +899,14 @@ class Component extends DCLogic {
         canScope, noScope: !canScope, scopeOffTip,
         pubHot: canPub, pubOff: !canPub, pubOffTip, pubTip,
         // 删除：随时可以（删除前弹窗确认）。已应用的，删除后组内终端的白名单会被清除；只演示应用到终端时不写组数
-        delTip: applied ? '删除白名单：已应用到 ' + (gc > 0 ? gc + ' 个组 ' : '') + hc + ' 台终端，删除后这些终端的白名单会被清除' : '删除白名单',
+        delTip: applied ? '删除白名单：已应用到 ' + (gc > 0 ? gc + ' 个组、' : '') + hc + ' 台终端，删除后这些终端的白名单会被清除' : '删除白名单',
         // ---- 演示用的点击动作 ----
         setGroup: (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'group' } });
           showToast('应用成功'); },   // 应用到组成功只弹这一句
         setHost:  (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'host' } });
           showToast(applied ? '（演示）已修改应用的终端，已按新范围自动下发' : '（演示）已应用到 5 台终端，白名单已自动下发'); },
         publish:  (e) => { prevent(e); this.setState({ published: { ...published, [r.name]: true } });
-          showToast('发布成功'); },   // 发布成功只弹这一句，不分有没有应用范围
+          showToast(applied ? '发布成功' : '发布成功，请点这一行的「应用到组」'); },   // 已应用：只说发布成功；没应用：提醒再去点「应用到组」
         askDel:   (e) => { prevent(e); this.setState({ delAsk: r.name }); },   // 打开删除确认弹窗
       };
     });

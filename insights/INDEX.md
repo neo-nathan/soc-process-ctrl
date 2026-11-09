@@ -19,14 +19,14 @@
    ⚠️ 钩子必须**压缩到 120 字以内** —— MEMORY.md 每次会话全量进上下文,写成长摘要会挤占注意力。
 5. 没有 `↳ memory:` 标注的条目见下方说明,按价值自行决定要不要新建 memory 条目。
 
-## 二、同步状态(生成时刻实测,本机日期 2026-11-08)
+## 二、同步状态(生成时刻实测,本机日期 2026-11-09)
 
 | 指标 | 数值 |
 |---|---|
-| insights 文件总数 | **13** |
-| 其中 memory 侧**显式点名引用**的 | **13** |
+| insights 文件总数 | **14** |
+| 其中 memory 侧**显式点名引用**的 | **14** |
 | 未见 memory 显式引用的 | **0** |
-| memory 事实文件总数 | **14** |
+| memory 事实文件总数 | **15** |
 | 断链(索引→文件、memory→insight) | **0** |
 
 ⚠️ **「未见 memory 显式引用」不等于「没沉淀进 memory」**。映射是靠"memory 文件正文里有没有写出
@@ -104,3 +104,6 @@ insight,只是没留文件名。**所以这 0 条是"待人工确认"的候选,�
 - **[提交 public 要同时改 public/版本控制.txt](insight-20261105-0358-提交public要改版本控制txt.md)** \
   SOC 源码 public/ 每次 svn 提交都要把 public/版本控制.txt 改成本次版本号（只一行、无末尾换行）并一起提交；r72265 以前本项目漏改。提交前 svn up public，按网址查最新号 +1，写入后 svn diff 核对。 \
   ↳ memory: `svn-public-version-file`
+- **[改 SOC 源码要保留 CRLF 换行](insight-20261109-0240-改SOC源码要保留CRLF换行.md)** \
+  SOC 源码有的文件是 CRLF 换行（如 log.js、processMana.html、log.html），Python 默认读写会全变 LF，svn diff 变成整文件改动；用 newline='' 读写，改完对比 CRLF 行数和 diff 行数。 \
+  ↳ memory: `soc-src-keep-crlf`
