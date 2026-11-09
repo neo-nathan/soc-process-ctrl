@@ -355,7 +355,7 @@ html,body{margin:0}
         </div>
         <!-- ② 搜索条件：只按名单名称搜（同一个进程所在名单的系统类型都一样，不用按系统类型搜）；模糊匹配，点搜索或回车生效 -->
         <div style="display: flex; align-items: center;">
-          <input id="ldKw" type="text" aria-label="名单搜索关键字" value="{{ ld.kw }}" onChange="{{ ld.onKw }}" onKeyDown="{{ ld.onKey }}" placeholder="{{ ld.ph }}" style="height: 30px; width: 360px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
+          <input id="ldKw" type="text" aria-label="白/黑名单搜索关键字" value="{{ ld.kw }}" onChange="{{ ld.onKw }}" onKeyDown="{{ ld.onKey }}" placeholder="{{ ld.ph }}" style="height: 30px; width: 360px; padding: 0 10px; border: 1px solid #d5d9e0; border-radius: 2px; background: #ffffff; color: #333333; font-size: 13px; font-family: inherit;">
           <button class="pbtn" onClick="{{ ld.search }}" style="height: 30px; margin-left: 10px; padding: 0 20px; background: #1e88e5; border: 1px solid #1e88e5; border-radius: 2px; color: #ffffff; font-size: 13px; font-family: inherit; cursor: pointer;">搜索</button>
           <span style="margin-left: auto; color: #4a5568;">共 <span style="color: #1e88e5;">{{ ld.count }}</span> 个{{ ld.kindName }}</span>
         </div>
@@ -936,7 +936,7 @@ class Component extends DCLogic {
       if (scope === 'sel' && !selCount) return showToast('请先勾选要加入' + kindName + '的进程', true);
       if (scope === 'all' && !fullList.length) return showToast('没有可加入' + kindName + '的进程', true);
       // 列表已按左上角系统类型筛选，正常不会混在一起；这里再兜底检查一次
-      if (catsOf(scope === 'all' ? fullList : checkedList).length > 1) return showToast('所选进程里既有 Windows 又有 Linux/信创，名单按系统类型区分，请分开加入', true);
+      if (catsOf(scope === 'all' ? fullList : checkedList).length > 1) return showToast('所选进程里既有 Windows 又有 Linux/信创，' + kindName + '按系统类型区分，请分开加入', true);
       this.setState({ pk: { kind, scope }, pkSel: [], pkNew: null });   // pkNew：创建名单表单（null = 没打开）
     };
     const act = {
@@ -959,7 +959,7 @@ class Component extends DCLogic {
     const pkCreate = () => {
       const name = String(nfD.name || '').trim();
       if (!name) return showToast('请输入' + pkName + '名称', true);
-      if (LIST_META[name]) return showToast('已有同名名单「' + name + '」', true);
+      if (LIST_META[name]) return showToast('已有同名' + pkName + '「' + name + '」', true);
       if (nfD.os !== pkCat) return showToast('系统类型需和所选进程一致（' + pkCat + '）', true);
       const key = pkKind === 'w' ? 'newW' : 'newB';
       const d = new Date(), z = (n) => String(n).padStart(2, '0');

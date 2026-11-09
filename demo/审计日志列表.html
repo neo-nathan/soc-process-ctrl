@@ -883,7 +883,7 @@ class Component extends DCLogic {
     const openPick = (kind) => {
       const kindName = kind === 'w' ? '白名单' : '黑名单';
       if (!selCount) return showToast('请先勾选要加入' + kindName + '的日志');
-      if (selCats.length > 1) return showToast('所选日志里既有 Windows 又有 Linux/信创，名单按系统类型区分，请分开加入');
+      if (selCats.length > 1) return showToast('所选日志里既有 Windows 又有 Linux/信创，' + kindName + '按系统类型区分，请分开加入');
       this.setState({ pk: { kind }, pkSel: [], pkNew: null });
     };
     const act = { white: () => openPick('w'), black: () => openPick('b') };
