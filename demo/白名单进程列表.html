@@ -691,7 +691,7 @@ class Component extends DCLogic {
           if (isNew) { this.setState({ gone: { ...gone, [r.key]: true } }); return; }   // 新增的还没发布，直接去掉
           // 已发布 / 有变更的名单至少要保留 1 个进程：这个移除后名单里一个进程都不剩（已发布的 - 待移除的 + 还没发布的新增），就拦住
           const leftAfter = BASE_COUNT - delCount() - 1 + newCount();
-          if (leftAfter <= 0) { showToast('白名单至少要保留 1 个进程，不能把进程全部移除；要清掉这条白名单请直接删除它', true); return; }
+          if (leftAfter <= 0) { showToast('至少要保留 1 个进程，不能全部移除；要删除白名单请直接删除它', true); return; }
           this.setState({ marked: { ...marked, [r.key]: true } });
         }),
         restore: act(() => { const m = { ...marked }; delete m[r.key]; this.setState({ marked: m, restored: { ...restored, [r.key]: true } }); }),
@@ -714,8 +714,8 @@ class Component extends DCLogic {
       groupCount: 5, hostCount: 236, created: '2026-09-08 16:30:45',
       status: pubStatus,
       stColor: { '已发布': '#2e7d32', '有变更': '#ef6c00' }[pubStatus],
-      stTip: { '已发布': '内容已定稿并下发到终端，终端上就是当前内容',
-               '有变更': '发布过，之后进程有增减（+N / -N）还没发布，终端上还是旧版本；回白名单列表点「发布」，会自动下发。已发布的白名单至少保留 1 个进程' }[pubStatus],
+      stTip: { '已发布': '内容已定稿。还没设置应用范围的，终端上没有它，下一步：回白名单列表点「应用到组」，选完自动下发；已应用的不需要操作，改应用范围会自动下发。',
+               '有变更': '发布过，之后进程有增减（+N / -N）还没发布。下一步：回白名单列表点「发布」，已应用的会自动下发到终端，有变更时不能改应用范围；发布后进程数会变成 0 的不能发布，要清掉这条白名单请直接删除。' }[pubStatus],
     };
     // ---------- 提示条：showToast("文字", 是否警告) 显示，2 秒后自动清掉 ----------
     const toast = st.toast || '';
@@ -782,7 +782,7 @@ class Component extends DCLogic {
       if (err) { this.setState({ addErr: err }); return; }
       const now = new Date(TODAY + 'T10:00:00');   // 演示用的添加时间
       const added = TODAY + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
-      showToast('已添加进程「' + proc + '」，回白名单列表点「发布」后终端生效', false,
+      showToast('已添加进程「' + proc + '」，返回列表点「发布」后生效', false,
         { manual: [{ proc, algo, hash, path, added }, ...(st.manual || [])], addOpen: false, addErr: '' });
     };
     const autoName = nameOf(apd.path);   // 边输路径边识别
