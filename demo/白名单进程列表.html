@@ -158,10 +158,10 @@ html,body{margin:0}
              点 +N 只看新增的进程，点 -N 只看待移除的进程；再点一次（或在高级搜索里选"全部"）恢复显示全部 -->
         <div style="display: flex; align-items: center; gap: 6px;">进程数：<span style="color: #1e88e5;">{{ wl.count }}</span> 个
           <template data-sc="if" value="{{ hasAdd }}" hint-placeholder-val="{{ true }}">
-            <button class="dbtn" onClick="{{ pickAdd }}" aria-pressed="{{ addPressed }}" title="点击只看新增的进程，再点一次显示全部" style="height: 22px; padding: 0 6px; border: 1px solid {{ addBd }}; border-radius: 2px; background: {{ addBg }}; color: #2e7d32; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;">+{{ addN }}</button>
+            <button class="dbtn" onClick="{{ pickAdd }}" aria-pressed="{{ addPressed }}" title="点击仅看新增的进程，再次点击显示全部" style="height: 22px; padding: 0 6px; border: 1px solid {{ addBd }}; border-radius: 2px; background: {{ addBg }}; color: #2e7d32; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;">+{{ addN }}</button>
           </template>
           <template data-sc="if" value="{{ hasDel }}" hint-placeholder-val="{{ true }}">
-            <button class="dbtn" onClick="{{ pickDel }}" aria-pressed="{{ delPressed }}" title="点击只看待移除的进程，再点一次显示全部" style="height: 22px; padding: 0 6px; border: 1px solid {{ delBd }}; border-radius: 2px; background: {{ delBg }}; color: #e53935; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;">-{{ delN }}</button>
+            <button class="dbtn" onClick="{{ pickDel }}" aria-pressed="{{ delPressed }}" title="点击仅看待移除的进程，再次点击显示全部" style="height: 22px; padding: 0 6px; border: 1px solid {{ delBd }}; border-radius: 2px; background: {{ delBg }}; color: #e53935; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;">-{{ delN }}</button>
           </template>
         </div>
         <div>应用范围：<span style="color: #1e88e5;">{{ wl.groupCount }}</span> 个组　<span style="color: #1e88e5;">{{ wl.hostCount }}</span> 台终端</div>

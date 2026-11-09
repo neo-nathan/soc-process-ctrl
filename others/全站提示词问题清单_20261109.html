@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>进程管控模块 · 全部提示词清单</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f5f7fa; color: #333; font: 14px/1.7 "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif; }
+  .page { max-width: 1240px; margin: 0 auto; background: #fff; padding: 34px 46px 64px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  h1 { font-size: 23px; font-weight: 600; color: #1f2329; margin: 0 0 10px; }
+  .meta { font-size: 13px; color: #7d8694; background: #fbfbfc; border-left: 3px solid #d9001b; padding: 8px 12px; margin: 0 0 20px; }
+  .meta b { color: #d9001b; font-weight: 600; }
+  .meta .sep { color: #d6dbe2; margin: 0 6px; }
+  h2 { font-size: 18px; font-weight: 600; color: #1f2329; margin: 34px 0 12px; padding-left: 10px; border-left: 4px solid #3370ff; }
+  h3 { font-size: 15px; font-weight: 600; color: #2b3a4b; margin: 22px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; }
+  p { margin: 8px 0 12px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 20px; font-size: 13px; }
+  th, td { border: 1px solid #e3e8ee; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #f2f5fa; font-weight: 600; color: #1f2329; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #fafbfc; }
+  tbody tr:hover { background: #f0f6ff; }
+  td:first-child { color: #7d8694; white-space: nowrap; }
+  code { background: #f4f5f7; border-radius: 3px; padding: 1px 5px; color: #b02a37; font-family: Consolas, Monaco, "Courier New", monospace; font-size: 12.5px; white-space: nowrap; }
+  blockquote { margin: 12px 0; padding: 10px 16px; background: #fafbfc; border-left: 3px solid #c9d3e0; color: #4a5560; }
+  ul { margin: 8px 0 14px; padding-left: 22px; }
+  li { margin: 3px 0; }
+  hr { border: 0; border-top: 1px solid #eceff3; margin: 26px 0; }
+  i.opt { color: #8a919c; font-style: normal; }
+  .toc { background: #fafbfc; border: 1px solid #e3e8ee; border-radius: 6px; padding: 12px 18px; margin: 6px 0 10px; font-size: 13px; }
+  .toc-t { font-weight: 600; color: #1f2329; margin-bottom: 4px; }
+  .toc ol { margin: 0; padding-left: 18px; columns: 2; column-gap: 32px; }
+  .toc li { margin: 2px 0; break-inside: avoid; }
+  .toc li.lv3 { margin-left: 14px; list-style: circle; }
+  .toc a { color: #3370ff; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; padding: 0; max-width: none; }
+    .toc { break-inside: avoid; }
+    table { break-inside: auto; }
+    tr { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<h1>进程管控模块 · 全部提示词清单</h1>
+<div class="meta">代码基线 SVN <b>r72256</b><span class="sep">｜</span>2026-11-05 13:55<span class="sep">｜</span>共 <b>178</b> 条<span class="sep">｜</span>导出时间 2026-11-09 15:41<span class="sep">｜</span>红色 = 生效口径（<b>心跳</b> / <b>N 分钟内</b>）</div>
+<nav class="toc"><div class="toc-t">目录</div><ol>
+<li class="lv2"><a href="#sec0">一、跨菜单的通用问题（先修这批，影响面最大）</a></li>
+<li class="lv2"><a href="#sec1">二、全网终端</a></li>
+<li class="lv2"><a href="#sec2">三、病毒查杀</a></li>
+<li class="lv2"><a href="#sec3">四、防火墙</a></li>
+<li class="lv2"><a href="#sec4">五、漏洞扫描</a></li>
+<li class="lv2"><a href="#sec5">六、资产管理</a></li>
+<li class="lv2"><a href="#sec6">七、行为审计</a></li>
+<li class="lv2"><a href="#sec7">八、安全基线</a></li>
+<li class="lv2"><a href="#sec8">九、桌面管理</a></li>
+<li class="lv2"><a href="#sec9">十、移动安全</a></li>
+<li class="lv2"><a href="#sec10">十一、进程管控</a></li>
+<li class="lv2"><a href="#sec11">十二、报表中心</a></li>
+<li class="lv2"><a href="#sec12">十三、系统设置</a></li>
+<li class="lv2"><a href="#sec13">十四、授权中心 / 登录</a></li>
+<li class="lv2"><a href="#sec14">十五、汇总建议</a></li>
+</ol></nav>
+<h1>全站提示词问题清单（按主菜单）</h1>
+<ul><li><strong>基线</strong>：SVN <strong>r72299</strong> 工作副本（<code>ESMCenterST</code>），前端 <code>public/esm/view/</code> 14 个模块 + 公共布局/instruction + 登录/激活/授权视图 + 后端 <code>esmCenter/controllers</code> 的 msg。</li><li><strong>方法</strong>：全量扫描中文字符串（JS 字面量 + HTML 文本/属性），按规则筛出可疑项，再逐条回读上下文人工核实。<strong>下面只列核实过的问题</strong>，没列的就是没问题。</li><li><strong>红色</strong> = 需要重点处理的<strong>错别字 / 歧义字 / 口语化词</strong>。</li></ul>
+<hr>
+<h2 id="sec0">一、跨菜单的通用问题（先修这批，影响面最大）</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>1</td><td><code>settings/company.html:317</code>、<code>settings/settings.html:384</code>、<code>rsr/policy.html:180</code>、<code>instruction.html:441</code>、<code>esmCenter/views/esm/Index/activateAccountFromMail.html:19</code>、<code>registerFromMail.html:19</code></td><td>「立即<span style="color:#d9001b;font-weight:600">登陆</span>后，查看更多账户信息」「次错误<span style="color:#d9001b;font-weight:600">登陆</span>后锁定账户」「初次<span style="color:#d9001b;font-weight:600">登陆</span>瑞星SOC平台」</td><td><strong>错别字</strong>：全站统一用「登录」，「登陆」是误用（6 处，含 2 处注册/激活页）</td><td>全部改「登录」</td></tr><tr><td>2</td><td><code>auth/Index/create.html:100</code>、<code>forgetpwd.html:140</code>、<code>indexOld.html:123</code>、<code>rsr/policy.html:194/452/458</code></td><td>「请牢记创建的管理员<span style="color:#d9001b;font-weight:600">帐号</span>信息」「锁定<span style="color:#d9001b;font-weight:600">帐户</span>」</td><td><strong>错别字 + 不统一</strong>：「帐号/帐户」应为「账号/账户」，且同系统里两种写法混用</td><td>统一「账号」「账户」</td></tr><tr><td>3</td><td><code>protection/policy.js:301/321/325</code>、<code>rum/log.js:486</code>、<code>settings/accountManage.html:196</code>、<code>settings/accountManage.js:1079/1214/1420</code></td><td>「蠕虫木马<span style="color:#d9001b;font-weight:600">(</span>默认端口<span style="color:#d9001b;font-weight:600">)</span>」「安全<span style="color:#d9001b;font-weight:600">(</span>组<span style="color:#d9001b;font-weight:600">)</span>」「用户修改<span style="color:#d9001b;font-weight:600">(</span>启用禁用等权限<span style="color:#d9001b;font-weight:600">)</span>」</td><td><strong>标点</strong>：中文句子里的括号用了半角，全站 17 处</td><td>统一全角「（）」</td></tr><tr><td>4</td><td><code>sys/info.js:660</code>、<code>sys/overview.js:495</code>、<code>virus/overview.js:470</code>、<code>processManage/list.html:354</code>、<code>report/overview.html:948</code>、<code>settings/setPolicy.html:1059</code>、<code>settings/setPolicy.js:1704/1746</code>、<code>settings/settings.html:501</code></td><td>「正在导入，请稍后<span style="color:#d9001b;font-weight:600">...</span>」「任务正在启动<span style="color:#d9001b;font-weight:600">...</span>」「加载中请稍等<span style="color:#d9001b;font-weight:600">...</span>」</td><td><strong>标点</strong>：三个半角句点当省略号，共 14 处</td><td>统一中文省略号「…」，或直接去掉（「加载中」已足够）</td></tr><tr><td>5</td><td><code>settings/accountManage.js:226/397/451</code>、<code>settings/overview.js:683/781/796/810</code>、<code>settings/accountManage.html:542</code>、<code>report/overview.html:415/674/927</code></td><td>「密码强度过低<span style="color:#d9001b;font-weight:600">,</span>由字母<span style="color:#d9001b;font-weight:600">(</span>区分大小写),数字,符号组成」「动态口令将失效<span style="color:#d9001b;font-weight:600">;</span>」「SMTP服务器参数无效<span style="color:#d9001b;font-weight:600">,</span>请点击」</td><td><strong>标点</strong>：中文句子里混用半角逗号/分号</td><td>改全角「，」「；」；第一句同时改「<span style="color:#d9001b;font-weight:600">由</span>」→「须由」</td></tr><tr><td>6</td><td><code>settings/settings.html:308</code> vs <code>settings/accountManage.js:226</code></td><td>一处写「<span style="color:#d9001b;font-weight:600">特殊字符</span>（~!@#$…）」，一处写「<span style="color:#d9001b;font-weight:600">符号</span>」</td><td><strong>术语不统一</strong>：同一套密码规则两种叫法</td><td>统一「特殊字符」</td></tr><tr><td>7</td><td>全站</td><td>「请稍等」12 处、「请稍候」2 处</td><td><strong>用词不统一</strong></td><td>择一，建议「请稍候」</td></tr><tr><td>8</td><td><code>esmCenter/controllers/*.php</code></td><td>后端 msg 大量「重置令牌成功！」「删除成功！」（39 处「成功！」、37 处「失败！」）</td><td><strong>风格不统一</strong>：后端一律带「！」，前端提示条一半带一半不带</td><td>定一条规则（建议提示条句末不加标点），后端 msg 去掉「！」</td></tr></tbody></table>
+<hr>
+<h2 id="sec1">二、全网终端</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>9</td><td><code>sys/overview.js:495</code></td><td>「<span style="color:#d9001b;font-weight:600">开发中</span>，敬请期待...」，单元格文字也是「敬请期待」</td><td><strong>口语 + 暴露未完成状态</strong>，且 title 与文字重复；省略号还是半角</td><td>未上线功能就别挂入口；保留则改「该功能暂未开放」</td></tr><tr><td>10</td><td><code>sys/overview.js:494</code></td><td>「点击开启 192.168.x.x 远程协助」</td><td>「点击」后紧跟 IP，句子读起来断</td><td>改「开启 192.168.x.x 的远程协助」</td></tr></tbody></table>
+<hr>
+<h2 id="sec2">三、病毒查杀</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>11</td><td><code>virus/log.js:724</code></td><td>「该文件<span style="color:#d9001b;font-weight:600">已经在下载</span>无需重复点击」</td><td><strong>语病 + 口语</strong>：缺「中」、缺停顿</td><td>「该文件正在下载，请勿重复操作」</td></tr><tr><td>12</td><td><code>virus/overview.js:470</code></td><td>「任务正在启动...」「正在扫描<span style="color:#d9001b;font-weight:600">请稍候</span>...」「任务正在停止...」「计算中...」</td><td>省略号半角；「正在扫描请稍候」两句粘连</td><td>「任务启动中…」「正在扫描，请稍候…」</td></tr><tr><td>13</td><td><code>virus/policy.html:1476</code></td><td>「（-1<span style="color:#d9001b;font-weight:600">~</span>128，-1<span style="color:#d9001b;font-weight:600">代表</span>查杀所有目录）」</td><td><strong>范围用半角 ~</strong>；「代表」偏口语</td><td>「-1～128；-1 表示查杀所有目录」</td></tr></tbody></table>
+<hr>
+<h2 id="sec3">四、防火墙</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>14</td><td><code>protection/policy.js:683</code></td><td>「当前暂无数据<span style="color:#d9001b;font-weight:600">～</span>」</td><td><strong>口语波浪号</strong>（同系统其它空态已统一为「当前暂无数据」）</td><td>去掉「～」</td></tr><tr><td>15</td><td><code>protection/policy.js:301/321/325</code></td><td>见通用第 3 条（半角括号）</td><td>—</td><td>—</td></tr></tbody></table>
+<hr>
+<h2 id="sec4">五、漏洞扫描</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>16</td><td><code>rls/policy.html:169</code></td><td>「（并行下载数范围<span style="color:#d9001b;font-weight:600">2~10</span>）」</td><td>半角 ~ 表范围，数字与中文挤在一起</td><td>「（并行下载数 2～10）」</td></tr><tr><td>17</td><td><code>rls/policy.html:135</code></td><td>「请输入后<span style="color:#d9001b;font-weight:600">点击右侧按钮</span>，<span style="color:#d9001b;font-weight:600">例：</span>https://…」</td><td>「右侧」依赖布局易失效；「例：」应为「示例：」</td><td>「输入后点「导入」按钮，示例：https://…」</td></tr></tbody></table>
+<hr>
+<h2 id="sec5">六、资产管理</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>18</td><td><code>assetManagement/policy.js:115</code></td><td>「当前<span style="color:#d9001b;font-weight:600">无相关数据展示</span>，请<span style="color:#d9001b;font-weight:600">点击跳转到</span> 第三方软件」</td><td><strong>表述生硬 + 歧义</strong>（「数据展示」不是人话，「点击跳转到」拗口）</td><td>「暂无相关数据，请前往「第三方软件」查看」</td></tr></tbody></table>
+<hr>
+<h2 id="sec6">七、行为审计</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>19</td><td><code>behaviorAudit/policy.html:105/106/107/197/217/225/245/246/254/256</code>、<code>policy.js:2850/2859/2886/2897</code></td><td>「<span style="color:#d9001b;font-weight:600">～</span>（例 00:00 <span style="color:#d9001b;font-weight:600">~</span> 23:59）」「<span style="color:#d9001b;font-weight:600">(</span>例 2014-11-27 00:00 ~ 23:59<span style="color:#d9001b;font-weight:600">)</span>」</td><td>同一屏里全角「～」和半角「~」混用；括号半角；<strong>示例年份还是 2014</strong></td><td>时间段统一「00:00～23:59」；括号全角；示例年份改近期</td></tr><tr><td>20</td><td><code>behaviorAudit/logJiLian.js:753</code></td><td>「级联组织」</td><td>与本系统「组」的说法不一致（同名功能在别处叫「改组」）</td><td>统一「级联组」，或保留但在悬停里说明</td></tr></tbody></table>
+<hr>
+<h2 id="sec7">八、安全基线</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>21</td><td><code>rsr/policy.html:180</code></td><td>「次错误<span style="color:#d9001b;font-weight:600">登陆</span>后锁定账户」</td><td>见通用第 1 条</td><td>改「登录」</td></tr><tr><td>22</td><td><code>rsr/policy.html:194/452/458</code></td><td>「锁定<span style="color:#d9001b;font-weight:600">帐户</span>」</td><td>见通用第 2 条</td><td>改「账户」</td></tr><tr><td>23</td><td><code>rsr/policy.html:124/140/180/236</code>、<code>report/templete/temp3.html:182/190/198</code></td><td>「（8<span style="color:#d9001b;font-weight:600">~</span>14个）」「（30<span style="color:#d9001b;font-weight:600">~</span>90天）」「（3<span style="color:#d9001b;font-weight:600">~</span>7次）」「数值范围为<span style="color:#d9001b;font-weight:600">1~10</span>的整数」</td><td>半角 ~ 表范围，且数字与量词无空格</td><td>「8～14 个」「30～90 天」「1～10 的整数」</td></tr></tbody></table>
+<hr>
+<h2 id="sec8">九、桌面管理</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>24</td><td><code>rum/policy.html:142/143</code></td><td>输入框占位「<span style="color:#d9001b;font-weight:600">请点击上传</span>」，下方提示「（请点击输入框上传文件）」</td><td><strong>提示与实际不符</strong>：该输入框是 <code>disabled</code> 的，点了没反应，用户会以为坏了；「请点击上传」也不是占位该说的话</td><td>占位改「请选择图片文件」；提示改「点右侧「选择文件」上传」，并确保可点</td></tr><tr><td>25</td><td><code>rum/log.js:486</code></td><td>「用户修改<span style="color:#d9001b;font-weight:600">(</span>启用禁用等权限<span style="color:#d9001b;font-weight:600">)</span>」</td><td>半角括号</td><td>全角「（）」</td></tr></tbody></table>
+<hr>
+<h2 id="sec9">十、移动安全</h2>
+<p>未发现不适合的提示词。</p>
+<hr>
+<h2 id="sec10">十一、进程管控</h2>
+<p>（上一轮验证报告已列 14 条，这里只补与本次口径相关的 2 条）</p>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>26</td><td><code>processMana.js:414</code>、<code>processMana.html:97</code></td><td>「暂时还没有可选的…，请<span style="color:#d9001b;font-weight:600">点击</span>右上角 新建… 按钮创建<span style="color:#d9001b;font-weight:600">~</span>」</td><td><strong>口语波浪号</strong> + 「点击」与日志页「请点」不一致</td><td>照日志页：「请点右上角「新建白名单」创建」</td></tr><tr><td>27</td><td><code>bwlistProc.html:30/31</code></td><td>「点击只看新增的进程，<span style="color:#d9001b;font-weight:600">再点一次</span>显示全部」</td><td><strong>口语</strong></td><td>「点击仅看新增的进程，再次点击显示全部」</td></tr></tbody></table>
+<hr>
+<h2 id="sec11">十二、报表中心</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>28</td><td><code>report/overview.html:415/674/927</code></td><td>「SMTP服务器参数无效<span style="color:#d9001b;font-weight:600">,</span>请点击<i class="opt">〔配置〕</i>」</td><td>半角逗号；「请点击」后直接接链接，句子断</td><td>「SMTP 服务器参数无效，请先完成配置」</td></tr><tr><td>29</td><td><code>report/overview.html:948</code></td><td>「加载中请稍等<span style="color:#d9001b;font-weight:600">...</span>」</td><td>省略号半角，且两句粘连</td><td>「加载中，请稍候…」</td></tr></tbody></table>
+<hr>
+<h2 id="sec12">十三、系统设置</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>30</td><td><code>settings/settings.html:484</code></td><td>「目前中心数据不够丰富，请尽快将更多的设备加入进来<span style="color:#d9001b;font-weight:600">呦~</span>」</td><td><strong>口语语气词 + 波浪号</strong>（正式产品界面不该出现）</td><td>「当前中心数据较少，建议尽快接入更多设备」</td></tr><tr><td>31</td><td><code>settings/settings.html:518</code></td><td>「邀请成功！可以继续邀请<span style="color:#d9001b;font-weight:600">哦~</span>」</td><td><strong>口语语气词</strong></td><td>「邀请成功，可继续邀请」</td></tr><tr><td>32</td><td><code>settings/settings.html:489</code></td><td>「…<span style="color:#d9001b;font-weight:600">点击链接行下载安装~</span>」</td><td><strong>错字（多「行」/缺动词）+ 波浪号</strong></td><td>「点击链接下载安装」</td></tr><tr><td>33</td><td><code>settings/company.html:12</code>、<code>settings/settings.html:62</code></td><td>「建议先补充相关资料<span style="color:#d9001b;font-weight:600">~</span>」</td><td>口语波浪号</td><td>去掉「~」</td></tr><tr><td>34</td><td><code>settings/accountManage.html:543</code></td><td>「可在确认前点击<span style="color:#d9001b;font-weight:600">“取消“</span>，终止本次操作」</td><td><strong>引号不配对</strong>（后引号写成了前引号），且与全站「」不一致</td><td>「可在确认前点击「取消」」</td></tr><tr><td>35</td><td><code>settings/company.js:708</code>、<code>settings/overview.js:1021</code></td><td>「手机或座机<span style="color:#d9001b;font-weight:600">(</span>用<span style="color:#d9001b;font-weight:600">-</span>分隔<span style="color:#d9001b;font-weight:600">)</span>号码格式不正确」</td><td>半角括号 + 「-」含义不明</td><td>「手机或座机号码格式不正确（多个号码用「-」分隔）」</td></tr><tr><td>36</td><td><code>settings/operlog.js:66</code></td><td>「系统<span style="color:#d9001b;font-weight:600">后台</span>执行」</td><td><strong>歧义</strong>：读者不知道「后台」指运维后台还是服务端</td><td>「由系统自动执行」</td></tr><tr><td>37</td><td><code>settings/setPolicy.html:126</code></td><td>「请严格管控<span style="color:#d9001b;font-weight:600">后台账号</span>与提取密码权限」</td><td>同上，「后台账号」指向不清</td><td>「请严格管控系统管理员账号与提取密码权限」</td></tr><tr><td>38</td><td><code>settings/setPolicy.html:1059</code>、<code>settings/setPolicy.js:1704/1746</code>、<code>settings/settings.html:501</code></td><td>「备份中请稍等<span style="color:#d9001b;font-weight:600">...</span>」</td><td>见通用第 4 条</td><td>「备份中，请稍候…」</td></tr></tbody></table>
+<hr>
+<h2 id="sec13">十四、授权中心 / 登录</h2>
+<table><thead><tr><th>#</th><th>位置</th><th>现状</th><th>问题</th><th>建议</th></tr></thead><tbody><tr><td>39</td><td><code>auth/Index/create.html:100</code>、<code>forgetpwd.html:140</code>、<code>indexOld.html:123</code></td><td>「请牢记创建的管理员<span style="color:#d9001b;font-weight:600">帐号</span>信息！」</td><td><strong>错别字</strong>，且句末「！」与全站多数提示不一致</td><td>「请妥善保管管理员账号信息」</td></tr><tr><td>40</td><td><code>esmCenter/views/esm/Index/activateAccountFromMail.html:19</code>、<code>registerFromMail.html:19</code></td><td>「您正在尝试<span style="color:#d9001b;font-weight:600">登陆</span>到瑞星SOHO」</td><td><strong>错别字</strong>（邮件里的链接页，对外可见）</td><td>「您正在登录瑞星 SOHO」</td></tr></tbody></table>
+<hr>
+<h2 id="sec14">十五、汇总建议</h2>
+<p>1. <strong>优先修错别字</strong>：通用第 1、2 条（登录/账号）+ 设置第 32 条（漏字）+ 第 34 条（引号不配对），这四类是硬错误，客户会截图投诉。</p>
+<p>2. <strong>批量替换可脚本化</strong>：半角括号（17 处）、半角省略号（14 处）、范围符 <code>~</code>（约 20 处）、「请稍等/稍候」，都是机械替换，建议一次性过脚本 + 人工抽查。</p>
+<p>3. <strong>口语语气词要定规矩</strong>：<code>~</code>、<code>哦</code>、<code>呦</code> 这类只出现在「系统设置-引导/邀请」和个别空态里，建议写入《提示语规范》：正式提示不使用语气词。</p>
+<p>4. <strong>后端 msg 与前端提示条风格要统一</strong>：后端 76 处「！」，前端一半不带标点，建议统一为「提示条句末不加标点、弹窗正文加句号」。</p>
+<p>5. 需要我按菜单出<strong>可直接替换的对照表（旧文案 → 新文案 + 文件行号）</strong>，或直接改代码，你说一声——按上次的规矩，改之前先给你看 diff。</p>
+</div>
+</body>
+</html>
