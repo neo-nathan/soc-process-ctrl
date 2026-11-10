@@ -1,0 +1,2 @@
+ES5_PARSE_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/list.js
+ES5_PARSE_OK /Users/nick/Workspace/ESMCenterST/public/esm/view/processManage/bwlistProc.js

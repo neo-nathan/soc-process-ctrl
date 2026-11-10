@@ -253,7 +253,7 @@ html,body{margin:0}
              ② 发布状态（4 种）：---（没进程）/ 待发布（加了进程还没发布过）/ 已发布（内容定稿了）/ 有变更（发布过，之后有 +N / -N）
              ③ 应用范围：---（还没选终端）/ N 个组 M 台终端（已下发到这些终端）
            操作顺序：添加进程 → 发布（定稿）→ 应用范围（选完自动下发）→ 以后改了进程再发布（自动下发）；改应用范围不用发布，自动下发
-           按钮规则：发布 = 待发布 / 有变更 能点（发布后会变成 0 的不能点）；应用到组 / 终端 = 只有"已发布"能点；删除 = 随时能点，先弹确认框
+           按钮规则：发布 = 待发布 / 已发布 / 有变更 能点（发布后会变成 0 的不能点）；应用到组 / 终端 = 发布过（已发布、有变更）就能点；删除 = 随时能点，先弹确认框
            列 = [展开箭头] / 序号 / 名称 / 系统类型 / 进程数 / 应用范围 / 发布状态 / 创建人 / 创建时间 / 描述
            各列按比例分配整行宽度（flex: 比例 1 0）
            操作按钮不再单独一列：点行首的箭头（或名称）展开，按钮在展开的子行里（照截图 16 策略中心的折叠样式） -->
@@ -282,10 +282,10 @@ html,body{margin:0}
                 <span style="display: block; color: #a5d6a7;">已发布</span>
                 <span style="display: block; margin-bottom: 6px;">内容定稿了，没有待发布的增减。应用范围是 --- 的还没下发到终端，选了应用范围就自动下发；改应用范围也自动下发，不用再发布</span>
                 <span style="display: block; color: #ffcc80;">有变更</span>
-                <span style="display: block;">发布过，之后进程有增减（+N / -N）还没发布，终端上还是旧版本；点「发布」自动下发。有变更时不能改应用范围；已发布的白名单至少保留 1 个进程</span>
+                <span style="display: block;">发布过，之后进程有增减（+N / -N）还没发布，终端上还是旧版本；点「发布」自动下发。已发布的白名单至少保留 1 个进程</span>
                 <!-- 状态流转图：箭头上的字 = 触发状态变化的操作
                        --- →添加进程→ 待发布 →发布→ 已发布 →进程增减→ 有变更 →发布→ 已发布
-                       应用范围是另一条线：已发布时选 / 改范围 → 自动下发，状态不变 -->
+                       应用范围是另一条线：已发布、有变更时选 / 改范围 → 自动下发，状态不变 -->
                 <span style="display: block; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.2); color: #c5ccd6;">状态流转（箭头上的字 = 触发变化的操作）</span>
                 <svg role="img" aria-label="发布状态流转图" width="446" height="110" viewBox="0 0 446 110" style="display: block; margin-top: 4px;" font-size="11" font-family="inherit">
                   <defs><marker id="stArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5 0 10z" fill="#c5ccd6"></path></marker></defs>
@@ -295,14 +295,15 @@ html,body{margin:0}
                     <path d="M306 29H350"></path>
                     <path d="M350 43H306"></path>
                     <path d="M268 49V72"></path>
+                    <path d="M388 49V72"></path>
                   </g>
                   <g fill="#c5ccd6" text-anchor="middle">
                     <text x="88" y="26">添加进程</text>
                     <text x="208" y="26">发布</text>
                     <text x="328" y="19">进程增减</text>
                     <text x="328" y="60">发布</text>
-                    <text x="268" y="88">选 / 改应用范围 → 自动下发</text>
-                    <text x="268" y="104" font-size="10">（状态不变；有变更时不能改范围）</text>
+                    <text x="328" y="88">选 / 改应用范围 → 自动下发</text>
+                    <text x="328" y="104" font-size="10">（状态不变）</text>
                   </g>
                   <g stroke-width="1.2" text-anchor="middle">
                     <rect x="6" y="23" width="60" height="26" rx="3" fill="#2b3a4d" stroke="#c5ccd6"></rect><text x="36" y="40" fill="#c5ccd6">---</text>
@@ -376,8 +377,8 @@ html,body{margin:0}
             <!-- 展开的子行（点了行首箭头才出现）：操作按钮都放这里，照截图 16 的白底边框按钮 + 蓝色线条图标
                    编辑 / 进程 / 应用到组 / 应用到终端 / 发布 / 删除
                    能点的 = 正常按钮；不能点的 = 灰色按钮（鼠标移上去说明原因）
-                     发布        待发布 / 有变更 能点；空白名单、没有变更、发布后会变成 0 的灰色
-                     应用到组/终端 只有"已发布"能点；选完 / 改完自动下发
+                     发布        待发布 / 已发布 / 有变更 能点；空白名单、发布后会变成 0 的灰色
+                     应用到组/终端 发布过（已发布、有变更）就能点；选完 / 改完自动下发
                      删除        随时能点，点了先弹确认框 -->
             <template data-sc="if" value="{{ r.open }}" hint-placeholder-val="{{ false }}">
               <div class="subrow" style="display: flex; align-items: center; gap: 10px; height: 52px; padding-left: 92px; box-sizing: border-box; background: #eef1f5; border-bottom: 1px solid #e3e6eb; box-shadow: inset 3px 0 0 #1e88e5;">
@@ -391,7 +392,7 @@ html,body{margin:0}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
                   <span>进程</span>
                 </a>
-                <!-- 应用到组：组织树图标（照截图 16）；只有"已发布"的名单能点（选完自动下发），其余灰色 -->
+                <!-- 应用到组：组织树图标（照截图 16）；发布过（已发布、有变更）的名单能点（选完自动下发），其余灰色 -->
                 <template data-sc="if" value="{{ r.canScope }}" hint-placeholder-val="{{ true }}">
                   <a href="#" class="obtn" onClick="{{ r.setGroup }}" title="{{ r.groupTip }}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v5H9zM3 16h6v5H3zM15 16h6v5h-6zM12 8v4M6 16v-4h12v4"></path></svg>
@@ -784,23 +785,23 @@ class Component extends DCLogic {
     //   ① 新建空白名单                     进程数 0      发布状态 ---（没进程，不能发布）
     //   ② 添加进程                         进程数 0 +5   发布状态 待发布
     //   ③ 点「发布」= 内容定稿              进程数 5      发布状态 已发布（还没选终端，终端上没有它）
-    //   ④ 选应用范围（只有已发布的能选）     自动下发到所选终端，状态还是 已发布
-    //   ⑤ 再加进程                         进程数 5 +2   发布状态 有变更（终端上还是 5 个的旧版本；有变更时不能改应用范围）
+    //   ④ 选应用范围（发布过就能选）         自动下发到所选终端，状态还是 已发布
+    //   ⑤ 再加进程                         进程数 5 +2   发布状态 有变更（终端上还是 5 个的旧版本）
     //   ⑥ 点「发布」                       进程数 7      发布状态 已发布，自动下发到终端
     //   ⑦ 进程不变只改应用范围             不用发布，自动下发到新加的终端
     //   已发布的名单至少保留 1 个进程，不能删成 0；删除名单随时可以（已下发的会向终端下发清除策略）
     //   ┌────────┬──────────┬────────┬───────────────┬───────────────┬────────────┐
     //   │ 发布状态 │ 进程数    │ 应用范围 │ 发布            │ 应用到组 / 终端  │ 示例         │
     //   ├────────┼──────────┼────────┼───────────────┼───────────────┼────────────┤
-    //   │ 已发布   │ 18       │ 已应用  │ 灰（没有变更）   │ 可（改完自动下发）│ Web 服务    │
-    //   │ 有变更   │ 9 -1     │ 已应用  │ 可（并下发）     │ 灰（先发布）     │ 数据库服务   │
-    //   │ 有变更   │ 27 +2 -3 │ 已应用  │ 可（并下发）     │ 灰              │ 办公软件（进程页示例就是它）│
-    //   │ 有变更   │ 15 +2 -1 │ 已应用  │ 可（并下发）     │ 灰              │ 运维工具     │
-    //   │ 已发布   │ 11       │ ---    │ 灰              │ 可（选完自动下发）│ 邮件服务     │
-    //   │ 有变更   │ 5 +2     │ ---    │ 可（只定稿）     │ 灰              │ 人事系统     │
+    //   │ 已发布   │ 18       │ 已应用  │ 可（再发布）     │ 可（改完自动下发）│ Web 服务    │
+    //   │ 有变更   │ 9 -1     │ 已应用  │ 可（并下发）     │ 可              │ 数据库服务   │
+    //   │ 有变更   │ 27 +2 -3 │ 已应用  │ 可（并下发）     │ 可              │ 办公软件（进程页示例就是它）│
+    //   │ 有变更   │ 15 +2 -1 │ 已应用  │ 可（并下发）     │ 可              │ 运维工具     │
+    //   │ 已发布   │ 11       │ ---    │ 可              │ 可（选完自动下发）│ 邮件服务     │
+    //   │ 有变更   │ 5 +2     │ ---    │ 可（只定稿）     │ 可              │ 人事系统     │
     //   │ 待发布   │ 0 +7     │ ---    │ 可              │ 灰（先发布）     │ 打印服务     │
     //   │ 待发布   │ 0 +4     │ ---    │ 可              │ 灰              │ 测试环境     │
-    //   │ 有变更   │ 6 -6     │ 已应用  │ 灰（发布后为 0） │ 灰              │ 财务系统     │
+    //   │ 有变更   │ 6 -6     │ 已应用  │ 灰（发布后为 0） │ 可              │ 财务系统     │
     //   │ ---     │ 0        │ ---    │ 灰（空白名单）   │ 灰（先添加进程） │ 门户网站     │
     //   └────────┴──────────┴────────┴───────────────┴───────────────┴────────────┘
     const raw = [
@@ -847,16 +848,15 @@ class Component extends DCLogic {
       const status = none ? '---' : (!everPub ? '待发布' : (changed ? '有变更' : '已发布'));
       const kind = status === '---' ? '空（白名单）' : status;                // 筛选按它比较
       const chg = changed ? [add ? '新增 ' + add + ' 个' : '', del ? '移除 ' + del + ' 个' : ''].filter(Boolean).join('、') : '';
-      // ---- 发布：待发布 / 有变更 能点；空白名单、没有变更、发布后会变成 0 的不能点 ----
+      // ---- 发布：待发布 / 已发布 / 有变更 能点；空白名单、发布后会变成 0 的不能点 ----
       const toZero = everPub && changed && total === 0;
-      const canPub = (status === '待发布' || status === '有变更') && !toZero;
+      const canPub = (status === '待发布' || status === '已发布' || status === '有变更') && !toZero;
       const pubOffTip = none ? '还没有进程，不能发布，请先添加进程'
-        : (toZero ? '发布后进程数为 0，至少保留 1 个进程；要删除这条白名单请直接删除它'
-        : '没有待发布的变更');
-      const pubTip = applied ? '发布并下发到 ' + hc + ' 台终端' : '标记为已发布，设置应用范围后自动下发';
-      // ---- 应用到组 / 终端：只有"已发布"能点；选完 / 改完自动下发 ----
-      const canScope = status === '已发布';
-      const scopeOffTip = none ? '还没有进程，先添加并发布' : (status === '待发布' ? '先发布，只有已发布的白名单才能设置应用范围' : '有变更还没发布，先点「发布」再改应用范围');
+        : '发布后进程数为 0，至少保留 1 个进程；要删除这条白名单请直接删除它';   // 灰色只剩这两种
+      const pubTip = applied ? '发布并下发到 ' + hc + ' 台终端' : (status === '已发布' ? '应用到组后下发' : '标记为已发布，设置应用范围后自动下发');
+      // ---- 应用到组 / 终端：发布过（已发布、有变更）就能点；选完 / 改完自动下发 ----
+      const canScope = status === '已发布' || status === '有变更';
+      const scopeOffTip = none ? '还没有进程，先添加并发布' : '先发布，再设置应用范围';
       return {
         ...r, gc, hc, base, add, del,
         // 描述：没填的显示灰色 ---
@@ -890,7 +890,7 @@ class Component extends DCLogic {
           if (status === '待发布') return '下一步：点「发布」把内容定稿，再设置应用范围（自动下发）。';
           if (status === '已发布') return applied ? '终端已是最新，不需要操作。改应用范围会自动下发。' : '下一步：点「应用到组」或「应用到终端」，选完自动下发。';
           if (toZero) return '发布后进程数会变成 0，不能发布；要删除这条白名单请直接删除它。';
-          return '下一步：点「发布」' + (applied ? '，会自动下发到终端。有变更时不能改应用范围。' : '把变更定稿，再设置应用范围。');
+          return '下一步：点「发布」' + (applied ? '，会自动下发到终端。' : '把变更定稿，再设置应用范围。');
         })(),
         // 操作按钮的提示文字
         procTip:  none ? '还没有进程，去添加' : (changed ? '有 ' + chg + ' 还没发布' : '查看 / 维护白名单里的进程'),
@@ -906,7 +906,7 @@ class Component extends DCLogic {
         setHost:  (e) => { prevent(e); this.setState({ scoped: { ...scoped, [r.name]: 'host' } });
           showToast(applied ? '（演示）已修改应用的终端，已按新范围自动下发' : '（演示）已应用到 5 台终端，白名单已自动下发'); },
         publish:  (e) => { prevent(e); this.setState({ published: { ...published, [r.name]: true } });
-          showToast(applied ? '发布成功' : '发布成功，请点这一行的「应用到组」'); },   // 已应用：只说发布成功；没应用：提醒再去点「应用到组」
+          showToast('发布成功。'); },   // 发布成功固定这一句
         askDel:   (e) => { prevent(e); this.setState({ delAsk: r.name }); },   // 打开删除确认弹窗
       };
     });
